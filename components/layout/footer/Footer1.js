@@ -2,9 +2,11 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import SocialLinks from "@/components/elements/SocialLinks"
 
-export default function Footer1() {
+export default function Footer1({ settings = {} }) {
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState(["Design", "Technology", "UI/UX", "Marketing", "Travel", "Podcast", "Lifestyle"])
+
+    const footerLogo = settings.logo_footer || "/assets/img/logo/logoredwhite.webp"
 
     useEffect(() => {
         fetch('/api/categories')
@@ -26,7 +28,7 @@ export default function Footer1() {
                         <div className="col-xl-4 col-lg-4 col-md-6 mt-30">
                             <div className="ta-footer-widget widget">
                                 <Link href="/" className="d-inline-block mb-25">
-                                    <img src="/assets/img/logo/logo-white.webp" alt="Hoom Magazine" style={{ height: '38px', width: 'auto' }} />
+                                    <img src={footerLogo} alt={settings.site_title || "Duanarasi"} style={{ height: '38px', width: 'auto', objectFit: 'contain' }} />
                                 </Link>
                                 <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#94a3b8', marginBottom: '20px' }}>
                                     Hoom Magazine menyajikan berita terkini, artikel mendalam, tren teknologi, gaya hidup, dan wawasan terpercaya untuk pembaca modern di seluruh Indonesia.

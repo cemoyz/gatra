@@ -371,10 +371,14 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
           {/* Logo Header */}
           <div className="dash-sidebar-header">
             <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', width: '100%' }}>
-              {siteSettings.site_logo ? (
+              {(siteSettings.logo_dashboard || siteSettings.site_logo) ? (
                 <img
-                  src={siteSettings.site_logo.startsWith('http') || siteSettings.site_logo.startsWith('/') ? siteSettings.site_logo : `/assets/img/logo/${siteSettings.site_logo}`}
-                  alt=""
+                  src={
+                    (siteSettings.logo_dashboard || siteSettings.site_logo).startsWith('http') || (siteSettings.logo_dashboard || siteSettings.site_logo).startsWith('/')
+                      ? (siteSettings.logo_dashboard || siteSettings.site_logo)
+                      : `/assets/img/logo/${siteSettings.logo_dashboard || siteSettings.site_logo}`
+                  }
+                  alt={siteSettings.site_title || "Logo"}
                   style={{
                     width: '36px',
                     height: '36px',

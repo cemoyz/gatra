@@ -213,34 +213,44 @@ export default function SocialLinks({ className = '', showLabels = false, style 
           align-items: center !important;
           justify-content: center !important;
           flex-shrink: 0 !important;
-          background: transparent !important;
-          border: 1.5px solid #ffffff !important;
-          color: #ffffff !important;
+          background: transparent;
+          border: 1.5px solid currentColor;
+          color: inherit;
           padding: 0 !important;
           margin: 0 !important;
           text-decoration: none !important;
+          cursor: pointer !important;
+          position: relative !important;
+          z-index: 10 !important;
+          pointer-events: auto !important;
           transition: all 0.2s ease-in-out !important;
         }
 
         .social-circle-btn:hover {
-          background: rgba(255, 255, 255, 0.25) !important;
+          background: #da0105 !important;
           color: #ffffff !important;
-          border-color: #ffffff !important;
+          border-color: #da0105 !important;
           transform: translateY(-2px);
         }
 
         .social-circle-btn svg {
-          fill: #ffffff !important;
-          color: #ffffff !important;
+          fill: currentColor !important;
+          color: currentColor !important;
           display: block !important;
           margin: auto !important;
+          pointer-events: none !important;
+        }
+
+        .social-circle-btn svg path {
+          pointer-events: none !important;
         }
 
         .social-circle-btn i {
-          color: #ffffff !important;
+          color: currentColor !important;
           font-size: 14px !important;
           line-height: 1 !important;
           margin: auto !important;
+          pointer-events: none !important;
         }
       `}</style>
     </div>

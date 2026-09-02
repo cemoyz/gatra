@@ -11,7 +11,7 @@ export const Card = React.forwardRef(({ className = '', style = {}, children, ..
       boxShadow: 'var(--dash-shadow, 0 1px 3px 0 rgba(0, 0, 0, 0.05))',
       color: 'var(--dash-text-main)',
       position: 'relative',
-      overflow: 'hidden',
+      overflow: 'visible',
       ...style
     }}
     {...props}

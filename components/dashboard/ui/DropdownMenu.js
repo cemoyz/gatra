@@ -50,7 +50,7 @@ export function DropdownMenu({ children, open: controlledOpen, onOpenChange }) {
 
   return (
     <DropdownContext.Provider value={{ open, setOpen, triggerRef, menuRef }}>
-      <div style={{ position: 'relative', display: 'inline-block' }}>
+      <div style={{ position: 'relative', display: 'inline-block', zIndex: open ? 1200 : 'auto' }}>
         {children}
       </div>
     </DropdownContext.Provider>
@@ -132,9 +132,9 @@ export function DropdownMenuContent({
         backgroundColor: 'var(--dash-card-bg)',
         border: '1px solid var(--dash-border)',
         borderRadius: '12px',
-        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.15)',
         padding: '6px',
-        zIndex: 1000,
+        zIndex: 1300,
         animation: 'dashFadeSlideUp 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         boxSizing: 'border-box',
         ...style

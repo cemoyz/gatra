@@ -272,7 +272,7 @@ function Home1({ settings = {} }) {
                                     </div>
                                 </div>
                                 <div className="col-xl-4">
-                                    <BlogSidebar />
+                                    <BlogSidebar settings={settings} />
                                 </div>
                             </div>
                         </div>

@@ -30,7 +30,11 @@ export default function DashboardSettings() {
   const [settings, setSettings] = useState({
     site_title: 'Dua Narasi',
     site_tagline: 'Portal Berita & Opini Terpercaya',
-    site_logo: '',
+    site_logo: '/assets/img/logo/logo.webp',
+    logo_header: '/assets/img/logo/logo.webp',
+    logo_header_dark: '/assets/img/logo/logo-white.webp',
+    logo_footer: '/assets/img/logo/logoredwhite.webp',
+    logo_dashboard: '/assets/img/logo/favicon.webp',
     show_featured_posts: 'true',
     title_featured_posts: 'Featured Post',
     featured_posts_mode: 'manual',
@@ -57,6 +61,13 @@ export default function DashboardSettings() {
     handpick_posts_sort: 'latest',
     handpick_posts_limit: '8',
     show_marquee_cats: 'true',
+    // Sidebar Ad Settings
+    show_sidebar_ad: 'true',
+    sidebar_ad_title: 'Dua Narasi',
+    sidebar_ad_subtitle: 'Portal Berita & Opini Terpercaya',
+    sidebar_ad_image: '/assets/img/bg/sidebar-ad.webp',
+    sidebar_ad_url: '',
+    sidebar_ad_open_new_tab: 'true',
     social_whatsapp: '',
     social_telegram: '',
     site_url: 'http://localhost:3000',
@@ -227,6 +238,7 @@ export default function DashboardSettings() {
           {/* ================= TAB 1: IDENTITAS SITUS ================= */}
           <TabsContent value="general">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* 1. INFORMASI UMUM */}
               <Card>
                 <CardHeader>
                   <CardTitle icon="fa-info-circle">Identitas & Informasi Umum</CardTitle>
@@ -237,7 +249,7 @@ export default function DashboardSettings() {
                     <div className="dash-form-group" style={{ margin: 0 }}>
                       <Label>Judul Portal / Site Title *</Label>
                       <Input
-                        placeholder="Contoh: Hoom Magazine"
+                        placeholder="Contoh: Dua Narasi"
                         value={settings.site_title || ''}
                         onChange={(e) => setSettings({ ...settings, site_title: e.target.value })}
                         required
@@ -252,19 +264,88 @@ export default function DashboardSettings() {
                         onChange={(e) => setSettings({ ...settings, site_tagline: e.target.value })}
                       />
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-                    <div className="dash-form-group" style={{ gridColumn: '1 / -1', margin: 0 }}>
-                      <ImageUploader
-                        label="Logo / Icon Header Menu & Website"
-                        value={settings.site_logo || ''}
-                        onChange={(val) => setSettings({ ...settings, site_logo: val })}
-                        presetFolder="logo"
-                        presetImages={['logo.webp', 'logo-white.webp', 'favicon.webp']}
-                        maxPreviewHeight={80}
-                      />
-                      <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', marginTop: '4px' }}>
-                        <i className="fa fa-info-circle"></i> Icon yang Anda unggah akan otomatis tampil pada header menu sidebar dashboard dan branding website.
+              {/* 2. PENGATURAN LOGO DINAMIS (HEADER, FOOTER, DASHBOARD) */}
+              <Card>
+                <CardHeader>
+                  <CardTitle icon="fa-picture-o">Pengaturan Logo Dinamis Portal</CardTitle>
+                  <CardDescription>Kelola logo untuk bilah header laman depan (terang & gelap), footer laman depan, serta sidebar panel dashboard.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+                    {/* Logo Header Terang */}
+                    <div style={{ background: 'var(--dash-muted-bg)', padding: '16px', borderRadius: '10px', border: '1px solid var(--dash-border)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '13.5px', marginBottom: '4px', color: 'var(--dash-text-main)' }}>
+                        <i className="fa fa-sun-o" style={{ color: '#f59e0b', marginRight: '6px' }}></i> Logo Header (Mode Terang)
                       </div>
+                      <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', marginBottom: '12px' }}>
+                        Tampil di header utama laman depan saat tema terang/putih.
+                      </div>
+                      <ImageUploader
+                        label="Upload Logo Header Terang"
+                        value={settings.logo_header || settings.site_logo || ''}
+                        onChange={(val) => setSettings({ ...settings, logo_header: val, site_logo: val })}
+                        presetFolder="logo"
+                        presetImages={['logo.webp', 'logo2.webp', 'favicon.webp']}
+                        maxPreviewHeight={60}
+                      />
+                    </div>
+
+                    {/* Logo Header Gelap */}
+                    <div style={{ background: 'var(--dash-muted-bg)', padding: '16px', borderRadius: '10px', border: '1px solid var(--dash-border)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '13.5px', marginBottom: '4px', color: 'var(--dash-text-main)' }}>
+                        <i className="fa fa-moon-o" style={{ color: '#818cf8', marginRight: '6px' }}></i> Logo Header (Mode Gelap)
+                      </div>
+                      <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', marginBottom: '12px' }}>
+                        Tampil saat mode gelap (dark mode) aktif di website.
+                      </div>
+                      <ImageUploader
+                        label="Upload Logo Header Gelap"
+                        value={settings.logo_header_dark || ''}
+                        onChange={(val) => setSettings({ ...settings, logo_header_dark: val })}
+                        presetFolder="logo"
+                        presetImages={['logo-white.webp', 'logo-white2.webp', 'logoredwhite.webp']}
+                        maxPreviewHeight={60}
+                      />
+                    </div>
+
+                    {/* Logo Footer */}
+                    <div style={{ background: 'var(--dash-muted-bg)', padding: '16px', borderRadius: '10px', border: '1px solid var(--dash-border)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '13.5px', marginBottom: '4px', color: 'var(--dash-text-main)' }}>
+                        <i className="fa fa-arrow-down" style={{ color: '#da0105', marginRight: '6px' }}></i> Logo Footer Laman Depan
+                      </div>
+                      <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', marginBottom: '12px' }}>
+                        Tampil pada seksi footer bagian bawah laman depan.
+                      </div>
+                      <ImageUploader
+                        label="Upload Logo Footer"
+                        value={settings.logo_footer || ''}
+                        onChange={(val) => setSettings({ ...settings, logo_footer: val })}
+                        presetFolder="logo"
+                        presetImages={['logoredwhite.webp', 'logo-white.webp', 'logo.webp']}
+                        maxPreviewHeight={60}
+                      />
+                    </div>
+
+                    {/* Logo Dashboard Sidebar */}
+                    <div style={{ background: 'var(--dash-muted-bg)', padding: '16px', borderRadius: '10px', border: '1px solid var(--dash-border)' }}>
+                      <div style={{ fontWeight: 700, fontSize: '13.5px', marginBottom: '4px', color: 'var(--dash-text-main)' }}>
+                        <i className="fa fa-tachometer" style={{ color: '#10b981', marginRight: '6px' }}></i> Logo / Ikon Dashboard Sidebar
+                      </div>
+                      <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', marginBottom: '12px' }}>
+                        Tampil di pojok kiri atas bilah navigasi admin dashboard.
+                      </div>
+                      <ImageUploader
+                        label="Upload Ikon Dashboard"
+                        value={settings.logo_dashboard || ''}
+                        onChange={(val) => setSettings({ ...settings, logo_dashboard: val })}
+                        presetFolder="logo"
+                        presetImages={['favicon.webp', 'favicon2.webp', 'logo.webp']}
+                        maxPreviewHeight={60}
+                      />
                     </div>
                   </div>
                 </CardContent>
@@ -674,6 +755,89 @@ export default function DashboardSettings() {
                           >
                             <option value="latest">Terbaru</option>
                             <option value="views">Paling Banyak Dibaca</option>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* 5. SIDEBAR AD BANNER */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-picture-o">5. Banner Iklan Sidebar (Sidebar Ad)</CardTitle>
+                      <CardDescription>Kelola gambar poster, judul, deskripsi, dan tautan iklan banner pada sidebar website.</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_sidebar_ad !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_sidebar_ad !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_sidebar_ad !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_sidebar_ad: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                {settings.show_sidebar_ad !== 'false' && (
+                  <CardContent>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      {/* Image Uploader for Sidebar Ad */}
+                      <div>
+                        <Label style={{ marginBottom: '8px', display: 'block' }}>Gambar Poster / Banner Iklan</Label>
+                        <ImageUploader
+                          value={settings.sidebar_ad_image || ''}
+                          onChange={(url) => setSettings({ ...settings, sidebar_ad_image: url })}
+                          label="Upload Banner Iklan (Rekomendasi 360x420 atau rasio vertikal)"
+                          presetFolder="bg"
+                          presetImages={['sidebar-ad.webp']}
+                        />
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                        <div className="dash-form-group" style={{ margin: 0 }}>
+                          <Label>Judul Iklan / Brand Title</Label>
+                          <Input
+                            placeholder="Contoh: Dua Narasi"
+                            value={settings.sidebar_ad_title || ''}
+                            onChange={(e) => setSettings({ ...settings, sidebar_ad_title: e.target.value })}
+                          />
+                        </div>
+
+                        <div className="dash-form-group" style={{ margin: 0 }}>
+                          <Label>Deskripsi / Subtitle Iklan</Label>
+                          <Input
+                            placeholder="Contoh: Portal Berita & Opini Terpercaya"
+                            value={settings.sidebar_ad_subtitle || ''}
+                            onChange={(e) => setSettings({ ...settings, sidebar_ad_subtitle: e.target.value })}
+                          />
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                        <div className="dash-form-group" style={{ margin: 0 }}>
+                          <Label>Tautan / Target URL (Opsional)</Label>
+                          <Input
+                            placeholder="https://sponsor.com atau /subscribe"
+                            value={settings.sidebar_ad_url || ''}
+                            onChange={(e) => setSettings({ ...settings, sidebar_ad_url: e.target.value })}
+                          />
+                          <span style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)', marginTop: '4px', display: 'block' }}>
+                            Biarkan kosong jika banner tidak dapat diklik.
+                          </span>
+                        </div>
+
+                        <div className="dash-form-group" style={{ margin: 0 }}>
+                          <Label>Target Pembukaan Tautan</Label>
+                          <Select
+                            value={settings.sidebar_ad_open_new_tab || 'true'}
+                            onChange={(e) => setSettings({ ...settings, sidebar_ad_open_new_tab: e.target.value })}
+                          >
+                            <option value="true">Buka di Tab Baru (_blank)</option>
+                            <option value="false">Buka di Tab yang Sama (_self)</option>
                           </Select>
                         </div>
                       </div>

@@ -519,7 +519,7 @@ html {
   border: 1px solid var(--dash-border);
   border-radius: var(--dash-radius);
   box-shadow: var(--dash-shadow);
-  overflow: hidden;
+  overflow: visible;
   transition: all 0.2s ease;
 }
 

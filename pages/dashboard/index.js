@@ -148,12 +148,12 @@ export default function DashboardOverview() {
               </div>
             </div>
 
-            {/* Illustration */}
-            <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* Illustration with Entrance & Hover Transition */}
+            <div className="dash-illustration-box" style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img
                 src="/illustrations/graphic-designer-workplace-1.png"
                 alt="Editorial illustration"
-                style={{ maxHeight: '150px', width: 'auto', objectFit: 'contain', filter: 'grayscale(1)', opacity: 0.9 }}
+                className="dash-illustration-img"
                 onError={(e) => { e.currentTarget.style.display = 'none' }}
               />
             </div>
@@ -486,6 +486,42 @@ export default function DashboardOverview() {
         </div>
 
       </div>
+      <style jsx>{`
+        .dash-illustration-box {
+          perspective: 1000px;
+        }
+
+        .dash-illustration-img {
+          max-height: 150px;
+          width: auto;
+          object-fit: contain;
+          opacity: 0;
+          filter: grayscale(1);
+          transform: translateY(14px) scale(0.96);
+          animation: illustrationEnter 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+          transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease, filter 0.6s ease;
+          will-change: transform, opacity;
+        }
+
+        .dash-illustration-img:hover {
+          transform: translateY(-4px) scale(1.02);
+          opacity: 1 !important;
+          filter: grayscale(1) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.12));
+        }
+
+        @keyframes illustrationEnter {
+          0% {
+            opacity: 0;
+            transform: translateY(16px) scale(0.94);
+            filter: grayscale(1);
+          }
+          100% {
+            opacity: 0.92;
+            transform: translateY(0) scale(1);
+            filter: grayscale(1);
+          }
+        }
+      `}</style>
     </DashboardLayout>
   )
 }

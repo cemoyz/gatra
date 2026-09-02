@@ -94,6 +94,7 @@ export function Select({
           display: isFullWidth ? 'block' : 'inline-block',
           verticalAlign: 'middle',
           width: style.width || (isFullWidth ? '100%' : 'auto'),
+          zIndex: open ? 1200 : 'auto',
           ...style
         }}
       >
@@ -149,14 +150,14 @@ export function Select({
               right: 0,
               width: '100%',
               minWidth: '100%',
-              maxHeight: '260px',
+              maxHeight: '280px',
               overflowY: 'auto',
               backgroundColor: 'var(--dash-card-bg)',
               border: '1px solid var(--dash-border)',
               borderRadius: '10px',
-              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.15)',
               padding: '4px',
-              zIndex: 1100,
+              zIndex: 1300,
               animation: 'dashFadeSlideUp 0.15s ease forwards',
               boxSizing: 'border-box'
             }}
@@ -228,6 +229,7 @@ export function Select({
           display: style.width === '100%' ? 'block' : 'inline-block',
           verticalAlign: 'middle',
           width: style.width || 'auto',
+          zIndex: open ? 1200 : 'auto',
           ...style
         }}
       >
@@ -315,14 +317,14 @@ export function SelectContent({ children, align = 'start', width, className = ''
         right: 0,
         width: width || '100%',
         minWidth: '100%',
-        maxHeight: '260px',
+        maxHeight: '280px',
         overflowY: 'auto',
         backgroundColor: 'var(--dash-card-bg)',
         border: '1px solid var(--dash-border)',
         borderRadius: '10px',
-        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.15)',
         padding: '4px',
-        zIndex: 1100,
+        zIndex: 1300,
         animation: 'dashFadeSlideUp 0.15s ease forwards',
         boxSizing: 'border-box',
         ...style

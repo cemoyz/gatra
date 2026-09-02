@@ -15,7 +15,12 @@ const defaultSettings = {
   footer_style: '1',
   site_title: 'Dua Narasi',
   site_tagline: 'Portal Berita & Opini Terpercaya',
-  site_logo: '', // uploaded logo/icon image URL
+  site_logo: '/assets/img/logo/logo.webp', // uploaded logo/icon image URL
+  logo_header: '/assets/img/logo/logo.webp',
+  logo_header_dark: '/assets/img/logo/logo-white.webp',
+  logo_footer: '/assets/img/logo/logoredwhite.webp',
+  logo_dashboard: '/assets/img/logo/favicon.webp',
+  site_favicon: '/assets/img/logo/favicon.webp',
   show_author_bio: 'true',
   show_related_posts: 'true',
   show_newsletter: 'true',
@@ -46,6 +51,13 @@ const defaultSettings = {
   handpick_posts_sort: 'latest',
   handpick_posts_limit: '8',
   show_marquee_cats: 'true',
+  // Sidebar Ad Banner Settings
+  show_sidebar_ad: 'true',
+  sidebar_ad_title: 'Dua Narasi',
+  sidebar_ad_subtitle: 'Portal Berita & Opini Terpercaya',
+  sidebar_ad_image: '/assets/img/bg/sidebar-ad.webp',
+  sidebar_ad_url: '',
+  sidebar_ad_open_new_tab: 'true',
   // Master ON/OFF Toggle for Social Media
   show_social_links: 'true',
   // Individual Platform ON/OFF Toggles

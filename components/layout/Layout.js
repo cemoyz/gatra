@@ -26,11 +26,27 @@ import Footer9 from "./footer/Footer9"
 import Footer8 from "./footer/Footer8"
 import Footer7 from "./footer/Footer7"
 
-export default function Layout({ headerStyle, footerStyle, headTitle, breadcrumbTitle, children, rtl }) {
+export default function Layout({ headerStyle, footerStyle, headTitle, breadcrumbTitle, children, rtl, settings: propSettings }) {
     const [scroll, setScroll] = useState(0)
+    const [settings, setSettings] = useState(propSettings || {})
     // Moblile Menu
     const [isMobileMenu, setMobileMenu] = useState(false)
     const handleMobileMenu = () => setMobileMenu(!isMobileMenu)
+
+    useEffect(() => {
+        if (!propSettings) {
+            fetch('/api/settings')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.settings) {
+                        setSettings(data.settings)
+                    }
+                })
+                .catch(console.error)
+        } else {
+            setSettings(propSettings)
+        }
+    }, [propSettings])
 
     useEffect(() => {
         const WOW = require('wowjs')
@@ -58,20 +74,20 @@ export default function Layout({ headerStyle, footerStyle, headTitle, breadcrumb
                 <ThemeSwitch />
                 <BackToTop />
 
-                {!headerStyle && <Header1 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} />}
-                {headerStyle == 1 ? <Header1 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} /> : null}
-                {headerStyle == 2 ? <Header2 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} /> : null}
-                {headerStyle == 3 ? <Header3 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} /> : null}
-                {headerStyle == 4 ? <Header4 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} /> : null}
-                {headerStyle == 5 ? <Header5 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} /> : null}
-                {headerStyle == 6 ? <Header6 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} /> : null}
-                {headerStyle == 7 ? <Header7 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} /> : null}
-                {headerStyle == 8 ? <Header8 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} /> : null}
-                {headerStyle == 9 ? <Header9 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} /> : null}
+                {!headerStyle && <Header1 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} />}
+                {headerStyle == 1 ? <Header1 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
+                {headerStyle == 2 ? <Header2 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
+                {headerStyle == 3 ? <Header3 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
+                {headerStyle == 4 ? <Header4 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
+                {headerStyle == 5 ? <Header5 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
+                {headerStyle == 6 ? <Header6 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
+                {headerStyle == 7 ? <Header7 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
+                {headerStyle == 8 ? <Header8 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
+                {headerStyle == 9 ? <Header9 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
 
                 <div className={`ta-overlay ${isMobileMenu? "is-open":""}`} onClick={handleMobileMenu}/>
 
-                <Sidebar isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu}/>
+                <Sidebar isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings}/>
 
                 <main>
                     {breadcrumbTitle && <Breadcrumb breadcrumbTitle={breadcrumbTitle} />}
@@ -79,19 +95,19 @@ export default function Layout({ headerStyle, footerStyle, headTitle, breadcrumb
                     {children}
                 </main>
 
-                {!footerStyle && < Footer1 />}
-                {footerStyle == 1 ? < Footer1 /> : null}
-                {footerStyle == 2 ? < Footer2 /> : null}
-                {footerStyle == 3 ? < Footer3 /> : null}
-                {footerStyle == 4 ? < Footer4 /> : null}
-                {footerStyle == 5 ? < Footer5 /> : null}
-                {footerStyle == 6 ? < Footer6 /> : null}
-                {footerStyle == 7 ? < Footer7 /> : null}
-                {footerStyle == 8 ? < Footer8 /> : null}
-                {footerStyle == 9 ? < Footer9 /> : null}
-                {footerStyle == 10 ? < Footer10 /> : null}
-                {footerStyle == 11 ? < Footer11 /> : null}
-                {footerStyle == 12 ? < Footer12 /> : null}
+                {!footerStyle && < Footer1 settings={settings} />}
+                {footerStyle == 1 ? < Footer1 settings={settings} /> : null}
+                {footerStyle == 2 ? < Footer2 settings={settings} /> : null}
+                {footerStyle == 3 ? < Footer3 settings={settings} /> : null}
+                {footerStyle == 4 ? < Footer4 settings={settings} /> : null}
+                {footerStyle == 5 ? < Footer5 settings={settings} /> : null}
+                {footerStyle == 6 ? < Footer6 settings={settings} /> : null}
+                {footerStyle == 7 ? < Footer7 settings={settings} /> : null}
+                {footerStyle == 8 ? < Footer8 settings={settings} /> : null}
+                {footerStyle == 9 ? < Footer9 settings={settings} /> : null}
+                {footerStyle == 10 ? < Footer10 settings={settings} /> : null}
+                {footerStyle == 11 ? < Footer11 settings={settings} /> : null}
+                {footerStyle == 12 ? < Footer12 settings={settings} /> : null}
             </div>
 
         </>

@@ -4,7 +4,7 @@ import { Autoplay, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import SocialLinks from "@/components/elements/SocialLinks"
 
-export default function BlogSidebar() {
+export default function BlogSidebar({ settings: initialSettings }) {
     const [categories, setCategories] = useState([])
     const [popularPosts, setPopularPosts] = useState([])
     const [trendingPosts, setTrendingPosts] = useState([])
@@ -12,8 +12,27 @@ export default function BlogSidebar() {
     const [leadAuthor, setLeadAuthor] = useState(null)
     const [email, setEmail] = useState('')
     const [subscribed, setSubscribed] = useState(false)
+    const [settings, setSettings] = useState(initialSettings || {
+        show_sidebar_ad: 'true',
+        sidebar_ad_title: 'Dua Narasi',
+        sidebar_ad_subtitle: 'Portal Berita & Opini Terpercaya',
+        sidebar_ad_image: '/assets/img/bg/sidebar-ad.webp',
+        sidebar_ad_url: '',
+        sidebar_ad_open_new_tab: 'true'
+    })
 
     useEffect(() => {
+        // Fetch settings if not provided
+        if (!initialSettings) {
+            fetch('/api/settings')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.settings) {
+                        setSettings(data.settings)
+                    }
+                })
+                .catch(console.error)
+        }
         // Fetch real categories
         fetch('/api/categories')
             .then(res => res.json())
@@ -454,17 +473,50 @@ export default function BlogSidebar() {
                 </div>
 
                 {/* Ad Banner */}
-                <div className="ta-blog-widget widget mt-60">
-                    <div className="ta-sidebar-ad ta-stroke">
-                        <div className="thumb">
-                            <img src="/assets/img/bg/sidebar-ad.webp" alt="Ad Banner" />
-                        </div>
-                        <div className="content ta-stroke">
-                            <h6 className="title">Hoom Magazine</h6>
-                            <p>Experience fast & scalable publishing with Next.js & Prisma</p>
+                {settings.show_sidebar_ad !== 'false' && (
+                    <div className="ta-blog-widget widget mt-60">
+                        <div className="ta-sidebar-ad ta-stroke" style={{ overflow: 'hidden', position: 'relative' }}>
+                            {settings.sidebar_ad_url ? (
+                                <a
+                                    href={settings.sidebar_ad_url}
+                                    target={settings.sidebar_ad_open_new_tab !== 'false' ? '_blank' : '_self'}
+                                    rel="noopener noreferrer"
+                                    style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}
+                                >
+                                    <div className="thumb">
+                                        <img
+                                            src={settings.sidebar_ad_image || '/assets/img/bg/sidebar-ad.webp'}
+                                            alt={settings.sidebar_ad_title || 'Ad Banner'}
+                                            style={{ width: '100%', height: 'auto', display: 'block' }}
+                                        />
+                                    </div>
+                                    {(settings.sidebar_ad_title || settings.sidebar_ad_subtitle) && (
+                                        <div className="content ta-stroke">
+                                            {settings.sidebar_ad_title && <h6 className="title">{settings.sidebar_ad_title}</h6>}
+                                            {settings.sidebar_ad_subtitle && <p>{settings.sidebar_ad_subtitle}</p>}
+                                        </div>
+                                    )}
+                                </a>
+                            ) : (
+                                <>
+                                    <div className="thumb">
+                                        <img
+                                            src={settings.sidebar_ad_image || '/assets/img/bg/sidebar-ad.webp'}
+                                            alt={settings.sidebar_ad_title || 'Ad Banner'}
+                                            style={{ width: '100%', height: 'auto', display: 'block' }}
+                                        />
+                                    </div>
+                                    {(settings.sidebar_ad_title || settings.sidebar_ad_subtitle) && (
+                                        <div className="content ta-stroke">
+                                            {settings.sidebar_ad_title && <h6 className="title">{settings.sidebar_ad_title}</h6>}
+                                            {settings.sidebar_ad_subtitle && <p>{settings.sidebar_ad_subtitle}</p>}
+                                        </div>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     )

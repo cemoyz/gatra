@@ -2517,22 +2517,9 @@ h6 {
   flex-direction: column;
 }
 .ta-header .ta-logo img {
-  max-width: 120px;
-}
-@media (max-width: 575px) {
-  .ta-header .ta-logo img {
-    max-width: 100px;
-  }
-}
-.ta-header .ta-logo span {
-  display: inline-block;
-  margin-top: 10px;
-  font-size: 14px;
-  color: #999999;
-}
-.ta-header .ta-logo img {
-  max-width: 95px;
-  height: auto;
+  height: 36px;
+  width: auto;
+  object-fit: contain;
 }
 .ta-header__top {
   padding: 12px 0px;
@@ -7207,8 +7194,10 @@ body {
 
 /* Header Logo */
 .ta-header .ta-logo img {
-  max-width: 95px !important;
-  height: auto !important;
+  height: 36px !important;
+  width: auto !important;
+  max-width: none !important;
+  object-fit: contain;
 }
 .ta-header .ta-logo img.hide-on-dark {
   display: none !important;
@@ -7258,6 +7247,10 @@ body {
 }
 
 /* Header Social Media Circular White Buttons */
+.ta-header .ta-social-links {
+  position: relative !important;
+  z-index: 10 !important;
+}
 .ta-header .ta-social-links a {
   width: 36px !important;
   height: 36px !important;
@@ -7276,6 +7269,10 @@ body {
   color: #ffffff !important;
   padding: 0 !important;
   margin: 0 4px !important;
+  position: relative !important;
+  z-index: 10 !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
   transition: all 0.2s ease !important;
 }
 .ta-header .ta-social-links a:hover {
@@ -7289,6 +7286,7 @@ body {
 .ta-header .ta-social-links a i {
   fill: #ffffff !important;
   color: #ffffff !important;
+  pointer-events: none !important;
 }
 
 /* Header Subscribe Button & Mobile Trigger */
@@ -7297,11 +7295,13 @@ body {
   color: #da0105 !important;
   border: none !important;
   font-weight: 700 !important;
-  padding: 6px 18px !important;
+  padding: 0 18px !important;
   font-size: 13px !important;
+  height: 36px !important;
   min-height: 36px !important;
   display: inline-flex !important;
   align-items: center !important;
+  justify-content: center !important;
 }
 .ta-header .ta-header__top__right .ta-button:hover {
   background-color: #262626 !important;
@@ -7388,5 +7388,75 @@ body {
   margin-bottom: 0 !important;
 }
 
+/* Author Social Media Buttons (Sidebar & Author Box) */
+.ta-author-wrapper .ta-social-links,
+.ta-authorinfo-box .ta-social-links,
+.ta-author-info-box .ta-social-links {
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.ta-author-wrapper .ta-social-links a,
+.ta-authorinfo-box .ta-social-links a,
+.ta-author-info-box .ta-social-links a {
+  border: 1.5px solid #0f172a !important;
+  color: #0f172a !important;
+  background: transparent !important;
+}
+
+.ta-author-wrapper .ta-social-links a svg,
+.ta-author-wrapper .ta-social-links a svg path,
+.ta-author-wrapper .ta-social-links a i,
+.ta-authorinfo-box .ta-social-links a svg,
+.ta-authorinfo-box .ta-social-links a svg path,
+.ta-authorinfo-box .ta-social-links a i,
+.ta-author-info-box .ta-social-links a svg,
+.ta-author-info-box .ta-social-links a svg path,
+.ta-author-info-box .ta-social-links a i {
+  fill: #0f172a !important;
+  color: #0f172a !important;
+}
+
+.ta-author-wrapper .ta-social-links a:hover,
+.ta-authorinfo-box .ta-social-links a:hover,
+.ta-author-info-box .ta-social-links a:hover {
+  background: #da0105 !important;
+  border-color: #da0105 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+.ta-author-wrapper .ta-social-links a:hover svg,
+.ta-author-wrapper .ta-social-links a:hover svg path,
+.ta-author-wrapper .ta-social-links a:hover i,
+.ta-authorinfo-box .ta-social-links a:hover svg,
+.ta-authorinfo-box .ta-social-links a:hover svg path,
+.ta-authorinfo-box .ta-social-links a:hover i,
+.ta-author-info-box .ta-social-links a:hover svg,
+.ta-author-info-box .ta-social-links a:hover svg path,
+.ta-author-info-box .ta-social-links a:hover i {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+/* Footer Social Media Buttons */
+.ta-footer .ta-social-links a {
+  border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+  color: #ffffff !important;
+}
+
+.ta-footer .ta-social-links a svg,
+.ta-footer .ta-social-links a i {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+.ta-footer .ta-social-links a:hover {
+  background-color: #da0105 !important;
+  border-color: #da0105 !important;
+  color: #ffffff !important;
+}
+
 /*# sourceMappingURL=main.css.map */
+
 

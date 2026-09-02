@@ -8,11 +8,11 @@ export default function Header4({ scroll,handleMobileMenu }) {
             <header className="ta-header">
                 <div className="ta-header__top">
                     <div className="container">
-                        <div className="row">
-                            <div className="col-md-3 align-self-center d-none d-md-block">
-                                <SocialLinks className="d-flex align-items-center" />
+                        <div className="row align-items-center">
+                            <div className="col-lg-5 col-md-5 align-self-center d-none d-md-flex align-items-center" style={{ position: 'relative', zIndex: 10 }}>
+                                <SocialLinks className="d-flex align-items-center flex-wrap" />
                             </div>
-                            <div className="col-md-6 align-self-center">
+                            <div className="col-lg-2 col-md-2 col-12 align-self-center text-center">
                                 <div className="ta-header__top__center">
                                     <div className="ta-logo">
                                         <Link href="/">
@@ -22,8 +22,8 @@ export default function Header4({ scroll,handleMobileMenu }) {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-md-3 align-self-center d-none d-md-block">
-                                <div className="ta-header__top__right">
+                            <div className="col-lg-5 col-md-5 align-self-center d-none d-md-flex align-items-center justify-content-end" style={{ position: 'relative', zIndex: 10 }}>
+                                <div className="ta-header__top__right justify-content-end">
                                     <Link href="/subscribe" className="ta-button">Subscribe <i className="fa fa-paper-plane" /></Link>
                                 </div>
                             </div>
