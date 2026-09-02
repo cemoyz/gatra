@@ -8,7 +8,9 @@ export default function ImageUploader({
   presetImages = [
     'blog-2-1.webp', 'blog-2-2.webp', 'blog-2-3.webp', 'blog-2-4.webp',
     'blog-2-5.webp', 'blog-2-6.webp', 'blog-2-7.webp', 'blog-2-8.webp'
-  ]
+  ],
+  presetFolder = 'blog',
+  maxPreviewHeight = 120
 }) {
   const [uploading, setUploading] = useState(false)
   const [dragActive, setDragActive] = useState(false)
@@ -106,14 +108,15 @@ export default function ImageUploader({
     <div className="dash-image-uploader-wrapper" onPaste={handlePaste}>
       {label && <label className="dash-form-label">{label}</label>}
 
-      {/* Image Preview Box */}
+      {/* Image Preview Box (Centered & Natural Aspect Ratio) */}
       {previewSrc && (
         <div className="preview-container mb-3">
-          <div className="preview-box position-relative">
+          <div className="preview-box position-relative" style={{ maxHeight: `${maxPreviewHeight}px` }}>
             <img
               src={previewSrc}
               alt="Preview"
               className="preview-img"
+              style={{ maxHeight: `${maxPreviewHeight - 16}px` }}
             />
             <div className="preview-badge">
               {value.startsWith('/uploads') ? (
@@ -220,26 +223,34 @@ export default function ImageUploader({
             <label className="dash-form-label" style={{ fontSize: '12px', color: '#94a3b8' }}>
               Atau Pilih Preset Gambar Tema:
             </label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
-              {presetImages.map((img) => (
-                <img
-                  key={img}
-                  src={`/assets/img/blog/${img}`}
-                  alt={img}
-                  onClick={() => onChange(img)}
-                  style={{
-                    width: '100%',
-                    height: '38px',
-                    objectFit: 'cover',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    border: value === img ? '2px solid #3b82f6' : '1px solid var(--dash-border, #334155)',
-                    opacity: value === img ? 1 : 0.65,
-                    transition: 'all 0.2s ease'
-                  }}
-                  title={img}
-                />
-              ))}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '8px' }}>
+              {presetImages.map((img) => {
+                const fullSrc = img.startsWith('/') ? img : `/assets/img/${presetFolder}/${img}`
+                return (
+                  <img
+                    key={img}
+                    src={fullSrc}
+                    alt={img}
+                    onClick={() => onChange(fullSrc)}
+                    style={{
+                      width: '100%',
+                      height: '42px',
+                      objectFit: 'contain',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      background: 'var(--dash-muted-bg, #f1f5f9)',
+                      border: value === fullSrc || value === img ? '2px solid #3b82f6' : '1px solid var(--dash-border, #e2e8f0)',
+                      opacity: value === fullSrc || value === img ? 1 : 0.75,
+                      padding: '4px',
+                      transition: 'all 0.2s ease'
+                    }}
+                    title={img}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
+                )
+              })}
             </div>
           </div>
         )}
@@ -252,22 +263,32 @@ export default function ImageUploader({
 
         .preview-container {
           width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
         }
 
         .preview-box {
           position: relative;
-          width: 100%;
-          height: 150px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          max-width: 100%;
+          width: auto;
+          min-width: 120px;
+          padding: 8px 16px;
           border-radius: 10px;
           overflow: hidden;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          background: #0f172a;
+          border: 1px solid var(--dash-border, #e2e8f0);
+          background: var(--dash-muted-bg, #f1f5f9);
         }
 
         .preview-img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
+          width: auto;
+          height: auto;
+          max-width: 100%;
+          object-fit: contain;
+          display: block;
         }
 
         .preview-badge {

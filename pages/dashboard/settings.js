@@ -258,7 +258,9 @@ export default function DashboardSettings() {
                         label="Logo / Icon Header Menu & Website"
                         value={settings.site_logo || ''}
                         onChange={(val) => setSettings({ ...settings, site_logo: val })}
-                        presetImages={['logo-1.webp', 'logo-2.webp', 'logo-white.webp']}
+                        presetFolder="logo"
+                        presetImages={['logo.webp', 'logo-white.webp', 'favicon.webp']}
+                        maxPreviewHeight={80}
                       />
                       <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', marginTop: '4px' }}>
                         <i className="fa fa-info-circle"></i> Icon yang Anda unggah akan otomatis tampil pada header menu sidebar dashboard dan branding website.
