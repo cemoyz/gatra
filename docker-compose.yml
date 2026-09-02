@@ -11,11 +11,11 @@ services:
       - "${WEB_PORT:-3005}:3000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@db:5432/duanarasi?schema=public}
-      - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-this}
-      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
-    # env_file:
-    #   - .env
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-duanarasi}?schema=public
+      - JWT_SECRET=${JWT_SECRET:-hoom-magazine-super-secret-jwt-key-2026}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3005}
+      - IMGBB_API_KEY=${IMGBB_API_KEY:-fbe192c84a6e4a523741fb4297724951}
+      - NEXT_PUBLIC_IMGBB_API_KEY=${NEXT_PUBLIC_IMGBB_API_KEY:-fbe192c84a6e4a523741fb4297724951}
     depends_on:
       db:
         condition: service_healthy
@@ -33,8 +33,8 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-duanarasi}"]
+      interval: 3s
       timeout: 5s
       retries: 5
 
