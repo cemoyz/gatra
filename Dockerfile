@@ -7,7 +7,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
-RUN npm ci
+RUN npm ci || npm install --legacy-peer-deps
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
