@@ -309,7 +309,6 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     height: '36px',
                     borderRadius: '8px',
                     background: '#09090b',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12)',
                     display: 'flex',
                     alignItems: 'center',
@@ -339,7 +338,6 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     background: '#09090b',
                     color: '#fff',
                     borderRadius: '8px',
-                    border: '1px solid rgba(0, 0, 0, 0.1)',
                     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12)',
                     flexShrink: 0
                   }}
