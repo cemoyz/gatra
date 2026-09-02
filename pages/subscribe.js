@@ -117,11 +117,11 @@ export default function SubscribePage() {
             <section style={{ padding: '60px 0 80px', background: '#f8fafc' }}>
                 <div className="container">
                     <div className="row g-5">
-                        
+
                         {/* Form Column */}
                         <div className="col-lg-7">
                             <div style={{ background: '#ffffff', borderRadius: '20px', padding: '40px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0' }}>
-                                
+
                                 {submitted ? (
                                     <div style={{ textAlign: 'center', padding: '40px 10px' }}>
                                         <div style={{ width: '70px', height: '70px', borderRadius: '50%', background: '#dcfce7', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', margin: '0 auto 20px' }}>
@@ -137,9 +137,9 @@ export default function SubscribePage() {
                                             <Link href="/" className="ta-button" style={{ textDecoration: 'none' }}>
                                                 <i className="fa fa-home"></i> Kembali ke Beranda
                                             </Link>
-                                            <button 
+                                            <button
                                                 onClick={() => { setSubmitted(false); setEmail(''); setName('') }}
-                                                className="ta-button" 
+                                                className="ta-button"
                                                 style={{ background: '#f1f5f9', color: '#334155', border: '1px solid #cbd5e1' }}
                                             >
                                                 Daftarkan Email Lain
@@ -150,7 +150,7 @@ export default function SubscribePage() {
                                     <form onSubmit={handleSubscribe}>
                                         <div style={{ marginBottom: '24px' }}>
                                             <h3 style={{ fontSize: '22px', fontWeight: 800, color: '#0f172a', marginBottom: '6px' }}>
-                                                Gabung Bersama 45,000+ Pembaca Cerdas
+                                                Gabung Bersama Para Pembaca Cerdas
                                             </h3>
                                             <p style={{ color: '#64748b', fontSize: '14px', margin: 0 }}>
                                                 Pilih topik yang Anda minati dan kami akan sesuaikan isi buletin Anda.
@@ -254,10 +254,10 @@ export default function SubscribePage() {
                                                     alignItems: 'flex-start',
                                                     gap: '10px'
                                                 }}>
-                                                    <input 
-                                                        type="radio" 
-                                                        name="freq" 
-                                                        checked={frequency === 'weekly'} 
+                                                    <input
+                                                        type="radio"
+                                                        name="freq"
+                                                        checked={frequency === 'weekly'}
                                                         onChange={() => setFrequency('weekly')}
                                                         style={{ marginTop: '3px', accentColor: '#da0105' }}
                                                     />
@@ -278,10 +278,10 @@ export default function SubscribePage() {
                                                     alignItems: 'flex-start',
                                                     gap: '10px'
                                                 }}>
-                                                    <input 
-                                                        type="radio" 
-                                                        name="freq" 
-                                                        checked={frequency === 'daily'} 
+                                                    <input
+                                                        type="radio"
+                                                        name="freq"
+                                                        checked={frequency === 'daily'}
                                                         onChange={() => setFrequency('daily')}
                                                         style={{ marginTop: '3px', accentColor: '#da0105' }}
                                                     />
@@ -380,8 +380,8 @@ export default function SubscribePage() {
                                             <div style={{ fontSize: '12px', color: '#94a3b8' }}>Ingin berkontribusi sebagai penulis?</div>
                                             <div style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>Gabung dengan Tim Penulis Kami</div>
                                         </div>
-                                        <Link href="/register" className="ta-button" style={{ padding: '8px 16px', fontSize: '13px', textDecoration: 'none' }}>
-                                            Daftar Akun
+                                        <Link href="/contact" className="ta-button" style={{ padding: '8px 16px', fontSize: '13px', textDecoration: 'none' }}>
+                                            Hubungi Redaksi
                                         </Link>
                                     </div>
                                 </div>

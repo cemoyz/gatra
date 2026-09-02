@@ -28,8 +28,8 @@ export default async function handler(req, res) {
       return res.status(400).json({ success: false, message: 'An account with this email already exists' })
     }
 
-    // Default registered users to SUBSCRIBER or specified role
-    const assignedRole = ['ADMIN', 'EDITOR', 'AUTHOR', 'SUBSCRIBER'].includes(role) ? role : 'SUBSCRIBER'
+    // All public self-registrations are strictly SUBSCRIBER
+    const assignedRole = 'SUBSCRIBER'
 
     const hashedPassword = hashPassword(password)
     const newUser = await prisma.user.create({

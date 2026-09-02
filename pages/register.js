@@ -228,29 +228,23 @@ export default function Register() {
                 </div>
               </div>
 
-              <div style={{ marginBottom: '22px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#cbd5e1', marginBottom: '6px' }}>
-                  Register As / Intended Role
-                </label>
-                <select
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '11px 14px',
-                    background: '#1e293b',
-                    border: '1px solid #334155',
-                    borderRadius: '8px',
-                    color: '#f8fafc',
-                    fontSize: '14px',
-                    outline: 'none',
-                    boxSizing: 'border-box'
-                  }}
-                >
-                  <option value="SUBSCRIBER">Reader / Subscriber</option>
-                  <option value="AUTHOR">Author / Contributor</option>
-                  <option value="EDITOR">Content Editor</option>
-                </select>
+              <div style={{
+                marginBottom: '22px',
+                padding: '14px 16px',
+                background: 'rgba(59, 130, 246, 0.08)',
+                border: '1px solid rgba(59, 130, 246, 0.25)',
+                borderRadius: '8px',
+                fontSize: '13px',
+                color: '#94a3b8',
+                lineHeight: 1.5
+              }}>
+                <div style={{ color: '#38bdf8', fontWeight: 700, marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <i className="fa fa-pencil-square-o"></i> Ingin Berkontribusi Sebagai Penulis?
+                </div>
+                Formulir ini untuk pendaftaran akun Pembaca (Subscriber). Untuk bergabung ke dalam tim penulis resmi Dua Narasi, silakan{' '}
+                <Link href="/contact" style={{ color: '#38bdf8', textDecoration: 'underline', fontWeight: 600 }}>
+                  Hubungi Redaksi Melalui Kontak Kami &rarr;
+                </Link>
               </div>
 
               <button
