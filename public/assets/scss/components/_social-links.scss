@@ -1,0 +1,62 @@
+/* social links css start */
+.ta-social-links {
+    margin-top: -10px;
+    a {
+        margin-top: 10px;
+        border-radius: 50%;
+        border: 2px solid $dark;
+        color: $dark;
+        font-size: 14px;
+        @include d-flex(center, center);
+        width: 40px;
+        height: 40px;
+        &:hover {
+            background: $theme-color;
+            color: $white;
+            border-color: $theme-color;
+        }
+        &:not(:last-child) {
+            margin-right: 10px;
+        }
+        &.fb {
+            background: #3b5998;
+        }
+        &.tw {
+            background: #1da1f2;
+        }
+        &.yt {
+            background: #ff0000;
+        }
+        &.ln {
+            background: #0077b5;
+        }
+    }
+    &__self-bg {
+        a {
+            color: $white;
+            border: none;
+            width: 45px;
+            height: 45px;
+        }
+    }
+    &__big {
+        a {
+            width: 55px;
+            height: 55px;
+            font-size: 16px;
+            border-color: $dark;
+            &:not(:last-child) {
+                margin-right: 15px;
+                @include respond(lg) {
+                    margin-right: 10px;
+                }
+            }
+            @include respond(lg) {
+                width: 45px;
+                height: 45px;
+                font-size: 14px;
+            }
+        }
+    }
+}
+/* social links css end */

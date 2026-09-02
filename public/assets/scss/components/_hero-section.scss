@@ -1,0 +1,162 @@
+/* hero section css start */
+.ta-hero-section {
+	.ta-title {
+		font-size: 55px;
+		font-weight: 700;
+		text-align: center;
+		line-height: 1.2;
+		font-family: $headingfont;
+		@include respond(lg) {
+			font-size: 42px;
+		}
+		@include respond(md) {
+			font-size: 34px;
+		}
+		@include respond(xxs) {
+			font-size: 32px;
+			br {
+				display: none;
+			}
+		}
+		span {
+			position: relative;
+			color: $dark;
+			font-weight: 700;
+			svg {
+				left: 50%;
+				position: absolute;
+				top: 50%;
+				transform: translate(-57%, -45%);
+				width: calc(100% + 35px);
+				z-index: -1;
+				position: absolute;
+				@include respond(lg) {
+					width: calc(100% + 80px);
+				}
+				@include respond(md) {
+					width: calc(100% + 90px);
+				}
+                path {
+                    animation: circlePattern 1.5s linear infinite;
+                }
+			}
+		}
+	}
+}
+.ta-search-wrapper {
+	position: relative;
+	max-width: 600px;
+	margin: 0 auto;
+	margin-top: 55px;
+	input {
+		background: $white;
+		box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.06);
+		padding: 21px 10px;
+		padding-left: 165px;
+		padding-right: 60px;
+		border: none;
+		width: 100%;
+		@include respond(xxs) {
+			font-size: 12px;
+			font-weight: 700;
+			padding-left: 135px;
+		}
+	}
+	.nice-select {
+		position: absolute;
+		left: 10px;
+		top: 2px;
+		background: #fbf6f6;
+		border: none;
+		padding: 0px 20px;
+		max-width: 130px;
+		min-height: 40px;
+		height: 40px;
+		line-height: 40px;
+		top: 50%;
+		z-index: 2;
+		translate: 0px -50%;
+		@include respond(xxs) {
+			max-width: 110px;
+		}
+		.current {
+			font-weight: 700;
+			font-size: 14px;
+			color: $dark;
+			@include respond(xxs) {
+				font-size: 12px;
+				font-weight: 700;
+			}
+		}
+		&::after {
+			right: 20px;
+			width: 6px;
+			height: 6px;
+			border-color: $dark;
+			border-width: 1px;
+		}
+		.list {
+			background: $white;
+			box-shadow: none;
+			.selected {
+				background: #fbf6f6;
+			}
+			li {
+				font-weight: 700;
+				color: $dark;
+				background: transparent;
+				&:hover {
+					background: #fbf6f6;
+				}
+			}
+		}
+	}
+	button {
+		position: absolute;
+		right: 10px;
+		background: $theme-color;
+		color: $white;
+		width: 40px;
+		height: 40px;
+		top: 50%;
+		translate: 0px -50%;
+		@include respond(xxs) {
+			width: 30px;
+			height: 30px;
+			font-size: 12px;
+		}
+	}
+}
+
+.ta-fp-wide-slider {
+	.meta-infos,
+	.ta-round-btn {
+		z-index: 1;
+		position: relative;
+	}
+	.ta-bg {
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		img {
+			width: 100%;
+			transition: 10s;
+			height: 100%;
+			object-fit: cover;
+		}
+		&::before {
+			z-index: 1;
+		}
+	}
+	.active {
+		.ta-bg {
+			img {
+				-webkit-transform: scale(1.2);
+				-moz-transform: scale(1.2);
+				transform: scale(1.2);
+			}
+		}
+	}
+}
+/* hero section css end */

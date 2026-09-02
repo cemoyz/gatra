@@ -1,0 +1,17 @@
+/* brand css start */
+.ta-brand-slider-wrapper {
+    .item {
+        @include d-flex(center, center);
+        min-height: 90px;
+        padding: 20px;
+        box-shadow: 0px 30px 60px 0px rgba(0, 0, 0, 0.04);
+        background: $white;
+        img {
+            width: auto;
+        }
+    }
+    .owl-stage-outer {
+        padding-bottom: 8px;
+    }
+}
+/* brand css end */

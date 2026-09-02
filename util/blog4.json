@@ -1,0 +1,44 @@
+[
+    {
+        "id": 34,
+        "title": "Kennan",
+        "img": "blog-4-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 35,
+        "title": "Abraham",
+        "img": "blog-4-2.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 36,
+        "title": "Minerva",
+        "img": "blog-4-3.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 37,
+        "title": "Onfre",
+        "img": "blog-4-4.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 38,
+        "title": "Benedict",
+        "img": "blog-4-5.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 39,
+        "title": "Martin",
+        "img": "blog-4-6.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    }
+]

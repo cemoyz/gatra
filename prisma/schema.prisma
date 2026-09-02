@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("SUBSCRIBER") // "ADMIN" | "EDITOR" | "AUTHOR" | "SUBSCRIBER"
+  avatar    String?  @default("/assets/img/author/author-1.webp")
+  bio       String?  @db.Text
+  
+  // Relasi balik ke Author (1-to-1)
+  author    Author?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Post {
+  id          Int        @id @default(autoincrement())
+  title       String
+  slug        String?    @unique
+  excerpt     String?    @db.Text
+  content     String?    @db.Text
+  img         String?
+  
+  // Relasi Kategori (Many-to-One)
+  categoryId  Int?
+  category    Category?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  // Relasi Penulis / Author (Many-to-One)
+  authorId    Int?
+  author      Author?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  // Relasi Tag (Many-to-Many)
+  tags        Tag[]      @relation("PostTags")
+
+  // Relasi Komentar (One-to-Many)
+  comments    Comment[]
+
+  views       Int        @default(0)
+  status      String     @default("PUBLISHED") // "PUBLISHED" | "DRAFT"
+  featured    Boolean    @default(false)
+  
+  // Post Types: standard | video | audio | gallery | quote | link | status
+  postType    String     @default("standard")
+  
+  // Format specific fields
+  videoUrl    String?
+  audioUrl    String?
+  quoteText   String?    @db.Text
+  quoteAuthor String?
+  externalUrl String?
+  gallery     String?    @db.Text
+  layout      String?    @default("right-sidebar") // right-sidebar | left-sidebar | no-sidebar | info-right | compact
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("posts")
+}
+
+model Category {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique
+  slug         String   @unique
+  description  String?  @db.Text
+  showInHeader Boolean  @default(true)
+  posts        Post[]
+  createdAt    DateTime @default(now())
+
+  @@map("categories")
+}
+
+model Author {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String?  @unique
+  avatar    String?  @default("/assets/img/author/author-1.webp")
+  bio       String?  @db.Text
+  role      String   @default("Editor") // e.g. "Senior Technology Editor", "Lead Columnist", "Author"
+  
+  // Relasi ke User (1-to-1 opsional)
+  userId    Int?     @unique
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  posts     Post[]
+  createdAt DateTime @default(now())
+
+  @@map("authors")
+}
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  slug      String   @unique
+  posts     Post[]   @relation("PostTags")
+  createdAt DateTime @default(now())
+
+  @@map("tags")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String?
+  content   String   @db.Text
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@map("comments")
+}
+
+model Setting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String @db.Text
+
+  @@map("settings")
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String   @db.Text
+  status    String   @default("UNREAD") // "UNREAD" | "READ" | "REPLIED"
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}

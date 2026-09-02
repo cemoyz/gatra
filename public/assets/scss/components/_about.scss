@@ -1,0 +1,71 @@
+/* about css start */
+.ta-about-section {
+    .thumb {
+        img {
+            width: 100%;
+        }
+    }
+    p {
+        line-height: 26px;
+    }
+    .right-wrapper {
+        @include respond(lg) {
+            margin-top: 50px;
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+    }
+}
+.ta-about-tab {
+    .nav {
+        a {
+            padding: 15px 25px;
+        }
+    }
+}
+
+.ta-about-me-section {
+    .ta-name {
+        font-size: 48px;
+        color: $pera-color;
+        font-weight: 700;
+        font-family: $headingfont;
+        @include respond(lg) {
+            font-size: 36px;
+        }
+        @include respond(xxs) {
+            font-size: 28px;
+        }
+        span {
+            display: inline-block;
+            position: relative;
+            color: $dark;
+        }
+    }
+    .ta-headline {
+        font-size: 24px;
+        font-weight: 600;
+        color: $dark;
+        line-height: 1.4;
+        margin-bottom: 30px;
+        @include respond(lg) {
+            font-size: 20px;
+        }
+    }
+    p {
+        line-height: 26px;
+    }
+    .ta-social-links {
+        margin-top: 35px;
+    }
+    .info-wrapper {
+        @include respond(lg) {
+            padding-left: 40px;
+        }
+        @include respond(md) {
+            padding-left: 0px;
+            padding-top: 40px;
+        }
+    }
+}
+/* about css end */

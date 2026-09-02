@@ -1,0 +1,240 @@
+/* Heder css start*/
+.ta-sticky-header {
+	position: fixed;
+	top: 0;
+	width: 100%;
+    z-index: 10;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    animation-name: ta-fade-top;
+    animation-duration: .4s;
+	padding-top: 0px !important;
+    .menu-area-wrapper {
+        .shape {
+            display: none;
+        }
+    }
+	&.bg-white-on-sticky {
+		background: $white !important;
+	}
+	.bg-white-on-sticky {
+		background: $white !important;
+		border: none;
+	}
+	.ta-stroke {
+		border-color: $dark !important;
+		&::after {
+			display: block !important;
+		}
+	}
+}
+
+.ta-header {
+	position: relative;
+	z-index: 7;
+	&__info {
+		padding: 12px 0px;
+		&.theme-bg {
+			span,
+			a,
+			p {
+				font-size: 14px;
+				color: $white;
+				span {
+					font-weight: 700;
+				}
+				i {
+					margin-right: 8px;
+				}
+			}
+		}
+		.ta-social-links {
+			padding-left: 30px;
+			margin-left: 30px;
+			position: relative;
+			&::after {
+				@include after;
+				background: #e65288;
+				width: 2px;
+				left: 0;
+				top: 50%;
+				height: 13px;
+			}
+			a {
+				width: auto;
+				height: auto;
+				border: none;
+				&:not(:last-child) {
+					margin-right: 20px
+				}
+			}
+		}
+	}
+	.ta-logo {
+		@include d-flex(center, center);
+		flex-direction: column;
+		img {
+			max-width: 120px;
+			@include respond(xxs) {
+				max-width: 100px;
+			}
+		}
+		span {
+			display: inline-block;
+			margin-top: 10px;
+			font-size: 14px;
+			color: #999999;
+		}
+	}
+	&__top {
+		padding: 35px 0px;
+		@include respond(xs) {
+			padding: 25px 0px;
+		}
+		&__right {
+			@include d-flex;
+			justify-content: flex-end;
+			align-items: center;
+		}
+		&--style-2 {
+			padding: 27px 0px;
+		}
+	}
+	&__menuarea {
+		&__right {
+			@include d-flex;
+			justify-content: flex-end;
+			align-items: center;
+			button {
+				color: $dark;
+				margin-right: 5px;
+			}
+		}
+		&.theme-bg {
+			.side-info-trigger {
+				img {
+					filter: brightness(100);
+				}
+			}
+		}
+	}
+	&__style-4 {
+		padding: 15px 0px;
+		@include respond(md) {
+			padding: 0px 0px;
+		}
+		.ta-logo {
+			justify-content: start;
+			flex-direction: row;
+		}
+		.ta-main-menu {
+			padding-left: 30px;
+		}
+		.ta-sticky-header {
+			background: $white;
+		}
+	}
+	&__style-5 {
+		.ta-search {
+			&__light {
+				color: #ee729f;
+				input {
+					&::placeholder {
+						color: #ee729f;
+					}
+				}
+			}
+		}
+	}
+	&__style-10 {
+		.ta-search {
+			&__light {
+				color: #999;
+				input {
+					&::placeholder {
+						color: #999;
+					}
+				}
+			}
+		}
+	}
+	&__style-11 {
+		.ta-sticky-header {
+			background: $white;
+		}
+	}
+}
+
+.side-info-trigger {
+	&__light {
+		img {
+			filter: brightness(100);
+		}
+	}
+	&__dark {
+		img {
+			filter: brightness(0);
+		}
+	}
+}
+
+.ta-search {
+	cursor: pointer;
+	div {
+		position: relative;
+		width: 100%;
+		overflow: hidden;
+	}
+	input {
+		border: none;
+		@include placeholder(#999);
+		text-transform: capitalize;
+		width: 60px;
+		transition: width 0.62s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		background: transparent;
+		color: #999;
+		font-weight: 500;
+		&:focus {
+			width: 80px;
+			&::placeholder {
+				opacity: 0;
+				font-weight: 500;
+			}
+		}
+	}
+	.ta-underline {
+		display: block;
+		width: 100%;
+		height: 2px;
+		position: absolute;
+		left: 26px;
+		bottom: 0px;
+		background-color: currentColor;
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 0.62s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+	&.opened {
+		.ta-underline {
+			transform: scaleX(1);
+		}
+	}
+	&__light {
+		input {
+			color: $white;
+			@include placeholder($white);
+			&::placeholder {
+				opacity: 1;
+				color: $white !important;
+			}
+		}
+		button {
+			color: $white;
+		}
+		.ta-underline {
+			background: $white;
+		}
+	}
+}
+
+/* Heder css end*/

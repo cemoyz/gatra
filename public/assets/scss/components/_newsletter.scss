@@ -1,0 +1,102 @@
+/* newsletter css start */
+.ta-newsletter-wrapper {
+	box-shadow: 0px 40px 80px 0px rgba(0, 0, 0, 0.06);
+	position: relative;
+	background-color: $white;
+	z-index: 2;
+	@include respond(lg) {
+		padding: 80px 60px;
+	}
+	@include respond(xs) {
+		padding: 50px 30px;
+	}
+	.ta-inner-wrapper {
+		@include respond(lg) {
+			padding: 0px;
+		}
+	}
+	.ta-section-heading {
+		img {
+			width: 110px;
+		}
+		.ta-title {
+			@include respond(xxs) {
+				margin-top: 30px;
+				font-size: 24px;
+			}
+		}
+	}
+	p {
+		font-size: 18px;
+		line-height: 28px;
+		@include respond(xs) {
+			font-size: 16px;
+			line-height: 26px;
+		}
+	}
+	.thumb-bg {
+		position: absolute;
+		right: -6%;
+    	top: 5%;
+		z-index: -1;
+		@include respond(lg) {
+			display: none;
+		}
+	}
+	&.dark-bg {
+		background-color: $bg-dark;
+		overflow: hidden;
+		.ta-title {
+			color: $white;
+			font-family: $headingfont;
+		}
+		p {
+			color: $white;
+		}
+		.ta-newsletter-form {
+			input {
+				background: $white;
+			}
+		}
+		.ta-button {
+			background: $theme-color;
+			padding: 19.5px 25px;
+			&:hover {
+				background: $theme-color;
+			}
+		}
+	}
+}
+.ta-newsletter-form {
+	div {
+		position: relative;
+		.ta-button {
+			position: absolute;
+			right: 0;
+			top: 0;
+			padding: 19px 25px;
+			@include respond(xxs) {
+				position: static;
+				margin-top: 20px;
+			}
+		}
+		input {
+			padding-left: 48px;
+			padding-right: 145px;
+			@include respond(xxs) {
+				padding-right: 25px;
+			}
+		}
+		.fa-envelope-open {
+			position: absolute;
+			left: 25px;
+			top: 49%;
+			translate: 0px -50%;
+			@include respond(xxs) {
+				top: 17px;
+				translate: 0 0;
+			}
+		}
+	}
+}
+/* newsletter css end */

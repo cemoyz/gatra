@@ -1,0 +1,84 @@
+.ta-breadcrumb {
+    ul {
+        flex-wrap: wrap;
+        margin-top: -10px;
+        li {
+            position: relative;
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: capitalize;
+            font-weight: 700;
+            margin-top: 10px;
+            line-height: 1.5;
+            &:not(:last-child) {
+                margin-right: 43px;
+                &::after {
+                    @include after;
+                    height: auto;
+                    width: auto;
+                    top: 50%;
+                    right: -25px;
+                    left: auto;
+                    font-family: "Font Awesome 5 Pro";
+                    content: "\f178";
+                    translate: 0px -50%;
+                    color: $theme-color;
+                    font-weight: 400;
+                }
+            }
+            a {
+                text-decoration: none;
+                span {
+                    font-family: $headingfont;
+                    color: $dark;
+                    font-weight: 700;
+                }
+            }
+            span {
+                font-family: $headingfont;
+                color: $dark;
+            }
+            &.duxinbcrumb-end {
+                position: relative;
+                span {
+                    color: $theme-color;
+                    position: relative;
+                    display: inline;
+                    background-image: -webkit-gradient(
+                        linear,
+                        left top,
+                        right top,
+                        from(currentColor),
+                        to(currentColor)
+                    );
+                    background-image: -webkit-linear-gradient(
+                        left,
+                        currentColor 0%,
+                        currentColor 100%
+                    );
+                    background-image: -o-linear-gradient(
+                        left,
+                        currentColor 0%,
+                        currentColor 100%
+                    );
+                    background-image: linear-gradient(
+                        to right,
+                        currentColor 0%,
+                        currentColor 100%
+                    );
+                    background-size: 100% 1px;
+                    background-position: 0px 95%;
+                    -webkit-transition: background-size 0.25s
+                        cubic-bezier(0.785, 0.135, 0.15, 0.86) 0s;
+                    -o-transition: background-size 0.25s
+                        cubic-bezier(0.785, 0.135, 0.15, 0.86) 0s;
+                    transition: background-size 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86)
+                        0s;
+                    padding: 0.7% 0px;
+                    background-repeat: no-repeat;
+                    color: inherit;
+                }
+            }
+        }
+    }
+}

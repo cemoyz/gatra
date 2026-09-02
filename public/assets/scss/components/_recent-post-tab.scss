@@ -1,0 +1,28 @@
+.ta-rcp-filters {
+    gap: 20px;
+    flex-wrap: wrap;
+    @include respond(xxs) {
+        gap: 15px;
+    }
+    li {
+        background: $white;
+        padding: 13px 22px;
+        color: $dark;
+        font-weight: 700;
+        @include transition(.4s);
+        cursor: pointer;
+        font-family: $headingfont;
+        border: 2px solid $dark;
+        span {
+            color: $theme-color;
+        }
+        &.active,
+        &:hover {
+            background: $dark;
+            color: $white;
+        }
+        @include respond(xxs) {
+            font-size: 14px;
+        }
+    }
+}

@@ -1,0 +1,86 @@
+[
+    {
+        "id": 1,
+        "title": "Building Better UI Designs With Layout Grids",
+        "img": "blog-2-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 2,
+        "title": "Taking The Stress Out Of Design System Management",
+        "img": "blog-2-2.webp",
+        "category": "video",
+        "author": "Alexis D."
+    },
+    {
+        "id": 3,
+        "title": "Taking The Stress Out Of Design System Management",
+        "img": "blog-2-3.webp",
+        "category": "nature",
+        "author": "Alexis D."
+    },
+    {
+        "id": 4,
+        "title": "Boosting Productivity For Designers With Efficient Tools",
+        "img": "blog-2-4.webp",
+        "category": "discover",
+        "author": "Alexis D."
+    },
+    {
+        "id": 5,
+        "title": "Understanding Privacy: Protect Your Users, Protect Yourself",
+        "img": "blog-2-5.webp",
+        "category": "travel",
+        "author": "Alexis D."
+    },
+    {
+        "id": 6,
+        "title": "The Future Of Design: Human Powered Or AI-Driven?",
+        "img": "blog-2-6.webp",
+        "category": "science",
+        "author": "Alexis D."
+    },
+    {
+        "id": 7,
+        "title": "Advent Calendars For Web Designer And Developers",
+        "img": "blog-2-7.webp",
+        "category": "marketing",
+        "author": "Alexis D."
+    },
+    {
+        "id": 8,
+        "title": "The Anatomy Of Themed Design System Components",
+        "img": "blog-2-8.webp",
+        "category": "podcast",
+        "author": "Alexis D."
+    },
+    {
+        "id": 9,
+        "title": "Roxie",
+        "img": "blog-2-9.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 10,
+        "title": "Wendel",
+        "img": "blog-2-10.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 11,
+        "title": "Jewelle",
+        "img": "blog-2-11.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 12,
+        "title": "Kathy",
+        "img": "blog-2-12.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    }
+]

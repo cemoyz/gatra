@@ -1,0 +1,56 @@
+/* PAGINATION CSS START */
+.ta-pagination {
+    ul {
+        list-style: none;
+        padding: 0px !important;
+        margin-bottom: 0px;
+        @include d-flex;
+        align-items: center;
+        margin-bottom: 0px !important;
+        li {
+            @include d-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            @include transition(.3s);
+            &:hover {
+                border-color: transparent;
+            }
+            &:not(:last-child) {
+                margin-right: 10px;
+            }
+            span,
+            a {
+                width: 50px;
+                height: 50px;
+                @include d-flex;
+                justify-content: center;
+                align-items: center;
+                color: $pera-color;
+                font-size: 15px;
+                font-weight: 700;
+                background: $white;
+                border: 2px solid $dark;
+                @include respond(xxs) {
+                    height: 38px;
+                    width: 38px;
+                }
+                &:hover {
+                    color: $white;
+                    background: $dark;
+                }
+            }
+            .current {
+                color: $white;
+                background: $dark;
+            }
+            .ta-loadmore-btn {
+                width: auto;
+                @include respond(xxs) {
+                    min-height: 38px;
+                }
+            }
+        }
+    }
+}
+/* PAGINATION CSS END */

@@ -1,0 +1,193 @@
+import prisma from '@/lib/prisma'
+import { sendDashboardEvent } from '@/lib/events'
+
+// In-memory de-duplication cache with 5s cooldown per IP+Post to prevent React StrictMode double mounts
+const recentViewsCache = new Map()
+
+export default async function handler(req, res) {
+  const { id } = req.query
+  const postId = parseInt(id)
+
+  if (isNaN(postId)) {
+    return res.status(400).json({ success: false, message: 'Invalid post ID' })
+  }
+
+  // GET single post with relations and increment view counter
+  if (req.method === 'GET') {
+    try {
+      const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1'
+      const viewKey = `${clientIp}_${postId}`
+      const now = Date.now()
+      const lastViewTime = recentViewsCache.get(viewKey)
+      const shouldIncrement = !lastViewTime || (now - lastViewTime > 5000)
+
+      let post
+      if (shouldIncrement) {
+        recentViewsCache.set(viewKey, now)
+        if (recentViewsCache.size > 2000) recentViewsCache.clear()
+
+        // 1. Increment post views atomically in PostgreSQL
+        post = await prisma.post.update({
+          where: { id: postId },
+          data: { views: { increment: 1 } },
+          include: {
+            category: true,
+            author: true,
+            tags: true,
+            comments: {
+              orderBy: { createdAt: 'desc' }
+            }
+          }
+        }).catch(async () => null)
+
+        // 2. Detect device type from User-Agent and increment daily tracking
+        const userAgent = req.headers['user-agent'] || ''
+        const isMobile = /mobile|android|iphone|ipad|ipod|blackberry|opera mini|iemobile|silk|kindle/i.test(userAgent)
+        const todayStr = new Date().toISOString().slice(0, 10)
+        const dailyTotalKey = `daily_views_${todayStr}`
+        const deviceKey = isMobile ? `daily_mobile_${todayStr}` : `daily_desktop_${todayStr}`
+
+        // Increment daily total
+        prisma.setting.upsert({
+          where: { key: dailyTotalKey },
+          update: { value: String((parseInt((await prisma.setting.findUnique({ where: { key: dailyTotalKey } }))?.value || '0')) + 1) },
+          create: { key: dailyTotalKey, value: '1' }
+        }).catch(() => {})
+
+        // Increment device specific count (desktop vs mobile)
+        prisma.setting.upsert({
+          where: { key: deviceKey },
+          update: { value: String((parseInt((await prisma.setting.findUnique({ where: { key: deviceKey } }))?.value || '0')) + 1) },
+          create: { key: deviceKey, value: '1' }
+        }).catch(() => {})
+
+        // 3. Emit SSE Event to all connected dashboard sessions
+        sendDashboardEvent('view_incremented', { postId, isMobile })
+      }
+
+      if (!post) {
+        post = await prisma.post.findUnique({
+          where: { id: postId },
+          include: {
+            category: true,
+            author: true,
+            tags: true,
+            comments: {
+              orderBy: { createdAt: 'desc' }
+            }
+          }
+        })
+      }
+
+      if (!post) {
+        return res.status(404).json({ success: false, message: 'Post not found' })
+      }
+
+      const formattedPost = {
+        ...post,
+        category: post.category?.name || 'General',
+        categorySlug: post.category?.slug || 'general',
+        author: post.author?.name || 'Admin',
+        authorAvatar: post.author?.avatar || '/assets/img/author/author-1.webp'
+      }
+
+      return res.status(200).json({ success: true, post: formattedPost })
+    } catch (error) {
+      console.error('Error fetching post with relations:', error)
+      return res.status(500).json({ success: false, message: error.message })
+    }
+  }
+
+  // PUT update post
+  if (req.method === 'PUT') {
+    try {
+      const {
+        title,
+        slug,
+        excerpt,
+        content,
+        img,
+        categoryId,
+        authorId,
+        tags,
+        status,
+        featured,
+        views,
+        postType,
+        videoUrl,
+        audioUrl,
+        quoteText,
+        quoteAuthor,
+        externalUrl,
+        gallery,
+        layout
+      } = req.body
+
+      const updateData = {}
+      if (title !== undefined) updateData.title = title
+      if (slug !== undefined) updateData.slug = slug
+      if (excerpt !== undefined) updateData.excerpt = excerpt
+      if (content !== undefined) updateData.content = content
+      if (img !== undefined) updateData.img = img
+      if (categoryId !== undefined) updateData.categoryId = categoryId ? parseInt(categoryId) : null
+      if (authorId !== undefined) updateData.authorId = authorId ? parseInt(authorId) : null
+      if (status !== undefined) updateData.status = status
+      if (featured !== undefined) updateData.featured = Boolean(featured)
+      if (views !== undefined) updateData.views = parseInt(views)
+      if (postType !== undefined) updateData.postType = postType
+      if (videoUrl !== undefined) updateData.videoUrl = videoUrl
+      if (audioUrl !== undefined) updateData.audioUrl = audioUrl
+      if (quoteText !== undefined) updateData.quoteText = quoteText
+      if (quoteAuthor !== undefined) updateData.quoteAuthor = quoteAuthor
+      if (externalUrl !== undefined) updateData.externalUrl = externalUrl
+      if (gallery !== undefined) updateData.gallery = gallery
+      if (layout !== undefined) updateData.layout = layout
+
+      if (Array.isArray(tags)) {
+        updateData.tags = {
+          set: [],
+          connectOrCreate: tags.map(tagName => {
+            const cleanName = typeof tagName === 'string' ? tagName.trim() : tagName.name
+            const cleanSlug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+            return {
+              where: { slug: cleanSlug },
+              create: { name: cleanName, slug: cleanSlug }
+            }
+          })
+        }
+      }
+
+      const updatedPost = await prisma.post.update({
+        where: { id: postId },
+        data: updateData,
+        include: {
+          category: true,
+          author: true,
+          tags: true,
+          comments: true
+        }
+      })
+
+      return res.status(200).json({ success: true, post: updatedPost })
+    } catch (error) {
+      console.error('Error updating post with relations:', error)
+      return res.status(500).json({ success: false, message: error.message || 'Failed to update post' })
+    }
+  }
+
+  // DELETE post
+  if (req.method === 'DELETE') {
+    try {
+      await prisma.post.delete({
+        where: { id: postId }
+      })
+
+      return res.status(200).json({ success: true, message: 'Post deleted successfully' })
+    } catch (error) {
+      console.error('Error deleting post:', error)
+      return res.status(500).json({ success: false, message: error.message || 'Failed to delete post' })
+    }
+  }
+
+  return res.status(405).json({ message: 'Method Not Allowed' })
+}

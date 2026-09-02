@@ -1,0 +1,16 @@
+/* Insta feed css start */
+.single-insta-feed {
+    a {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        display: block;
+    }
+    &.ta-stroke {
+        &::before {
+            z-index: 1;
+        }
+    }
+}
+/* Insta feed css end */

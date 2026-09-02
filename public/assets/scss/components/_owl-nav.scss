@@ -1,0 +1,61 @@
+/* owl nav css start */
+.ta-owl-nav {
+	.owl-nav {
+		@include d-flex;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+		div {
+			font-size: 16px;
+			color: $dark;
+			@include transition(0.4s);
+			@include d-flex;
+			align-items: center;
+			justify-content: center;
+			width: 45px;
+			height: 45px;
+			cursor: pointer;
+			background: $white;
+			border: 2px solid $dark;
+			&:hover {
+				color: $white;
+				background: $dark;
+				border-color: $dark;
+			}
+		}
+	}
+	&__top-right {
+		.owl-nav {
+			position: absolute;
+			right: 0;
+			top: -115px;
+			width: 100%;
+            justify-content: flex-end;
+			@include respond(xs) {
+				position: static;
+				justify-content: center;
+				margin-top: 30px;
+			}
+		}
+		&--top-60 {
+			.owl-nav {
+				top: -100px;
+			}
+		}
+	}
+	&__middle {
+		.owl-nav {
+			div {
+				left: 30px;
+				position: absolute;
+				top: 50%;
+				translate: 0px -50%;
+			}
+			.owl-next {
+				left: auto;
+				right: 30px;
+			}
+		}
+	}
+}
+/* owl nav css end */

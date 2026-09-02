@@ -1,0 +1,183 @@
+.ta-author-info-box-wrapper {
+    background-color: $white;
+    padding-top: 50px;
+    padding-left: 80px;
+    @include respond(md) {
+        padding: 50px;
+        margin-top: 30px;
+    }
+    @include respond(xxs) {
+        padding: 30px;
+    }
+    .shape {
+        &__1 {
+            left: -90px;
+            bottom: 170px;
+            @include respond(md) {
+                bottom: auto;
+                top: 170px;
+            }
+        }
+        &__2 {
+            left: 49%;
+            bottom: 40px;
+            @include respond(md) {
+                bottom: auto;
+                top: 40px;
+            }
+        }
+        &__3 {
+            right: 0;
+            bottom: 90px;
+            @include respond(md) {
+                bottom: auto;
+                top: 90px;
+            }
+        }
+        &__4 {
+            right: -30px;
+            bottom: -30px;
+            z-index: -1;
+            @include respond(md) {
+                bottom: auto;
+                top: -30px;
+            }
+        }
+    }
+}
+
+.ta-author-info-box {
+    .ta-name {
+        font-size: 48px;
+        color: $pera-color;
+        font-weight: 700;
+        font-family: $headingfont;
+        @include respond(lg) {
+            font-size: 36px;
+        }
+        @include respond(xxs) {
+            font-size: 30px;
+        }
+        span {
+            display: inline-block;
+            position: relative;
+            color: $dark;
+            &::after {
+                @include after;
+                height: 2px;
+                background: $dark;
+                bottom: 8px;
+                top: auto;
+                @include respond(xxs) {
+                    bottom: 5px;
+                }
+            }
+        }
+    }
+    .ta-content {
+        padding-top: 45px;
+        position: relative;
+        z-index: 2;
+        p {
+            font-size: 24px;
+            font-weight: 600;
+            color: $dark;
+            line-height: 1.5;
+            @include respond(lg) {
+                font-size: 18px;
+            }
+            @include respond(xxs) {
+                font-size: 16px;
+            }
+        }
+    }
+    .ta-social-links {
+        margin-top: 45px;
+        @include respond(lg) {
+            margin-top: 30px;
+        }
+        a {
+            width: 55px;
+            height: 55px;
+            font-size: 16px;
+            &:not(:last-child) {
+                margin-right: 15px;
+                @include respond(lg) {
+                    margin-right: 10px;
+                }
+            }
+            @include respond(lg) {
+                width: 45px;
+                height: 45px;
+                font-size: 14px;
+            }
+        }
+    }
+    .ta-thumb {
+        position: relative;
+        z-index: 2;
+    }
+}
+.ta-authorinfo-box {
+    .thumb {
+        border-radius: 50%;
+        max-width: 200px;
+        position: relative;
+        max-height: 200px;
+        img {
+            translate: 0px -13px;
+            max-height: 215px;
+            max-width: 180px;
+        }
+        &::after {
+            @include after;
+            border-radius: 50%;
+            background: #f2f2f7;
+            z-index: -1;
+            width: 200px;
+            height: 200px;
+        }
+    }
+    .name {
+        font-size: 36px;
+        font-weight: 700;
+    }
+    p {
+        font-size: 18px;
+        line-height: 1.5;
+        @include respond(lg) {
+            br {
+                display: none;
+            }
+        }
+    }
+    .ta-buttons {
+        @include d-flex(center, center);
+        gap: 25px;
+        a {
+            padding: 14px 30px
+        }
+    }
+}
+.search-info-wrapper {
+    @include d-flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+    button {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 2px solid $dark;
+        font-size: 14px;
+        @include d-flex(center, center);
+    }
+    img {
+        width: 15px;
+        filter: brightness(100);
+    }
+    .side-info-trigger {
+        border-color: $theme-color;
+        background: $theme-color;
+    }
+}

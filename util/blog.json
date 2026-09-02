@@ -1,0 +1,702 @@
+[
+    {
+        "id": 1,
+        "title": "Building Better UI Designs With Layout Grids",
+        "img": "blog-2-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 2,
+        "title": "Taking The Stress Out Of Design System Management",
+        "img": "blog-2-2.webp",
+        "category": "video",
+        "author": "Alexis D."
+    },
+    {
+        "id": 3,
+        "title": "Taking The Stress Out Of Design System Management",
+        "img": "blog-2-3.webp",
+        "category": "nature",
+        "author": "Alexis D."
+    },
+    {
+        "id": 4,
+        "title": "Boosting Productivity For Designers With Efficient Tools",
+        "img": "blog-2-4.webp",
+        "category": "discover",
+        "author": "Alexis D."
+    },
+    {
+        "id": 5,
+        "title": "Understanding Privacy: Protect Your Users, Protect Yourself",
+        "img": "blog-2-5.webp",
+        "category": "travel",
+        "author": "Alexis D."
+    },
+    {
+        "id": 6,
+        "title": "The Future Of Design: Human Powered Or AI-Driven?",
+        "img": "blog-2-6.webp",
+        "category": "science",
+        "author": "Alexis D."
+    },
+    {
+        "id": 7,
+        "title": "Advent Calendars For Web Designer And Developers",
+        "img": "blog-2-7.webp",
+        "category": "marketing",
+        "author": "Alexis D."
+    },
+    {
+        "id": 8,
+        "title": "The Anatomy Of Themed Design System Components",
+        "img": "blog-2-8.webp",
+        "category": "podcast",
+        "author": "Alexis D."
+    },
+    {
+        "id": 9,
+        "title": "Roxie",
+        "img": "blog-2-9.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 10,
+        "title": "Wendel",
+        "img": "blog-2-10.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 11,
+        "title": "Jewelle",
+        "img": "blog-2-11.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 12,
+        "title": "Kathy",
+        "img": "blog-2-12.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 13,
+        "title": "Own handsome delicate its",
+        "img": "blog-6-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 14,
+        "title": "How To Prioritize User Security",
+        "img": "blog-6-2.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 15,
+        "title": "Understanding Privacy: Protect You",
+        "img": "blog-6-3.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 16,
+        "title": "Accessible Front-End Patterns",
+        "img": "blog-6-4.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 17,
+        "title": "A Guide To Attracting Clients For Agency",
+        "img": "blog-6-5.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 18,
+        "title": "How To Price Projects Scope Creep",
+        "img": "blog-6-6.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 19,
+        "title": "How To Hire For Digital Roles",
+        "img": "blog-6-7.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 20,
+        "title": "A Complete Guide To App Marketing",
+        "img": "blog-6-8.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 21,
+        "title": "A Five-Step Approach To The Metaverse",
+        "img": "blog-6-9.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 22,
+        "title": "Lessons Learned As A Designer-Founder",
+        "img": "blog-6-10.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 23,
+        "title": "A Roadmap For Building A Business Chatbot",
+        "img": "blog-6-11.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 24,
+        "title": "How To Search For A Developer Job Abroad",
+        "img": "blog-6-12.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 25,
+        "title": "Job",
+        "img": "blog-6-13.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 26,
+        "title": "Dody",
+        "img": "blog-6-14.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 27,
+        "title": "Carol-jean",
+        "img": "blog-6-15.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 28,
+        "title": "Walden",
+        "img": "blog-6-16.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 29,
+        "title": "Sisely",
+        "img": "blog-6-17.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 30,
+        "title": "Mic",
+        "img": "blog-6-18.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 31,
+        "title": "Stanly",
+        "img": "blog-6-19.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 32,
+        "title": "Own handsome delicate its property mistress...",
+        "img": "blog-fp-big-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 33,
+        "title": "Own handsome delicate its property mistress...",
+        "img": "blog-fp-big-2.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 34,
+        "title": "Kennan",
+        "img": "blog-4-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 35,
+        "title": "Abraham",
+        "img": "blog-4-2.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 36,
+        "title": "Minerva",
+        "img": "blog-4-3.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 37,
+        "title": "Onfre",
+        "img": "blog-4-4.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 38,
+        "title": "Benedict",
+        "img": "blog-4-5.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 39,
+        "title": "Martin",
+        "img": "blog-4-6.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 40,
+        "title": "Indulgence unreserved is the alteration...",
+        "img": "blog-7.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 41,
+        "title": "Transparency is part of the fabric...",
+        "img": "blog-8.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 42,
+        "title": "It used to be the norm that businesses...",
+        "img": "blog-9.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 43,
+        "title": "Companies can be transparent with...",
+        "img": "blog-10.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 44,
+        "title": "I will share some tactics for improving...",
+        "img": "blog-11.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 45,
+        "title": "I will share some tactics for improving...",
+        "img": "blog-12.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 46,
+        "title": "FabUnit: The Smart Way To Control Synchronize",
+        "img": "blog-gallery-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 47,
+        "title": "FabUnit: The Smart Way To Control Synchronize",
+        "img": "blog-gallery-2.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 48,
+        "title": "FabUnit: The Smart Way To Control Synchronize",
+        "img": "blog-gallery-3.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 49,
+        "title": "FabUnit: The Smart Way To Control Synchronize",
+        "img": "blog-gallery-4.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 50,
+        "title": "Fluid Typography: Predicting A Problem With",
+        "img": "blog-big-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 51,
+        "title": "Fluid Typography: Predicting A Problem With",
+        "img": "blog-big-2.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 52,
+        "title": "Fluid Typography: Predicting A Problem With",
+        "img": "blog-big-3.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 53,
+        "title": "Indulgence unreserved is the alteration...",
+        "img": "Garms",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 54,
+        "title": "Under the cloudy shades of perfection...",
+        "img": "Konert",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 55,
+        "title": "Hustling to Mount Blanc’s peak...",
+        "img": "Baldam",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 56,
+        "title": "Cornwall, devon & dancing...",
+        "img": "Weben",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 57,
+        "title": "Indulgence unreserved is the alteration...",
+        "img": "Fulker",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 58,
+        "title": "Indulgence unreserved is the alteration...",
+        "img": "blog-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 59,
+        "title": "I will share some tactics for improving...",
+        "img": "blog-2.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 60,
+        "title": "I will share some tactics for improving...",
+        "img": "blog-3.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 61,
+        "title": "Gerladina",
+        "img": "blog-4.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 62,
+        "title": "Building Better UI Designs With Layout Grids",
+        "img": "blog-5-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 63,
+        "title": "Taking The Stress Out Of Design System Management",
+        "img": "blog-5-2.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 64,
+        "title": "Taking The Stress Out Of Design System Management",
+        "img": "blog-5-3.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 65,
+        "title": "Boosting Productivity For Designers With Efficient Tools",
+        "img": "blog-2-3.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 66,
+        "title": "Understanding Privacy: Protect Your Users, Protect Yourself",
+        "img": "blog-5-5.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 67,
+        "title": "The Future Of Design: Human Powered Or AI-Driven?",
+        "img": "blog-5-6.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 68,
+        "title": "Koenraad",
+        "img": "Stansell",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 69,
+        "title": "Upton",
+        "img": "Brevetor",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 70,
+        "title": "Wes",
+        "img": "Crich",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 71,
+        "title": "Felike",
+        "img": "Willgress",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 72,
+        "title": "Lita",
+        "img": "Filyashin",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 73,
+        "title": "Ruthanne",
+        "img": "Frascone",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 74,
+        "title": "Peggi",
+        "img": "Mobbs",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 75,
+        "title": "Kayle",
+        "img": "Caudrelier",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 76,
+        "title": "Jacinta",
+        "img": "Casse",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 77,
+        "title": "Bev",
+        "img": "Ellse",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 78,
+        "title": "Skipton",
+        "img": "Wraggs",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 79,
+        "title": "Wendi",
+        "img": "Winkett",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 80,
+        "title": "Marci",
+        "img": "Yurtsev",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 81,
+        "title": "Darryl",
+        "img": "Jess",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 82,
+        "title": "Sheelah",
+        "img": "Rablan",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 83,
+        "title": "Karol",
+        "img": "Ditzel",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 84,
+        "title": "Waiter",
+        "img": "Remington",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 85,
+        "title": "Ximenez",
+        "img": "Wigglesworth",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 86,
+        "title": "Alleyn",
+        "img": "Cotterill",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 87,
+        "title": "Tabbie",
+        "img": "Clitsome",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 88,
+        "title": "Tiffi",
+        "img": "Chevalier",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 89,
+        "title": "Olva",
+        "img": "Millichap",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 90,
+        "title": "Lethia",
+        "img": "Boribal",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 91,
+        "title": "Brenna",
+        "img": "Craster",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 92,
+        "title": "Toddy",
+        "img": "O'Hederscoll",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 93,
+        "title": "Karlens",
+        "img": "Spellacy",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 94,
+        "title": "Artie",
+        "img": "Loade",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 95,
+        "title": "Winslow",
+        "img": "Kilgour",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 96,
+        "title": "Orland",
+        "img": "Vinton",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 97,
+        "title": "Sukey",
+        "img": "Chace",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 98,
+        "title": "Ramsay",
+        "img": "Peel",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 99,
+        "title": "Silvain",
+        "img": "Kopmann",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 100,
+        "title": "Olin",
+        "img": "Dehn",
+        "category": "photo",
+        "author": "Alexis D."
+    }
+]

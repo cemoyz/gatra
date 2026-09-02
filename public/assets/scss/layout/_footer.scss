@@ -1,0 +1,237 @@
+/* Footer css start */
+.ta-footer {
+    position: relative;
+    .gd-shape {
+        opacity: 1;
+        bottom: 0;
+        top: auto;
+    }
+    &.ta-dark-mode {
+        background: $bg-dark;
+        .ta-footer-widget {
+            .title,
+            .widget-title {
+                color: $white;
+                font-family: $headingfont;
+            }
+            ul {
+                li {
+                    a {
+                        color: #bfbfbf;
+                        &:hover {
+                            color: $theme-color;
+                        }
+                    }
+                }
+            }
+        }
+        .ta-bottom-wrapper {
+            background: $theme-color;
+            span,
+            p {
+                color: $white;
+            }
+            a {
+                color: $white;
+                &:hover {
+                    color: $theme-color;
+                }
+            }
+            &.ta-stroke {
+                &::before,
+                &::after {
+                    display: none;
+                }
+            }
+        }
+        .pb-6 {
+            padding-bottom: 0px;
+        }
+    }
+    &__bottom {
+        p {
+            color: $dark;
+        }
+    }
+}
+.ta-footer-widget {
+    .pr-50 {
+        @include respond(md) {
+            padding-right: 0px;
+        }
+    }
+    .widget-title {
+        font-size: 20px;
+        margin-bottom: 35px;
+        font-weight: 700;
+    }
+    ul {
+        padding: 0px;
+        margin: 0px;
+        list-style: none;
+        li {
+            &:not(:last-child) {
+                margin-bottom: 20px;
+            }
+            a {
+                color: $dark;
+                position: relative;
+                font-weight: 500;
+                &::before {
+					@include after;
+					height: 1px;
+					background: $theme-color;
+					top: auto;
+					bottom: 4px;
+					transform: scaleX(0);
+					transform-origin: left;
+					transition: transform 0.62s
+						cubic-bezier(0.25, 0.46, 0.45, 0.94);
+				}
+                &:hover {
+                    color: $theme-color;
+                    &::before {
+                        transform: scaleX(1);
+                    }
+                }
+            }
+        }
+    }
+    .insta-gallery {
+        @include d-flex;
+        gap: 15px;
+        .item {
+            width: calc(100% / 3 - 10px);
+        }
+        img {
+            width: 100%;
+        }
+    }
+    .title {
+        margin-top: 30px;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: $headingfont;
+    }
+    .menu-list-wrapper {
+        @include d-flex;
+        ul {
+            &:not(:last-child) {
+                margin-right: 40px;
+            }
+        }
+    }
+    .ta-newsletter-form {
+        input {
+            padding: 20px 25px;
+            background: $white;
+            box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.04);
+        }
+        .fa-envelope-open {
+            left: auto;
+            right: 25px;
+            top: 30px;
+            @include respond(xxs) {
+                top: 23px;
+            }
+        }
+        .ta-button {
+            padding: 20px 40px;
+            position: static;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    }
+    .ta-about-info-widget {
+        p {
+            line-height: 1.5;
+        }
+        .footer-logo {
+            display: block;
+            img {
+                max-width: 80px;
+            }
+        }
+        .ta-social-links {
+            a {
+                background: $white;
+                width: 50px;
+                height: 50px;
+                font-size: 16px;
+                box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.06);
+                border: none;
+                &:hover {
+                    background: $theme-color;
+                }
+            }
+        }
+    }
+    &__style-2 {
+        ul {
+            li {
+                a {
+                    font-weight: 700;
+                    color: $dark;
+                }
+            }
+        }
+        .ta-logo {
+            img {
+                max-width: 80px;
+            }
+            span {
+                margin-top: 10px;
+                display: block;
+            }
+        }
+        .ta-social-links {
+            a {
+                width: 55px;
+                height: 55px;
+                &:not(:last-child) {
+                    margin-right: 15px;
+                }
+            }
+        }
+    }
+}
+.ta-bottom-wrapper {
+    background: $white;
+    box-shadow: 0px -16px 32px 0px rgba(0, 0, 0, 0.04);
+    @include d-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 30px;
+    @include respond(xs) {
+        justify-content: center;
+        text-align: center;
+        padding: 20px 25px;
+        div {
+            &:nth-child(2) {
+                margin-top: 10px;
+            }
+        }
+        p {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+    }
+    a {
+        font-weight: 700;
+        color: $dark;
+        &:hover {
+            color: $theme-color;
+        }
+    }
+    &__style-2 {
+        padding-bottom: 0px;
+        background: transparent !important;
+        box-shadow: none;
+    }
+}
+[data-ta-sticky-footer] {
+    position: sticky!important;
+    bottom: 0;
+    z-index: 0;
+}
+/* Footer css end */

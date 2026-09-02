@@ -1,0 +1,35 @@
+.ta-page-animation-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
+    background: #fff;
+    transform-origin: bottom;
+    transition: transform 1s 50ms cubic-bezier(.86,0,.07,1);
+    @include d-flex(center, center);
+    .ta-logo {
+        img {
+            width: 150px;
+            @include respond(xxs) {
+                width: 120px;
+            }
+        }
+    }
+}
+.ta-reaload-done {
+    .ta-page-animation-overlay {
+        transform: scaleY(0);
+        .ta-logo {
+            opacity: 0;
+            visibility: hidden;
+            @include transition(.3s);
+        }
+    }
+}
+.ta-page-loading {
+    .ta-page-animation-overlay {
+        transform: scaleY(1);
+        transform-origin: top;
+    }
+
+}

@@ -1,0 +1,93 @@
+/*-----------------------------------------------------------------------------------
+
+    Template Name: Hoom
+    Template URI: https://themealpha.dev/html/hoom-prev/
+    Description: News & Magazine HTML Template
+    Author: Theme_Alpha
+    Author URI: https://themeforest.net/user/theme_alpha
+    Version: 1.0.1
+    support: support@themealpha.dev
+
+-----------------------------------------------------------------------------------
+
+    CSS INDEX
+    ===================
+
+	* Theme default CSS
+	* header CSS
+	* navigation CSS
+	* preloader CSS
+	* theme-switcher CSS
+	* backtotop CSS
+	* side-info CSS
+	* search-popup CSS
+	* buttons CSS
+	* owl-nav CSS
+	* social-links CSS
+	* pagination CSS
+	* hero-section CSS
+	* blog CSS
+	* newsletter CSS
+	* sidebar CSS
+	* author-box CSS
+	* recent-post-tab CSS
+	* moving-cat CSS
+	* blog-cat CSS
+	* team CSS
+	* brand CSS
+	* insta-feed CSS
+	* about CSS
+	* contact-page CSS
+	* blog-details-page CSS
+	* blog-page CSS
+	* footer CSS
+
+-----------------------------------------------------------------------------------*/
+// abstracts scss
+@import 'abstracts/variables',
+'abstracts/mixins';
+
+// base scss
+@import 'base/fonts',
+'base/base',
+'base/spacing',
+'base/typography',
+'base/overlay';
+
+// layout scss
+@import 'layout/header',
+'layout/navigation';
+
+
+// components scss
+@import 'components/preloader',
+'components/theme-switcher',
+'components/backtotop',
+'components/side-info',
+'components/search-popup',
+'components/buttons',
+'components/owl-nav',
+'components/social-links',
+'components/pagination',
+'components/hero-section',
+'components/blog',
+'components/newsletter',
+'components/sidebar',
+'components/author-box',
+'components/recent-post-tab',
+'components/moving-cat',
+'components/blog-cat',
+'components/breadcrumb',
+'components/team',
+'components/brand',
+'components/insta-feed',
+'components/about';
+
+
+// pages scss
+@import 'pages/contact-page',
+'pages/blog-details-page',
+'pages/blog-page';
+
+// layout scss
+@import 'layout/footer';

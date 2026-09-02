@@ -1,0 +1,154 @@
+/* all button css start */
+.ta-button {
+    display: inline-block;
+    font-weight: 700;
+    background: $dark;
+    font-size: 14px;
+    color: $white;
+    padding: 17px 25px;
+    font-family: $headingfont;
+    &:hover {
+        background: $theme-color;
+        color: $white;
+    }
+    i {
+        margin-left: 10px;
+    }
+    &__borderd {
+        background: transparent;
+        border: 1px solid #e3e3e3;
+        color: $dark;
+        padding: 16px 25px;
+        font-weight: 700;
+        @include respond(xxs) {
+            padding: 12px 22px;
+            font-size: 12px;
+        }
+    }
+    &__dark {
+        background: $dark;
+        color: $white;
+        padding-left: 30px;
+        padding-right: 30px;
+        &:hover {
+            background: $theme-color;
+        }
+    }
+    &__light {
+        background: $white;
+        color: $dark;
+        font-weight: 700;
+        box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.06);
+        &:hover {
+            background: $dark;
+            color: $white;
+        }
+    }
+}
+.ta-inline-btn {
+    color: $dark;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: $headingfont;
+    i {
+        margin-left: 10px;
+    }
+    &:hover {
+        color: $theme-color;
+    }
+    &__themebg {
+        color: $theme-color;
+        &:hover {
+            color: $dark;
+        }
+    }
+}
+.ta-round-btn {
+    width: 100px;
+    height: 100px;
+    @include d-flex(center, center);
+    color: $white;
+    border-radius: 50%;
+    background: $dark;
+    font-family: $headingfont;
+    @include respond(xxs) {
+        width: 70px;
+        height: 70px
+    }
+    span {
+        @include transition(.3s);
+    }
+    &__not-badge {
+        &:hover {
+            background: $theme-color;
+            color: $white;
+        }
+    }
+}
+.ta-video-btn {
+    background-color: $white;
+    color: $dark;
+    z-index: 2;
+    &:hover {
+        background: $theme-color;
+        color: $white;
+    }
+    &__mid {
+        height: 80px;
+        width: 80px;
+        @include respond(xxs) {
+            width: 60px;
+            height: 60px;
+            font-size: 14px;
+        }
+    }
+}
+.ta-share-btn {
+    color: $dark;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 10px 20px;
+    background: #eeeef1;
+    font-family: $headingfont;
+    @include respond(xs) {
+        font-size: 12px;
+    }
+    &:hover {
+        background: $dark;
+        color: $white;
+    }
+    &__dark {
+        background: $dark;
+        color: $white;
+        &:hover {
+            background: $theme-color;
+        }
+    }
+    &.ta-stroke {
+        &:hover {
+            border-color: $dark;
+            &::before {
+                border-color: $theme-color;
+            }
+        }
+    }
+}
+.ta-loadmore-btn {
+    padding: 0px 25px;
+    background: $theme-color-light;
+    color: $theme-color;
+    font-weight: 700;
+    display: inline-block;
+    min-height: 50px;
+    @include d-flex(center, center);
+    font-family: $headingfont;
+    i {
+        margin-left: 10px;
+    }
+    &:hover {
+        color: $white;
+        background: $theme-color;
+    }
+}
+/* all button css end */

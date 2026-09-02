@@ -1,0 +1,1135 @@
+/* blog css start */
+.ta-blog-area {
+	position: relative;
+	z-index: 1;
+	.gd-shape {
+		&__2 {
+			top: auto;
+			bottom: 0;
+		}
+	}
+	.container-fluid {
+		padding-left: 3%;
+		padding-right: 3%;
+		.col-xxl-2,
+		.col-xl-2 {
+			@include respond(laptop) {
+				.meta-infos {
+					margin-top: -5px;
+					flex-wrap: wrap;
+					@include respond(xxs) {
+						justify-content: flex-start !important;
+					}
+					li {
+						margin-top: 5px;
+						a {
+							font-size: 12px;
+						}
+					}
+				}
+				.content {
+					padding: 25px;
+					padding-bottom: 20px;
+				}
+				.ta-blog-box__title--small {
+					font-size: 16px;
+				}
+				.ta-blog-box__cats a {
+					font-size: 12px;
+				}
+			}
+		}
+		.ta-column-5 {
+			.col-xl-2 {
+				@include respond(lg) {
+					width: 33.3333%;
+				}
+				@include respond(xs) {
+					width: 50%;
+				}
+				@include respond(xxs) {
+					width: 100%;
+				}
+			}
+		}
+	}
+}
+.ta-blog-wrapper {
+	padding: 0px 35px;
+	@include respond(xxs) {
+		padding: 0px 15px;
+	}
+	&.mt-95 {
+		@include respond(xxs) {
+			margin-top: 65px;
+		}
+	}
+}
+.ta-blog-box {
+	position: relative;
+	&.mt-95 {
+		@include respond(xxs) {
+			margin-top: 65px;
+		}
+	}
+	.thumb {
+		position: relative;
+		img {
+			width: 100%;
+			object-fit: cover;
+			@include respond(xs) {
+				min-height: 250px;
+			}
+			@include respond(xxs) {
+				min-height: 200px;
+			}
+		}
+	}
+	.content {
+		&.pl-100 {
+			@include respond(laptop) {
+				padding-left: 50px;
+				padding-right: 50px;
+			}
+		}
+		&.pl-50,
+		&.pl-100 {
+			@include respond(md) {
+				padding-left: 0px;
+			}
+		}
+		&.pr-50,
+		&.pr-100 {
+			@include respond(md) {
+				padding-right: 0px;
+			}
+		}
+		&.text-center {
+			@include respond(xxs) {
+				text-align: left !important;
+			}
+		}
+		&.mt-85 {
+			@include respond(xxs) {
+				margin-top: 55px;
+			}
+		}
+	}
+	&__cats {
+		position: absolute;
+		top: 30px;
+		left: 30px;
+		z-index: 2;
+		a {
+			font-family: $headingfont;
+			color: $dark;
+			font-size: 12px;
+			text-transform: uppercase;
+			font-weight: 700;
+			padding: 6px 12px;
+			background: $white;
+			&:not(:last-child) {
+				margin-right: 10px;
+			}
+			&:hover {
+				background: $theme-color;
+				color: $white;
+				border-color: $white !important;
+			}
+			@include respond(xs) {
+				font-size: 12px;
+			}
+		}
+		&--right {
+			left: auto;
+			right: 30px;
+			@include respond(xxs) {
+				right: 20px;
+			}
+		}
+	}
+	&__meta-info {
+		@include respond(xxs) {
+			flex-wrap: wrap;
+			justify-content: flex-start !important;
+			margin-top: -10px;
+		}
+		.author-thumb {
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			margin-right: 10px;
+			img {
+				border-radius: 50%;
+			}
+		}
+		span {
+			color: $dark;
+			@include transition(0.3s);
+			font-family: $headingfont;
+			&:hover {
+				color: $theme-color;
+			}
+		}
+		li {
+			&:nth-child(3) {
+				@include respond(xxs) {
+					display: none;
+				}
+			}
+			&:nth-child(2) {
+				&::after {
+					@include respond(xxs) {
+						display: none;
+					}
+				}
+			}
+			span.author-thumb {
+				border: none !important;
+				width: 30px;
+				border-radius: 50%;
+				@include respond(xs) {
+					width: 25px;
+				}
+			}
+			position: relative;
+			&:not(:last-child) {
+				margin-right: 20px;
+				padding-right: 20px;
+				@include respond(xxs) {
+					margin-right: 10px;
+					padding-right: 10px;
+				}
+				&::after {
+					content: "";
+					position: absolute;
+					right: 0px;
+					background-image: url(../img/shape/meta-dots.webp);
+					top: 50%;
+					height: 12px;
+					width: 2px;
+					translate: 0px -50%;
+				}
+			}
+			a {
+				color: $dark;
+				font-size: 13px;
+				font-weight: 700;
+				font-family: $headingfont;
+				@include respond(xs) {
+					font-size: 13px;
+				}
+				&:hover {
+					color: $theme-color;
+				}
+			}
+			i {
+				margin-right: 8px;
+				color: $theme-color;
+			}
+		}
+		&--white {
+			li {
+				color: $white;
+				i,
+				span,
+				a {
+					color: $white;
+				}
+			}
+		}
+	}
+	&__title {
+		font-size: 36px;
+		font-weight: 700;
+		font-family: $headingfont;
+		position: relative;
+		z-index: 2;
+		@include respond(lg) {
+			font-size: 26px;
+		}
+		@include respond(xs) {
+			font-size: 22px;
+		}
+		@include respond(xxs) {
+			font-size: 20px;
+		}
+		a {
+			font-family: $headingfont;
+			color: $dark;
+			padding: 0.5% 0px;
+			padding-bottom: 0px;
+		}
+		&--big {
+			font-size: 36px;
+			@include respond(lg) {
+				font-size: 28px;
+			}
+			@include respond(md) {
+				font-size: 22px;
+			}
+		}
+		&--big-60 {
+			font-size: 60px;
+			line-height: 1.2;
+			@include respond(md) {
+				font-size: 48px;
+			}
+			@include respond(xs) {
+				font-size: 38px;
+			}
+			@include respond(xxs) {
+				font-size: 30px;
+			}
+		}
+		&--mid {
+			font-size: 30px;
+			@include respond(lg) {
+				font-size: 24px;
+			}
+			@include respond(xs) {
+				font-size: 20px;
+			}
+			@include respond(xxs) {
+				font-size: 18px;
+			}
+		}
+		&--mid-24 {
+			font-size: 24px;
+			@include respond(xs) {
+				font-size: 18px;
+			}
+		}
+		&--small {
+			font-size: 20px;
+			line-height: 1.5;
+		}
+		&--white {
+			a {
+				color: $white;
+			}
+		}
+	}
+	.excerpt {
+		p {
+			font-size: 18px;
+			line-height: 28px;
+			@include respond(xs) {
+				font-size: 16px;
+				line-height: 26px;
+			}
+			@include respond(xxs) {
+				font-size: 14px;
+			}
+		}
+		&__small {
+			p {
+				font-size: 16px;
+				line-height: 26px;
+			}
+		}
+	}
+	&__share-info {
+		@include respond(xxs) {
+			flex-wrap: wrap;
+			justify-content: flex-start !important;
+			margin-top: 25px;
+		}
+		ul {
+			background: $white;
+			box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.06);
+			padding: 11px 20px !important;
+			position: relative;
+			margin-right: 15px;
+			padding-right: 85px !important;
+			padding-bottom: 9px !important;
+			@include respond(xs) {
+				padding-right: 65px !important;
+			}
+			@include respond(xxs) {
+				padding-right: 0px !important;
+				margin-top: 10px;
+				margin-right: 0px;
+				justify-content: flex-start !important;
+				width: 100%;
+			}
+		}
+		li {
+			position: relative;
+			font-weight: 700;
+			font-size: 13px;
+			color: $dark;
+			font-family: $headingfont;
+			@include respond(xs) {
+				font-size: 12px;
+			}
+			&:not(:last-child) {
+				margin-right: 20px;
+				padding-right: 20px;
+				@include respond(xs) {
+					margin-right: 12px;
+					padding-right: 12px;
+				}
+				&::after {
+					content: "";
+					position: absolute;
+					right: 0px;
+					background-image: url(../img/shape/meta-dots.webp);
+					top: 50%;
+					height: 12px;
+					width: 2px;
+					translate: 0px -50%;
+				}
+			}
+			i {
+				color: #d9d9d9;
+				margin-right: 5px;
+			}
+		}
+		.like-btn {
+			width: 32px;
+			height: 31.5px;
+			position: absolute;
+			color: $theme-color;
+			background: $theme-color-light;
+			@include d-flex(center, center);
+			right: 2px;
+			top: 2px;
+			@include transition(0.3s);
+			a {
+				display: flex;
+			}
+			i {
+				@include transition(0.3s);
+				color: $theme-color;
+				margin-right: 0px;
+			}
+			&:hover {
+				background: $theme-color;
+				i {
+					color: $white;
+				}
+			}
+		}
+		.ta-share-btn {
+			@include respond(xxs) {
+				margin-top: 20px;
+			}
+		}
+	}
+	.post-format-icon {
+		color: $white;
+		width: 45px;
+		height: 45px;
+		border: 2px solid $white;
+		border-radius: 50%;
+		background: $theme-color;
+		@include d-flex(center, center);
+		position: absolute;
+		top: 30px;
+		left: 30px;
+		z-index: 1;
+		@include respond(xxs) {
+			width: 35px;
+			height: 35px;
+			font-size: 12px;
+			border-width: 1px;
+			left: 20px;
+		}
+		&__right {
+			left: auto;
+			right: 20px;
+		}
+	}
+	.bottom-wrapper {
+		border-top: 1px solid #e2e2e2;
+		position: relative;
+		z-index: 2;
+	}
+	.by {
+		color: $pera-color;
+		font-style: italic;
+		margin-right: 5px;
+	}
+	.share-info {
+		ul {
+			padding: 0px !important;
+			box-shadow: none;
+			margin: 0px !important;
+		}
+	}
+	.shape {
+		position: absolute;
+		z-index: -1;
+		display: none;
+		&__1 {
+			top: -40px;
+			left: 2%;
+		}
+		&__2 {
+			top: -20px;
+			left: 75%;
+		}
+		&__3 {
+			bottom: -25px;
+			right: 2%;
+		}
+	}
+	&__featured {
+		padding: 40px;
+		background: $white;
+		@include respond(lg) {
+			padding: 30px;
+		}
+		@include respond(xxs) {
+			padding: 20px;
+		}
+		.content {
+			padding-right: 40px;
+			padding-left: 40px;
+			@include respond(lg) {
+				padding-right: 0px;
+				padding-left: 10px;
+				.excerpt {
+					-webkit-line-clamp: 2;
+					-webkit-box-orient: vertical;
+					display: -webkit-box;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					@include respond(md) {
+						overflow: none;
+						text-overflow: none;
+						-webkit-line-clamp: none;
+					}
+				}
+			}
+			@include respond(md) {
+				padding-left: 0px;
+			}
+			.ta-button__borderd {
+				@include respond(lg) {
+					margin-top: 25px;
+				}
+			}
+			.bottom-wrapper {
+				@include respond(lg) {
+					margin-top: 30px;
+				}
+				@include respond(xxs) {
+					flex-wrap: wrap;
+					justify-content: flex-start !important;
+				}
+				.ta-blog-box__meta-info {
+					@include respond(xxs) {
+						width: 100%;
+					}
+				}
+				.ta-blog-box__share-info {
+					@include respond(xxs) {
+						margin-top: 15px;
+					}
+				}
+			}
+			.ta-blog-box__meta-info {
+				li {
+					&:not(:last-child) {
+						@include respond(lg) {
+							margin-right: 15px;
+							padding-right: 15px;
+						}
+					}
+				}
+			}
+			.ta-round-btn {
+				@include respond(lg) {
+					height: 60px;
+					width: 60px;
+					font-size: 12px;
+				}
+			}
+		}
+		.ta-blog-box__title--mid {
+			@include respond(lg) {
+				margin-top: 20px;
+			}
+		}
+		&.p-0 {
+			.content {
+				padding-left: 40px;
+				padding-right: 40px;
+				@include respond(md) {
+					padding-left: 30px;
+					padding-right: 30px;
+				}
+				@include respond(xxs) {
+					padding-left: 15px;
+					padding-right: 15px;
+				}
+				br {
+					@include respond(xs) {
+						display: none;
+					}
+				}
+			}
+		}
+	}
+	&__style-2 {
+		box-shadow: 0px 16px 32px 0px rgba(0, 0, 0, 0.04);
+		.content {
+			background: $white;
+			padding: 25px;
+			padding-top: 0px;
+			padding-bottom: 20px;
+			@include respond(xxs) {
+				padding-left: 20px;
+				padding-right: 20px;
+			}
+		}
+		.meta-infos {
+			background: $white;
+			box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.04);
+			padding: 15px 20px;
+			margin: 0px !important;
+			position: relative;
+			z-index: 2;
+			@include respond(xxs) {
+				justify-content: center !important;
+				gap: 10px;
+			}
+			li {
+				@include respond(xxs) {
+					margin-top: 0px;
+				}
+				&:not(:last-child) {
+					margin-right: 15px;
+					padding-right: 15px;
+					@include respond(xxs) {
+						margin-right: 0px;
+					}
+				}
+				i {
+					margin-right: 0px;
+				}
+			}
+			&__white {
+				span,
+				a,
+				li {
+					color: $white;
+				}
+			}
+		}
+		.ta-blog-box__share-info {
+			@include respond(xxs) {
+				margin-top: 0px;
+			}
+		}
+	}
+	&__style-3 {
+		.thumb {
+			&::after {
+				@include after;
+				background-image: -moz-linear-gradient(
+					90deg,
+					rgb(0, 0, 0) 0%,
+					rgb(18, 18, 18) 0%,
+					rgba(0, 0, 0, 0) 100%
+				);
+				background-image: -webkit-linear-gradient(
+					90deg,
+					rgb(0, 0, 0) 0%,
+					rgb(18, 18, 18) 0%,
+					rgba(0, 0, 0, 0) 100%
+				);
+				background-image: -ms-linear-gradient(
+					90deg,
+					rgb(0, 0, 0) 0%,
+					rgb(18, 18, 18) 0%,
+					rgba(0, 0, 0, 0) 100%
+				);
+				top: auto;
+				bottom: 0;
+			}
+		}
+		.content {
+			position: relative;
+			z-index: 2;
+			.author-thumb {
+				border: 4px solid $white;
+				border-radius: 50%;
+				box-shadow: 0px 30px 60px 0px rgba(0, 0, 0, 0.1);
+				img {
+					border-radius: 50%;
+				}
+			}
+		}
+		.inner-content {
+			position: absolute;
+			width: 100%;
+			bottom: 0px;
+			z-index: 2;
+			@include respond(xs) {
+				padding: 30px 20px;
+				padding-top: 0px;
+				text-align: left !important;
+			}
+		}
+		.ta-blog-box__title {
+			a {
+				color: $white;
+			}
+		}
+	}
+	&__style-4 {
+		padding: 20px;
+		.content {
+			padding-top: 30px;
+			padding-left: 20px;
+			@include respond(xs) {
+				padding-left: 0px;
+			}
+			.bottom-wrapper {
+				@include respond(lg) {
+					margin-top: 30px;
+				}
+				@include respond(xs) {
+					flex-wrap: nowrap;
+					justify-content: space-between !important;
+					.ta-blog-box__share-info {
+						margin-top: 0px;
+					}
+				}
+			}
+		}
+		.post-format-icon {
+			left: 20px;
+			top: 20px;
+		}
+		.ta-blog-box__cats--right {
+			right: 20px;
+		}
+	}
+	&__style-5 {
+		.content {
+			padding: 30px;
+			@include respond(md) {
+				padding: 20px;
+			}
+		}
+		.meta-infos {
+			li,
+			a {
+				font-size: 12px;
+			}
+		}
+		.ta-blog-box__title--small {
+			font-size: 18px;
+			@include respond(lg) {
+				overflow: hidden;
+				display: -webkit-box;
+				-webkit-line-clamp: 1;
+				-webkit-box-orient: vertical;
+			}
+			@include respond(xxs) {
+				overflow: visible;
+				display: block;
+				-webkit-line-clamp: unset;
+				-webkit-box-orient: unset;
+			}
+		}
+	}
+	&__style-6 {
+		.content {
+			padding: 40px;
+			padding-bottom: 35px;
+			@include respond(xxs) {
+				padding: 30px;
+				padding-bottom: 25px;
+			}
+		}
+		.ta-blog-box__title--small {
+			font-size: 18px;
+		}
+	}
+}
+.ta-format-quote {
+	position: relative;
+	z-index: 1;
+	padding: 50px;
+	background: $white;
+	@include respond(xxs) {
+		padding: 30px;
+	}
+	.excerpt {
+		position: relative;
+		z-index: 2;
+	}
+	.excerpt p,
+	.excerpt blockquote,
+	blockquote,
+	p {
+		font-size: 24px;
+		font-weight: 700;
+		color: $dark;
+		line-height: 1.4;
+		font-family: $headingfont;
+		@include respond(md) {
+			font-size: 20px;
+		}
+		@include respond(xxs) {
+			font-size: 18px;
+		}
+		a {
+			color: $dark;
+		}
+	}
+	.qa-icon {
+		@include d-flex(center, center);
+		background: $theme-color;
+		border-radius: 50%;
+		width: 60px;
+		height: 60px;
+		border: 2px solid $dark;
+		i {
+			font-size: 20px;
+			color: $white;
+		}
+		img {
+			max-width: 30px;
+		}
+	}
+}
+.ta-format-link {
+	.excerpt {
+		max-width: 100%;
+	}
+	p {
+		a {
+			font-family: $headingfont;
+		}
+	}
+}
+.ta-audio {
+	iframe {
+		width: 100%;
+		min-height: 450px;
+	}
+}
+.ta-format-trending {
+	justify-content: flex-start !important;
+	align-items: flex-start !important;
+	.excerpt {
+		width: 100%;
+		a {
+			gap: 15px;
+			color: $dark;
+			font-family: $headingfont;
+			@include d-flex;
+			justify-content: flex-start;
+			&:not(:last-child) {
+				margin-bottom: 25px;
+				border-bottom: 2px solid $dark;
+				padding-bottom: 25px;
+			}
+			@include respond(md) {
+				flex-wrap: nowrap;
+			}
+			@include respond(xs) {
+				flex-wrap: wrap;
+			}
+		}
+		.ta-count {
+			width: 35px;
+			height: 35px;
+			font-weight: 700;
+			color: $white;
+			background: $dark;
+			@include d-flex(center, center);
+			border-radius: 50%;
+			font-size: 18px;
+		}
+	}
+}
+.qupte-author {
+	width: auto;
+	position: relative;
+	z-index: 2;
+	.qa-thumb {
+		border-radius: 50%;
+		img {
+			border-radius: 50%;
+		}
+	}
+	.qa-content {
+		text-align: left;
+	}
+	.name {
+		font-size: 16px;
+		font-weight: 700;
+		font-family: $headingfont;
+		@include respond(xxs) {
+			font-size: 14px;
+		}
+	}
+	.designation {
+		font-size: 14px;
+		font-weight: 400;
+		color: $theme-color;
+		display: block;
+		font-style: italic;
+		margin-top: 5px;
+		@include respond(xxs) {
+			font-size: 12px;
+		}
+	}
+}
+
+// post format gallery
+.ta-post-gallery {
+	.owl-dots {
+		display: none;
+	}
+}
+
+.inner-dots {
+	position: absolute;
+	bottom: 30px;
+	left: 30px;
+	z-index: 1;
+	.owl-dots {
+		@include d-flex;
+		align-items: center;
+		div {
+			height: 12px;
+			width: 12px;
+			border-radius: 50%;
+			background: transparent;
+			border: 2px solid $white;
+			display: block;
+			cursor: pointer;
+			&:not(:last-child) {
+				margin-right: 10px;
+			}
+			&.active {
+				background: $white;
+			}
+		}
+	}
+}
+.ta-column-5 {
+	.col-xl-2 {
+		width: 20%;
+		@include respond(xs) {
+			width: 33.3333%;
+		}
+		@include respond(xxs) {
+			width: 50%;
+		}
+	}
+}
+
+// feature post slider
+.ta-feature-post-slider {
+	.owl-stage-outer {
+		overflow: visible;
+	}
+}
+.ta-fps-wrapper {
+	.shape {
+		position: absolute;
+		&__1 {
+			left: -80px;
+			bottom: 35px;
+		}
+		&__2 {
+			right: -30px;
+			top: -30px;
+		}
+	}
+}
+.full-wid-fp-item {
+	padding-top: 175px;
+	padding-bottom: 250px;
+	@include respond(xxs) {
+		padding-top: 115px;
+		padding-bottom: 190px;
+	}
+	.ta-blog-box__meta-info {
+		justify-content: center !important;
+	}
+}
+
+// latest posts css
+.ta-latest-posts {
+	position: relative;
+	.item {
+		@include d-flex;
+		align-items: center;
+	}
+	.thumb {
+		width: 80px;
+		height: 80px;
+		margin-right: 20px;
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+	.content {
+		width: calc(100% - 100px);
+		.title {
+			font-size: 16px;
+			font-weight: 700;
+			margin-top: 10px;
+			line-height: 26px;
+			a {
+				font-family: $headingfont;
+				color: $dark;
+				background-size: 0px 1px;
+				padding: 0% 0px;
+				&:hover {
+					background-size: 100% 1px;
+				}
+			}
+		}
+		.date {
+			font-size: 14px;
+			color: $pera-color;
+		}
+	}
+	&__style-2 {
+		.thumb {
+			width: 100px;
+			height: 100px;
+			margin-right: 25px;
+		}
+		.content {
+			width: calc(100% - 125px);
+			.title {
+				font-weight: 700;
+				font-size: 18px;
+				font-family: $headingfont;
+				@include respond(xxs) {
+					font-size: 16px;
+				}
+			}
+		}
+		&.pr-60 {
+			padding-right: 0px;
+		}
+	}
+}
+.ta-latest-post-wrapper {
+	padding: 30px;
+	background: $white;
+	position: relative;
+	z-index: 1;
+	.row {
+		.col-xl-4 {
+			&:not(:last-child) {
+				.ta-latest-posts {
+					padding-right: 45px;
+					margin-right: 45px;
+					@include respond(xxs) {
+						padding-right: 0px;
+						margin-right: 0px;
+					}
+					&::after {
+						@include after;
+						width: 2px;
+						background: $border-color;
+						height: 100px;
+						left: auto;
+						right: 0px;
+						top: 50%;
+						translate: 0px -50%;
+						@include respond(md) {
+							display: none;
+						}
+					}
+				}
+			}
+			&:nth-child(2) {
+				.ta-latest-posts {
+					&::after {
+						@include respond(lg) {
+							display: none;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// recent post tab css
+.rcp-tab-section {
+	.ta-long-border {
+		border-color: $dark;
+	}
+}
+.rcp-tab-nav {
+	.nav {
+		justify-content: flex-end;
+		@include respond(lg) {
+			justify-content: flex-start;
+			margin-bottom: 50px;
+		}
+		a {
+			padding: 14px 20px;
+			font-size: 14px;
+		}
+	}
+}
+
+// feature post slider
+.ta-featured-blog-area {
+	&.mt-50 {
+		@include respond(lg) {
+			margin-top: 30px;
+		}
+	}
+}
+
+.ta-feature-post-slider {
+	padding-bottom: 10px;
+	&.pt-20 {
+		@include respond(lg) {
+			padding-top: 40px;
+		}
+	}
+	&__style-2 {
+		.thumb {
+			img {
+				@include respond(md) {
+					min-height: 400px;
+				}
+			}
+		}
+	}
+}
+
+// rcp slider
+.rcp-slider-wrapper {
+	.owl-stage-outer {
+		padding-bottom: 10px;
+	}
+}
+
+@include respond(xs) {
+	.owl-item {
+		.ta-stroke {
+			&::before {
+				display: none;
+			}
+		}
+		&.active {
+			.ta-stroke {
+				&::before {
+					display: block;
+				}
+			}
+		}
+	}
+}

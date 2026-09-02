@@ -1,0 +1,20 @@
+
+export default function PostStatus() {
+    return (
+        <>
+            <div className="content d-flex flex-column ta-format-quote align-items-center text-center mb-45 ta-stroke">
+                <div className="qa-icon mx-auto mb-25">
+                    <i className="fal fa-comment" />
+                </div>
+                <div className="excerpt">
+                    <blockquote>
+                        <p>20 years ago today, Steve introduced the world to
+                            Mac. It set Apple on a new course  forever changed the
+                            way people look at computers.</p>
+                    </blockquote>
+                </div>
+            </div>
+
+        </>
+    )
+}

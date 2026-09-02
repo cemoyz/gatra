@@ -1,0 +1,81 @@
+/* back to top css */
+.progress-wrap {
+	position: fixed;
+	right: 50px;
+	bottom: 50px;
+	height: 46px;
+	width: 46px;
+	cursor: pointer;
+	display: block;
+	border-radius: 50px;
+	z-index: 99;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(15px);
+	-webkit-transition: all 200ms linear;
+	transition: all 200ms linear;
+    background: $white;
+    box-shadow: 0px 16px 32px 0px rgb(0 0 0 / 6%);
+	@include respond(xs) {
+		right: 20px;
+		bottom: 30px;
+		height: 36px;
+		width: 36px;
+	}
+	@include respond(sm) {
+		right: 50px;
+		bottom: 50px;
+		height: 46px;
+		width: 46px;
+	}
+	&.active-progress {
+		opacity: 1;
+		visibility: visible;
+		transform: translateY(0);
+	}
+	&::after {
+		position: absolute;
+		content: "\f176";
+		font-family: "Font Awesome 5 Pro";
+		text-align: center;
+		line-height: 46px;
+		font-size: 20px;
+		color: $theme-color;
+		left: 0;
+		top: 0;
+		height: 46px;
+		width: 46px;
+		cursor: pointer;
+		display: block;
+		z-index: 1;
+		-webkit-transition: all 200ms linear;
+		transition: all 200ms linear;
+		font-weight: 300;
+		@include respond(xs) {
+			line-height: 36px;
+			font-size: 16px;
+			height: 36px;
+			width: 36px;
+		}
+		@include respond(sm) {
+			right: 50px;
+			bottom: 50px;
+			height: 46px;
+			width: 46px;
+		}
+	}
+	svg {
+		path {
+			fill: none;
+		}
+		&.progress-circle {
+			path {
+				stroke: $theme-color;
+				stroke-width: 4;
+				box-sizing: border-box;
+				-webkit-transition: all 200ms linear;
+				transition: all 200ms linear;
+			}
+		}
+	}
+}

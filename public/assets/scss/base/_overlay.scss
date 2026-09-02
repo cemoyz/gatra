@@ -1,0 +1,117 @@
+/*--
+    - Overlay
+------------------------------------------*/
+[data-overlay] {
+    position: relative;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: 1;
+    &::before {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        content: "";
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+}
+
+/*-- Overlay Color --*/
+[data-overlay="light"] {
+    &::before {
+        background-color: $white;
+    }
+}
+[data-overlay="dark"] {
+    &::before {
+        background-color: $dark;
+    }
+}
+[data-overlay="theme-gradiend"] {
+    &::before {
+        background-image: -moz-linear-gradient( 0deg, rgb(118,131,217) 0%, rgb(216,160,254) 100%);
+        background-image: -webkit-linear-gradient( 0deg, rgb(118,131,217) 0%, rgb(216,160,254) 100%);
+        background-image: -ms-linear-gradient( 0deg, rgb(118,131,217) 0%, rgb(216,160,254) 100%);
+    }
+}
+
+/*-- Overlay Opacity --*/
+[data-opacity="1"] {
+    &::before {
+        opacity: 0.1;
+    }
+}
+[data-opacity="2"] {
+    &::before {
+        opacity: 0.2;
+    }
+}
+[data-opacity="3"] {
+    &::before {
+        opacity: 0.3;
+    }
+}
+[data-opacity="4"] {
+    &::before {
+        opacity: 0.4;
+    }
+}
+[data-opacity="5"] {
+    &::before {
+        opacity: 0.5;
+    }
+}
+[data-opacity="06"] {
+    &::before {
+        opacity: 0.06;
+    }
+}
+[data-opacity="6"] {
+    &::before {
+        opacity: 0.6;
+    }
+}
+[data-opacity="65"] {
+    &::before {
+        opacity: 0.65;
+    }
+}
+[data-opacity="7"] {
+    &::before {
+        opacity: 0.7;
+    }
+}
+[data-opacity="8"] {
+    &::before {
+        opacity: 0.8;
+    }
+}
+[data-opacity="9"] {
+    &::before {
+        opacity: 0.9;
+    }
+}
+.ta-overlay {
+    background-color: $dark;
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	top: 0;
+	z-index: 9;
+	left: 0;
+	opacity: 0;
+	visibility: hidden;
+	@include transition(all 600ms ease);
+	z-index: 10;
+    opacity: 0;
+}
+.ta-overlay {
+    &.is-open {
+        opacity: .4;
+        visibility: visible;
+    }
+}

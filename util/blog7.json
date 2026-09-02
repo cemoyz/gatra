@@ -1,0 +1,24 @@
+[
+   
+    {
+        "id": 50,
+        "title": "Fluid Typography: Predicting A Problem With",
+        "img": "blog-big-1.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 51,
+        "title": "Fluid Typography: Predicting A Problem With",
+        "img": "blog-big-2.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    },
+    {
+        "id": 52,
+        "title": "Fluid Typography: Predicting A Problem With",
+        "img": "blog-big-3.webp",
+        "category": "photo",
+        "author": "Alexis D."
+    }
+]
