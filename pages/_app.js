@@ -18,20 +18,41 @@ import "@/public/assets/css/dashboard.css"
 function MyApp({ Component, pageProps }) {
     const router = useRouter()
     const [loading, setLoading] = useState(true)
-    const [pageTransitioning, setPageTransitioning] = useState(false)
 
     useEffect(() => {
         setTimeout(() => {
             setLoading(false)
         }, 1000)
 
+        let timer
         const handleStart = (url) => {
             if (url !== router.asPath) {
-                setPageTransitioning(true)
+                const bar = document.getElementById('global-route-bar')
+                if (bar) {
+                    bar.style.transition = 'transform 0.4s ease, opacity 0.15s ease'
+                    bar.style.opacity = '1'
+                    bar.style.transform = 'scaleX(0.7)'
+                }
             }
         }
         const handleComplete = () => {
-            setPageTransitioning(false)
+            const bar = document.getElementById('global-route-bar')
+            if (bar) {
+                bar.style.transition = 'transform 0.15s ease, opacity 0.2s ease'
+                bar.style.transform = 'scaleX(1)'
+                clearTimeout(timer)
+                timer = setTimeout(() => {
+                    if (bar) {
+                        bar.style.opacity = '0'
+                        setTimeout(() => {
+                            if (bar) {
+                                bar.style.transition = 'none'
+                                bar.style.transform = 'scaleX(0)'
+                            }
+                        }, 200)
+                    }
+                }, 150)
+            }
         }
 
         router.events.on('routeChangeStart', handleStart)
@@ -39,6 +60,7 @@ function MyApp({ Component, pageProps }) {
         router.events.on('routeChangeError', handleComplete)
 
         return () => {
+            clearTimeout(timer)
             router.events.off('routeChangeStart', handleStart)
             router.events.off('routeChangeComplete', handleComplete)
             router.events.off('routeChangeError', handleComplete)
@@ -49,7 +71,8 @@ function MyApp({ Component, pageProps }) {
         <>
             {/* Top Smooth Route Loading Progress Bar */}
             <div
-                className={`global-route-progressbar ${pageTransitioning ? 'active' : ''}`}
+                id="global-route-bar"
+                className="global-route-progressbar"
                 aria-hidden="true"
             />
 
@@ -66,26 +89,14 @@ function MyApp({ Component, pageProps }) {
                     top: 0;
                     left: 0;
                     right: 0;
-                    height: 3px;
+                    height: 2.5px;
                     background: linear-gradient(90deg, #da0105, #f97316, #da0105);
                     background-size: 200% 100%;
                     z-index: 999999;
                     opacity: 0;
                     transform: scaleX(0);
                     transform-origin: left center;
-                    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
                     pointer-events: none;
-                }
-
-                .global-route-progressbar.active {
-                    opacity: 1;
-                    transform: scaleX(0.85);
-                    animation: progressBarPulse 1.2s ease infinite;
-                }
-
-                @keyframes progressBarPulse {
-                    0% { background-position: 0% 50%; }
-                    100% { background-position: 200% 50%; }
                 }
             `}</style>
         </>
