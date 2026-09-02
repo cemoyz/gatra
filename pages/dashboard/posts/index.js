@@ -18,16 +18,20 @@ import {
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
+let cachedPosts = []
+let cachedCategories = []
+let cachedPagination = { page: 1, totalPages: 1, total: 0 }
+
 export default function PostsManagement() {
   const [currentUser, setCurrentUser] = useState(null)
-  const [posts, setPosts] = useState([])
-  const [categories, setCategories] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [posts, setPosts] = useState(cachedPosts)
+  const [categories, setCategories] = useState(cachedCategories)
+  const [loading, setLoading] = useState(cachedPosts.length === 0)
   const [search, setSearch] = useState('')
   const [selectedCat, setSelectedCat] = useState('all')
   const [selectedStatus, setSelectedStatus] = useState('all')
   const [selectedType, setSelectedType] = useState('all')
-  const [pagination, setPagination] = useState({ page: 1, totalPages: 1, total: 0 })
+  const [pagination, setPagination] = useState(cachedPagination)
   const [toast, setToast] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
@@ -60,13 +64,16 @@ export default function PostsManagement() {
     fetch('/api/categories')
       .then(res => res.json())
       .then(data => {
-        if (data.success) setCategories(data.categories || [])
+        if (data.success && Array.isArray(data.categories)) {
+          cachedCategories = data.categories
+          setCategories(data.categories)
+        }
       })
       .catch(console.error)
   }, [])
 
   const fetchPosts = async (page = 1, user = currentUser) => {
-    setLoading(true)
+    if (cachedPosts.length === 0) setLoading(true)
     try {
       const params = {
         page,
@@ -85,8 +92,10 @@ export default function PostsManagement() {
       const res = await fetch(`/api/posts?${query.toString()}`)
       const data = await res.json()
       if (data.success) {
-        setPosts(data.posts || [])
-        setPagination(data.pagination || { page: 1, totalPages: 1, total: 0 })
+        cachedPosts = data.posts || []
+        cachedPagination = data.pagination || { page: 1, totalPages: 1, total: 0 }
+        setPosts(cachedPosts)
+        setPagination(cachedPagination)
       }
     } catch (err) {
       console.error(err)

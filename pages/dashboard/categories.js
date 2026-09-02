@@ -17,9 +17,11 @@ import {
 } from '@/components/dashboard/ui'
 import { useEffect, useState } from 'react'
 
+let cachedCategories = []
+
 export default function CategoriesManagement() {
-  const [categories, setCategories] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [categories, setCategories] = useState(cachedCategories)
+  const [loading, setLoading] = useState(cachedCategories.length === 0)
   const [toast, setToast] = useState(null)
 
   // New Category Form
@@ -40,12 +42,13 @@ export default function CategoriesManagement() {
   }
 
   const fetchCategories = async () => {
-    setLoading(true)
+    if (cachedCategories.length === 0) setLoading(true)
     try {
       const res = await fetch('/api/categories')
       const data = await res.json()
       if (data.success) {
-        setCategories(data.categories || [])
+        cachedCategories = data.categories || []
+        setCategories(cachedCategories)
       }
     } catch (err) {
       console.error(err)

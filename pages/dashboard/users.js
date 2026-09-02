@@ -22,9 +22,11 @@ import {
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
+let cachedUsers = []
+
 export default function DashboardUsers() {
-  const [users, setUsers] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [users, setUsers] = useState(cachedUsers)
+  const [loading, setLoading] = useState(cachedUsers.length === 0)
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState('all')
 
@@ -62,13 +64,14 @@ export default function DashboardUsers() {
 
   // Fetch all users with author details
   const fetchUsers = async () => {
-    setLoading(true)
+    if (cachedUsers.length === 0) setLoading(true)
     try {
       const res = await fetch('/api/users')
       const data = await res.json()
       if (data.success && Array.isArray(data.users)) {
+        cachedUsers = data.users
         setUsers(data.users)
-      } else {
+      } else if (cachedUsers.length === 0) {
         setUsers([])
       }
     } catch (err) {
