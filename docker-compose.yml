@@ -8,7 +8,7 @@ services:
     container_name: duanarasi_web
     restart: always
     ports:
-      - "${WEB_PORT:-3001}:3000"
+      - "${WEB_PORT:-3005}:3000"
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@db:5432/duanarasi?schema=public}
