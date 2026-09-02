@@ -303,34 +303,19 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
           <div className="dash-sidebar-header">
             <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', width: '100%' }}>
               {siteSettings.site_logo ? (
-                <div
+                <img
+                  src={siteSettings.site_logo.startsWith('http') || siteSettings.site_logo.startsWith('/') ? siteSettings.site_logo : `/assets/img/logo/${siteSettings.site_logo}`}
+                  alt=""
                   style={{
                     width: '36px',
                     height: '36px',
-                    borderRadius: '8px',
-                    background: '#09090b',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '2px',
-                    flexShrink: 0,
-                    overflow: 'hidden'
+                    objectFit: 'contain',
+                    flexShrink: 0
                   }}
-                >
-                  <img
-                    src={siteSettings.site_logo.startsWith('http') || siteSettings.site_logo.startsWith('/') ? siteSettings.site_logo : `/assets/img/logo/${siteSettings.site_logo}`}
-                    alt=""
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain'
-                    }}
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none'
-                    }}
-                  />
-                </div>
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
               ) : (
                 <div
                   className="dash-sidebar-logo-icon"
@@ -338,7 +323,6 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     background: '#09090b',
                     color: '#fff',
                     borderRadius: '8px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12)',
                     flexShrink: 0
                   }}
                 >
@@ -358,10 +342,6 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
 
           {/* Navigation Links */}
           <div className="dash-sidebar-nav">
-            <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--dash-text-muted)', textTransform: 'uppercase', letterSpacing: '0.8px', padding: '8px 12px 4px' }}>
-              Menu Redaksi
-            </div>
-
             {navItems.map((item) => {
               const isActive = router.pathname === item.path
               return (
@@ -376,12 +356,12 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     padding: '10px 14px',
                     borderRadius: '10px',
                     fontSize: '13.5px',
-                    fontWeight: isActive ? 700 : 500,
+                    fontWeight: isActive ? 700 : 600,
                     marginBottom: '2px'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <i className={`fa ${item.icon}`} style={{ width: '18px', textAlign: 'center', fontSize: '15px', color: isActive ? 'var(--dash-primary)' : 'inherit' }}></i>
+                    <i className={`fa ${item.icon}`} style={{ width: '18px', textAlign: 'center', fontSize: '15px' }}></i>
                     <span>{item.label}</span>
                   </div>
                   {item.badge > 0 && (

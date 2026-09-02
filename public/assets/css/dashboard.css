@@ -254,20 +254,48 @@
   border-radius: 8px;
   font-size: 13.5px;
   font-weight: 600;
-  color: var(--dash-text-main) !important;
+  color: #09090b !important;
   text-decoration: none;
   transition: all 0.15s ease;
 }
 
+.dash-menu-subitem span,
+.dash-menu-subitem div {
+  color: #09090b !important;
+}
+
+.dash-menu-subitem i,
+.dash-menu-subitem svg {
+  color: #09090b !important;
+  opacity: 1 !important;
+}
+
 .dash-menu-subitem:hover {
-  color: var(--dash-primary) !important;
+  color: #000000 !important;
   background: var(--dash-card-hover);
+}
+
+.dash-menu-subitem:hover span,
+.dash-menu-subitem:hover i {
+  color: #000000 !important;
 }
 
 .dash-menu-subitem.active {
   background: var(--dash-muted-bg);
-  color: var(--dash-primary) !important;
+  color: #000000 !important;
   font-weight: 700;
+}
+
+.dash-menu-subitem.active span,
+.dash-menu-subitem.active i {
+  color: #000000 !important;
+}
+
+.dash-theme-dark .dash-menu-subitem,
+.dash-theme-dark .dash-menu-subitem span,
+.dash-theme-dark .dash-menu-subitem div,
+.dash-theme-dark .dash-menu-subitem i {
+  color: #f8fafc !important;
 }
 
 .dash-user-card-compact {
