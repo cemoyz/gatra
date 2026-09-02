@@ -34,6 +34,13 @@ export default function LoginPage() {
       const data = await res.json()
 
       if (data.success) {
+        if (data.token) {
+          try {
+            localStorage.setItem('hoom_token', data.token)
+            sessionStorage.setItem('hoom_token', data.token)
+            sessionStorage.setItem('dash_user', JSON.stringify(data.user))
+          } catch (e) {}
+        }
         showToast(`Selamat datang kembali, ${data.user?.name}!`, 'success')
         setTimeout(() => {
           if (['ADMIN', 'EDITOR', 'AUTHOR'].includes(data.user?.role)) {

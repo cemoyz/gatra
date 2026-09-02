@@ -115,7 +115,14 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
     if (mainEl) mainEl.addEventListener('scroll', onScroll, { passive: true })
 
     // Load logged in user & enforce auth guard
-    fetch('/api/auth/me')
+    let authToken = null
+    try {
+      authToken = localStorage.getItem('hoom_token') || sessionStorage.getItem('hoom_token')
+    } catch (e) {}
+
+    fetch('/api/auth/me', {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
+    })
       .then(res => res.json())
       .then(data => {
         if (data.success && data.user && ['ADMIN', 'EDITOR', 'AUTHOR'].includes(data.user.role)) {
@@ -125,13 +132,21 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
           setAuthLoading(false)
         } else {
           cachedDashboardUser = null
-          try { sessionStorage.removeItem('dash_user') } catch (e) {}
+          try {
+            sessionStorage.removeItem('dash_user')
+            localStorage.removeItem('hoom_token')
+            sessionStorage.removeItem('hoom_token')
+          } catch (e) {}
           router.replace('/login')
         }
       })
       .catch(() => {
         cachedDashboardUser = null
-        try { sessionStorage.removeItem('dash_user') } catch (e) {}
+        try {
+          sessionStorage.removeItem('dash_user')
+          localStorage.removeItem('hoom_token')
+          sessionStorage.removeItem('hoom_token')
+        } catch (e) {}
         router.replace('/login')
       })
 

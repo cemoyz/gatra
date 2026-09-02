@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       name: user.name
     })
 
-    setAuthCookie(res, token)
+    setAuthCookie(res, token, req)
 
     const userProfile = {
       id: user.id,
