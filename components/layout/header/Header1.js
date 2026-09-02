@@ -36,7 +36,7 @@ export default function Header1({ scroll, handleMobileMenu }) {
                             </div>
                             <div className="col-md-3 align-self-center d-none d-md-block">
                                 <div className="ta-header__top__right">
-                                    <Link href="/contact" className="ta-button">Subscribe <i className="fa fa-paper-plane" /></Link>
+                                    <Link href="/subscribe" className="ta-button">Subscribe <i className="fa fa-paper-plane" /></Link>
                                 </div>
                             </div>
                         </div>

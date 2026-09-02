@@ -35,7 +35,7 @@ export default function Header6({ scroll,handleMobileMenu }) {
                                                         </div>
                                                     </form>
                                                 </div>
-                                                <Link href="/contact" className="ta-button">Subscribe <i className="fa fa-paper-plane" /></Link>
+                                                <Link href="/subscribe" className="ta-button">Subscribe <i className="fa fa-paper-plane" /></Link>
                                             </div>
                                         </div>
                                         <div className="col-xl-3 col-lg-1 col-md-6 col-6 align-self-center justify-content-end d-flex d-lg-none">

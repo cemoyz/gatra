@@ -50,7 +50,7 @@ export default function Header7({ scroll,handleMobileMenu }) {
                                             </div>
                                         </form>
                                     </div>
-                                    <Link href="/contact" className="ta-button">Subscribe <i className="fa fa-paper-plane" /></Link>
+                                    <Link href="/subscribe" className="ta-button">Subscribe <i className="fa fa-paper-plane" /></Link>
                                 </div>
                             </div>
                         </div>

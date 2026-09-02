@@ -59,7 +59,7 @@ export default function Header8({ scroll, handleMobileMenu }) {
                                         Stories  updates from the Unspoken Smiles team, partners, and supporters. Dontate. Courses: dental <br />
                                         assistants, dentistry, dental professionals  etc.</p>
                                     <div className="ta-buttons mt-45">
-                                        <Link href="/contact" className="ta-button">Subscribe <i className="fa fa-paper-plane" /></Link>
+                                        <Link href="/subscribe" className="ta-button">Subscribe <i className="fa fa-paper-plane" /></Link>
                                         <Link href="#0" className="ta-button ta-button__light">Get In Touch</Link>
                                     </div>
                                 </div>
