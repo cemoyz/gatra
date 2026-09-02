@@ -118,15 +118,6 @@ export default function ImageUploader({
               className="preview-img"
               style={{ maxHeight: `${maxPreviewHeight - 16}px` }}
             />
-            <div className="preview-badge">
-              {value.startsWith('/uploads') ? (
-                <span className="badge-server"><i className="fa fa-check-circle"></i> Uploaded (Active)</span>
-              ) : value.includes('ibb.co') ? (
-                <span className="badge-imgbb"><i className="fa fa-cloud"></i> ImgBB</span>
-              ) : (
-                <span className="badge-local"><i className="fa fa-image"></i> Preset / Local</span>
-              )}
-            </div>
           </div>
         </div>
       )}
@@ -289,51 +280,6 @@ export default function ImageUploader({
           max-width: 100%;
           object-fit: contain;
           display: block;
-        }
-
-        .preview-badge {
-          position: absolute;
-          top: 8px;
-          right: 8px;
-        }
-
-        .badge-server {
-          background: rgba(16, 185, 129, 0.9);
-          backdrop-filter: blur(4px);
-          color: #ffffff;
-          font-size: 11px;
-          font-weight: 600;
-          padding: 4px 8px;
-          border-radius: 6px;
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-        }
-
-        .badge-imgbb {
-          background: rgba(37, 99, 235, 0.85);
-          backdrop-filter: blur(4px);
-          color: #ffffff;
-          font-size: 11px;
-          font-weight: 600;
-          padding: 4px 8px;
-          border-radius: 6px;
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
-        }
-
-        .badge-local {
-          background: rgba(51, 65, 85, 0.85);
-          backdrop-filter: blur(4px);
-          color: #ffffff;
-          font-size: 11px;
-          font-weight: 600;
-          padding: 4px 8px;
-          border-radius: 6px;
-          display: inline-flex;
-          align-items: center;
-          gap: 4px;
         }
 
         .dropzone-box {
