@@ -42,8 +42,33 @@
 	* blog-page CSS
 	* footer CSS
 
------------------------------------------------------------------------------------*/
 @import url("https://fonts.googleapis.com/css2?family=Catamaran:wght@300;400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&display=swap");
+
+/* Universal Sleek Slim Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.65);
+}
+
 @keyframes ta-gradient {
   0% {
     background-position: 0% 50%;
