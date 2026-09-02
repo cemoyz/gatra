@@ -13,6 +13,10 @@ import {
 import { canAccessRoute } from '@/lib/rbac'
 
 let cachedDashboardUser = null
+let cachedSiteSettings = null
+let cachedMessages = []
+let cachedComments = []
+let cachedUnreadCount = 0
 
 export default function DashboardLayout({ children, title = 'Dashboard' }) {
   const router = useRouter()
@@ -52,15 +56,28 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false)
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false)
   const [notifFilter, setNotifFilter] = useState('all') // 'all' | 'comments' | 'messages'
-  const [messages, setMessages] = useState([])
-  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0)
-  const [recentComments, setRecentComments] = useState([])
+  const [messages, setMessages] = useState(cachedMessages)
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(cachedUnreadCount)
+  const [recentComments, setRecentComments] = useState(cachedComments)
   const [lastSeenTime, setLastSeenTime] = useState(0)
   const [scrolled, setScrolled] = useState(false)
-  const [siteSettings, setSiteSettings] = useState({
-    site_title: 'Dua Narasi',
-    site_tagline: 'Editorial Control Panel',
-    site_logo: ''
+  const [siteSettings, setSiteSettings] = useState(() => {
+    if (cachedSiteSettings) return cachedSiteSettings
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = sessionStorage.getItem('dash_site_settings')
+        if (stored) {
+          const s = JSON.parse(stored)
+          cachedSiteSettings = s
+          return s
+        }
+      } catch (e) {}
+    }
+    return {
+      site_title: 'Dua Narasi',
+      site_tagline: 'Editorial Control Panel',
+      site_logo: ''
+    }
   })
   const notifRef = useRef(null)
 
@@ -70,6 +87,8 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
       .then(res => res.json())
       .then(data => {
         if (data.success && data.settings) {
+          cachedSiteSettings = data.settings
+          try { sessionStorage.setItem('dash_site_settings', JSON.stringify(data.settings)) } catch (e) {}
           setSiteSettings(prev => ({
             ...prev,
             ...data.settings
@@ -123,8 +142,10 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
         .then(res => res.json())
         .then(data => {
           if (data.success && Array.isArray(data.messages)) {
+            cachedMessages = data.messages
             setMessages(data.messages)
             const unread = data.messages.filter(m => !m.isRead).length
+            cachedUnreadCount = unread
             setUnreadMessagesCount(unread)
           }
         })
@@ -135,6 +156,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
         .then(res => res.json())
         .then(data => {
           if (data.success && Array.isArray(data.comments)) {
+            cachedComments = data.comments
             setRecentComments(data.comments)
           }
         })
