@@ -12,10 +12,33 @@ import {
 } from '@/components/dashboard/ui'
 import { canAccessRoute } from '@/lib/rbac'
 
+let cachedDashboardUser = null
+
 export default function DashboardLayout({ children, title = 'Dashboard' }) {
   const router = useRouter()
-  const [currentUser, setCurrentUser] = useState(null)
-  const [authLoading, setAuthLoading] = useState(true)
+  const [currentUser, setCurrentUser] = useState(() => {
+    if (cachedDashboardUser) return cachedDashboardUser
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = sessionStorage.getItem('dash_user')
+        if (stored) {
+          const u = JSON.parse(stored)
+          cachedDashboardUser = u
+          return u
+        }
+      } catch (e) {}
+    }
+    return null
+  })
+  const [authLoading, setAuthLoading] = useState(() => {
+    if (cachedDashboardUser) return false
+    if (typeof window !== 'undefined') {
+      try {
+        if (sessionStorage.getItem('dash_user')) return false
+      } catch (e) {}
+    }
+    return true
+  })
   const [themeMode, setThemeMode] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -77,13 +100,19 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
       .then(res => res.json())
       .then(data => {
         if (data.success && data.user && ['ADMIN', 'EDITOR', 'AUTHOR'].includes(data.user.role)) {
+          cachedDashboardUser = data.user
+          try { sessionStorage.setItem('dash_user', JSON.stringify(data.user)) } catch (e) {}
           setCurrentUser(data.user)
           setAuthLoading(false)
         } else {
+          cachedDashboardUser = null
+          try { sessionStorage.removeItem('dash_user') } catch (e) {}
           router.replace('/login')
         }
       })
       .catch(() => {
+        cachedDashboardUser = null
+        try { sessionStorage.removeItem('dash_user') } catch (e) {}
         router.replace('/login')
       })
 
@@ -167,6 +196,8 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
     } catch (err) {
       console.error(err)
     } finally {
+      cachedDashboardUser = null
+      try { sessionStorage.removeItem('dash_user') } catch (e) {}
       setCurrentUser(null)
       window.location.href = '/login'
     }
@@ -254,6 +285,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
   const isRouteForbidden = !canAccessRoute(userRole, router.pathname)
 
   if (authLoading || !currentUser) {
+    const isDark = themeMode === 'dark'
     return (
       <div style={{
         minHeight: '100vh',
@@ -261,22 +293,22 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#0f172a',
-        color: '#f8fafc',
+        background: isDark ? '#090d16' : '#f8fafc',
+        color: isDark ? '#f8fafc' : '#09090b',
         fontFamily: 'Inter, system-ui, sans-serif'
       }}>
         <Head>
           <title>Memuat Panel Dashboard...</title>
         </Head>
         <div style={{
-          width: '38px',
-          height: '38px',
-          border: '3px solid rgba(255,255,255,0.1)',
+          width: '36px',
+          height: '36px',
+          border: `3px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
           borderTopColor: '#da0105',
           borderRadius: '50%',
           animation: 'dashSpin 0.7s linear infinite'
         }} />
-        <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '13.5px', fontWeight: 500 }}>
+        <p style={{ marginTop: '16px', color: isDark ? '#94a3b8' : '#64748b', fontSize: '13.5px', fontWeight: 500 }}>
           Memverifikasi hak akses...
         </p>
         <style jsx>{`

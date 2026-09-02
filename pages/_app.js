@@ -54,9 +54,7 @@ function MyApp({ Component, pageProps }) {
             />
 
             {!loading ? (
-                <div key={router.asPath} className="page-transition-wrapper">
-                    <Component {...pageProps} />
-                </div>
+                <Component {...pageProps} />
             ) : (
                 <Preloader />
             )}
@@ -88,24 +86,6 @@ function MyApp({ Component, pageProps }) {
                 @keyframes progressBarPulse {
                     0% { background-position: 0% 50%; }
                     100% { background-position: 200% 50%; }
-                }
-
-                /* Seamless Smooth Page Fade & Slide Up Transition */
-                @keyframes pageFadeSlideIn {
-                    0% {
-                        opacity: 0;
-                        transform: translateY(8px);
-                    }
-                    100% {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-
-                .page-transition-wrapper {
-                    animation: pageFadeSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                    will-change: opacity, transform;
-                    width: 100%;
                 }
             `}</style>
         </>
