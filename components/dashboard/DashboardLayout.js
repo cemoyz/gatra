@@ -449,38 +449,39 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
           </div>
 
           {/* User Card at Sidebar Bottom */}
-          <div className="dash-sidebar-footer" style={{ padding: '10px 12px' }}>
+          <div className="dash-sidebar-footer" style={{ padding: '12px 14px' }}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className="dash-user-card-compact" style={{ padding: '6px 8px' }}>
+                <div className="dash-user-card-compact" style={{ padding: '8px 10px', borderRadius: '10px' }}>
                   <img
                     src={currentUser?.avatar || '/avatar.png'}
                     alt=""
                     className="dash-user-avatar-sm"
-                    style={{ width: '32px', height: '32px' }}
+                    style={{ width: '34px', height: '34px', flexShrink: 0 }}
                     onError={(e) => { e.currentTarget.src = '/avatar.png' }}
                   />
-                  <div style={{ flex: 1, minWidth: 0, lineHeight: 1.2 }}>
+                  <div style={{ flex: 1, minWidth: 0, lineHeight: 1.25 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {currentUser?.name || 'Redaksi Hoom'}
                       </span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
                       <span style={{
                         fontSize: '9.5px',
                         fontWeight: 800,
-                        padding: '1px 5px',
+                        padding: '2px 6px',
                         borderRadius: '4px',
                         letterSpacing: '0.4px',
                         textTransform: 'uppercase',
+                        display: 'inline-block',
                         ...getRoleBadgeStyle(userRole)
                       }}>
                         {userRole}
                       </span>
                     </div>
                   </div>
-                  <i className="fa fa-sort" style={{ color: 'var(--dash-text-muted)', fontSize: '12px' }}></i>
+                  <i className="fa fa-angle-up" style={{ color: 'var(--dash-text-muted)', fontSize: '13px', marginLeft: 'auto', flexShrink: 0 }}></i>
                 </div>
               </DropdownMenuTrigger>
 

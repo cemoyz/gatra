@@ -307,23 +307,27 @@ html {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 8px;
-  border-radius: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
   border: 1px solid var(--dash-border);
   background: var(--dash-card-bg);
   cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
   transition: all 0.15s ease;
 }
 
 .dash-user-card-compact:hover {
   background: var(--dash-card-hover);
+  border-color: var(--dash-text-muted);
 }
 
 .dash-user-avatar-sm {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 /* Topbar Styling matching main-files */
