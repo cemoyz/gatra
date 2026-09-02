@@ -188,9 +188,10 @@ export default function PostsManagement() {
       />
 
       {/* Main Table Card with Integrated Header Toolbar matching main-files */}
-      <Card>
+      <Card style={{ position: 'relative', minHeight: '380px' }}>
+        <CardLoadingOverlay loading={loading && posts.length === 0} text="Memuat daftar artikel..." />
         <CardHeader style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '14px', alignItems: 'stretch' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', width: '100%' }}>
             <CardTitle icon="fa-list">
               Daftar Artikel ({pagination.total || posts.length})
             </CardTitle>
@@ -228,57 +229,61 @@ export default function PostsManagement() {
                 ></i>
                 <input
                   type="text"
-                  placeholder="Cari judul berita, penulis, topik..."
+                  placeholder="Cari judul berita, ringkasan, atau isi konten..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="dash-input dash-input-search"
-                  style={{ height: '36px', borderRadius: '8px' }}
+                  style={{
+                    width: '100%',
+                    height: '36px',
+                    padding: '0 12px 0 34px',
+                    borderRadius: '8px',
+                    border: '1px solid var(--dash-border)',
+                    background: 'var(--dash-card-bg)',
+                    color: 'var(--dash-text-main)',
+                    fontSize: '13px',
+                    outline: 'none',
+                    transition: 'border-color 0.15s ease'
+                  }}
                 />
               </div>
-              <Button type="submit" variant="secondary" style={{ height: '36px', padding: '0 14px', borderRadius: '8px' }}>
-                Cari
-              </Button>
             </form>
 
-            {/* Filter Dropdowns matching main-files */}
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-              {/* Format Filter */}
-              <Select value={selectedType} onValueChange={setSelectedType}>
-                <SelectTrigger style={{ height: '36px', minWidth: '145px' }}>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {postTypes.map(t => (
-                    <SelectItem key={t.id} value={t.id}>{t.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {/* Format Filter */}
+            <Select value={selectedType} onValueChange={setSelectedType}>
+              <SelectTrigger style={{ height: '36px', minWidth: '145px' }}>
+                <SelectValue placeholder="Semua Format" />
+              </SelectTrigger>
+              <SelectContent>
+                {postTypes.map((t) => (
+                  <SelectItem key={t.id} value={t.id}>{t.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-              {/* Category Filter */}
-              <Select value={selectedCat} onValueChange={setSelectedCat}>
-                <SelectTrigger style={{ height: '36px', minWidth: '160px' }}>
-                  <SelectValue placeholder="Semua Kategori" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Semua Kategori</SelectItem>
-                  {categories.map((c) => (
-                    <SelectItem key={c.id} value={c.slug}>{c.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            {/* Category Filter */}
+            <Select value={selectedCat} onValueChange={setSelectedCat}>
+              <SelectTrigger style={{ height: '36px', minWidth: '160px' }}>
+                <SelectValue placeholder="Semua Kategori" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Kategori</SelectItem>
+                {categories.map((c) => (
+                  <SelectItem key={c.id} value={c.slug}>{c.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-              {/* Status Filter */}
-              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                <SelectTrigger style={{ height: '36px', minWidth: '145px' }}>
-                  <SelectValue placeholder="Semua Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Semua Status</SelectItem>
-                  <SelectItem value="PUBLISHED">Terbit (Published)</SelectItem>
-                  <SelectItem value="DRAFT">Draf (Draft)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Status Filter */}
+            <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+              <SelectTrigger style={{ height: '36px', minWidth: '145px' }}>
+                <SelectValue placeholder="Semua Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua Status</SelectItem>
+                <SelectItem value="PUBLISHED">Terbit (Published)</SelectItem>
+                <SelectItem value="DRAFT">Draf (Draft)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardHeader>
 
@@ -298,14 +303,7 @@ export default function PostsManagement() {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '48px', color: 'var(--dash-text-muted)' }}>
-                    <i className="fa fa-spinner fa-spin fa-2x" style={{ display: 'block', marginBottom: '10px' }}></i>
-                    Memuat daftar artikel...
-                  </td>
-                </tr>
-              ) : posts.length === 0 ? (
+              {posts.length === 0 && !loading ? (
                 <tr>
                   <td colSpan="8">
                     <EmptyState

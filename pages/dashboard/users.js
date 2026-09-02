@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
+  CardLoadingOverlay,
   Badge,
   Button,
   Input,
@@ -30,14 +31,12 @@ export default function DashboardUsers() {
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState('all')
 
-  // Modals & Feedback
   const [toast, setToast] = useState(null)
   const [showAddModal, setShowAddModal] = useState(false)
-  const [editUserModal, setEditUserModal] = useState(null) // selected user object to edit
+  const [editUserModal, setEditUserModal] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState(null)
 
-  // New User Form State
   const [newUser, setNewUser] = useState({
     name: '',
     email: '',
@@ -47,7 +46,6 @@ export default function DashboardUsers() {
     bio: ''
   })
 
-  // Edit User Form State
   const [editForm, setEditForm] = useState({
     name: '',
     email: '',
@@ -62,7 +60,6 @@ export default function DashboardUsers() {
     setTimeout(() => setToast(null), 4000)
   }
 
-  // Fetch all users with author details
   const fetchUsers = async () => {
     if (cachedUsers.length === 0) setLoading(true)
     try {
@@ -85,7 +82,6 @@ export default function DashboardUsers() {
     fetchUsers()
   }, [])
 
-  // Handle Add User
   const handleAddUser = async (e) => {
     e.preventDefault()
     if (!newUser.name || !newUser.email || !newUser.password) {
@@ -102,37 +98,33 @@ export default function DashboardUsers() {
       })
       const data = await res.json()
       if (data.success) {
-        showToast(`Pengguna "${data.user?.name}" berhasil ditambahkan!`, 'success')
+        showToast('Pengguna baru berhasil ditambahkan!')
         setShowAddModal(false)
-        setNewUser({ name: '', email: '', password: '', role: 'EDITOR', authorTitle: 'Senior Editor', bio: '' })
+        setNewUser({
+          name: '',
+          email: '',
+          password: '',
+          role: 'EDITOR',
+          authorTitle: 'Senior Editor',
+          bio: ''
+        })
         fetchUsers()
       } else {
         showToast(data.message || 'Gagal menambahkan pengguna', 'error')
       }
     } catch (err) {
-      showToast('Error koneksi saat menambahkan pengguna', 'error')
+      showToast('Terjadi kesalahan sistem', 'error')
     } finally {
       setSubmitting(false)
     }
   }
 
-  // Open Edit Modal
-  const openEditModal = (u) => {
-    setEditUserModal(u)
-    setEditForm({
-      name: u.name || '',
-      email: u.email || '',
-      role: u.role || 'EDITOR',
-      authorTitle: u.author?.role || '',
-      bio: u.bio || u.author?.bio || '',
-      password: ''
-    })
-  }
-
-  // Handle Save Edit
-  const handleSaveEdit = async (e) => {
+  const handleEditUser = async (e) => {
     e.preventDefault()
-    if (!editUserModal) return
+    if (!editForm.name || !editForm.email) {
+      showToast('Mohon lengkapi nama dan email', 'error')
+      return
+    }
 
     setSubmitting(true)
     try {
@@ -143,73 +135,83 @@ export default function DashboardUsers() {
       })
       const data = await res.json()
       if (data.success) {
-        showToast(`Profil pengguna "${data.user?.name}" berhasil diperbarui!`, 'success')
+        showToast('Data pengguna berhasil diperbarui!')
         setEditUserModal(null)
         fetchUsers()
       } else {
         showToast(data.message || 'Gagal memperbarui pengguna', 'error')
       }
     } catch (err) {
-      showToast('Error saat memperbarui data pengguna', 'error')
+      showToast('Terjadi kesalahan sistem', 'error')
     } finally {
       setSubmitting(false)
     }
   }
 
-  // Handle Delete User
-  const handleDeleteConfirm = async () => {
+  const handleDeleteUser = async () => {
     if (!deleteTarget) return
     setSubmitting(true)
     try {
-      const res = await fetch(`/api/users/${deleteTarget.id}`, { method: 'DELETE' })
+      const res = await fetch(`/api/users/${deleteTarget.id}`, {
+        method: 'DELETE'
+      })
       const data = await res.json()
       if (data.success) {
-        showToast('Pengguna berhasil dihapus')
+        showToast('Pengguna berhasil dihapus!')
+        setDeleteTarget(null)
         fetchUsers()
       } else {
         showToast(data.message || 'Gagal menghapus pengguna', 'error')
       }
     } catch (err) {
-      showToast('Terjadi kesalahan jaringan', 'error')
+      showToast('Terjadi kesalahan sistem', 'error')
     } finally {
       setSubmitting(false)
-      setDeleteTarget(null)
     }
   }
 
-  // Filter Users
-  const filteredUsers = users.filter(u => {
+  const openEditModal = (u) => {
+    setEditUserModal(u)
+    setEditForm({
+      name: u.name || '',
+      email: u.email || '',
+      role: u.role || 'EDITOR',
+      authorTitle: u.author?.role || '',
+      bio: u.author?.bio || '',
+      password: ''
+    })
+  }
+
+  const getRoleBadgeVariant = (role) => {
+    switch (role) {
+      case 'ADMIN': return 'primary'
+      case 'EDITOR': return 'info'
+      case 'AUTHOR': return 'warning'
+      default: return 'outline'
+    }
+  }
+
+  const filteredUsers = users.filter((u) => {
     const matchSearch =
       u.name?.toLowerCase().includes(search.toLowerCase()) ||
       u.email?.toLowerCase().includes(search.toLowerCase()) ||
-      u.author?.role?.toLowerCase().includes(search.toLowerCase()) ||
-      u.bio?.toLowerCase().includes(search.toLowerCase())
+      u.author?.role?.toLowerCase().includes(search.toLowerCase())
     const matchRole = roleFilter === 'all' || u.role === roleFilter
     return matchSearch && matchRole
   })
 
-  const isFiltered = search || roleFilter !== 'all'
-
-  const getRoleBadgeVariant = (role) => {
-    switch (role?.toUpperCase()) {
-      case 'ADMIN': return 'default'
-      case 'EDITOR': return 'secondary'
-      case 'AUTHOR': return 'outline'
-      default: return 'outline'
-    }
-  }
+  const isFiltered = search !== '' || roleFilter !== 'all'
 
   return (
     <DashboardLayout title="Manajemen Pengguna & Redaksi">
       <Toast toast={toast} onClose={() => setToast(null)} />
 
-      {/* Page Header */}
       <PageHeader
         title="Manajemen Pengguna"
         description="Kelola akun pengguna, hak akses redaksi, serta profil jurnalis dan penulis portal berita."
         badge={`${users.length} Total Pengguna`}
         icon="fa-users"
-        actions={
+        action={
           <button
             type="button"
             onClick={() => setShowAddModal(true)}
@@ -221,8 +223,9 @@ export default function DashboardUsers() {
         }
       />
 
-      {/* Main Single Card with Unified Toolbar */}
-      <Card>
+      <Card style={{ position: 'relative', minHeight: '380px' }}>
+        <CardLoadingOverlay loading={loading && users.length === 0} text="Memuat data pengguna..." />
+
         <CardHeader style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '14px', alignItems: 'stretch' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', width: '100%' }}>
             <CardTitle icon="fa-address-book-o">
@@ -242,7 +245,6 @@ export default function DashboardUsers() {
             )}
           </div>
 
-          {/* Unified Filter Row */}
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', width: '100%' }}>
             <div style={{ position: 'relative', flex: '1 1 280px', minWidth: '240px' }}>
               <i
@@ -262,8 +264,18 @@ export default function DashboardUsers() {
                 placeholder="Cari nama pengguna, email, atau gelar penulis..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="dash-input dash-input-search"
-                style={{ height: '36px', borderRadius: '8px' }}
+                style={{
+                  width: '100%',
+                  height: '36px',
+                  padding: '0 12px 0 34px',
+                  borderRadius: '8px',
+                  border: '1px solid var(--dash-border)',
+                  background: 'var(--dash-card-bg)',
+                  color: 'var(--dash-text-main)',
+                  fontSize: '13px',
+                  outline: 'none',
+                  transition: 'border-color 0.15s ease'
+                }}
               />
             </div>
 
@@ -276,13 +288,12 @@ export default function DashboardUsers() {
                 <SelectItem value="ADMIN">Administrator (ADMIN)</SelectItem>
                 <SelectItem value="EDITOR">Editor Redaksi (EDITOR)</SelectItem>
                 <SelectItem value="AUTHOR">Penulis / Wartawan (AUTHOR)</SelectItem>
-                <SelectItem value="SUBSCRIBER">Pelanggan (SUBSCRIBER)</SelectItem>
+                <SelectItem value="SUBSCRIBER">Pembaca (SUBSCRIBER)</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </CardHeader>
 
-        {/* Users Table */}
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
@@ -297,14 +308,7 @@ export default function DashboardUsers() {
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '48px', color: 'var(--dash-text-muted)' }}>
-                    <i className="fa fa-spinner fa-spin fa-2x" style={{ display: 'block', marginBottom: '10px' }}></i>
-                    Memuat data pengguna...
-                  </td>
-                </tr>
-              ) : filteredUsers.length === 0 ? (
+              {filteredUsers.length === 0 && !loading ? (
                 <tr>
                   <td colSpan="7">
                     <EmptyState

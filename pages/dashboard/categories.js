@@ -5,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
+  CardLoadingOverlay,
   Badge,
   Button,
   Input,
@@ -264,7 +265,8 @@ export default function CategoriesManagement() {
         </Card>
 
         {/* Categories List Card */}
-        <Card>
+        <Card style={{ position: 'relative', minHeight: '380px' }}>
+          <CardLoadingOverlay loading={loading && categories.length === 0} text="Memuat kategori..." />
           <CardHeader>
             <CardTitle icon="fa-folder-o">Daftar Kategori ({categories.length})</CardTitle>
           </CardHeader>
@@ -280,20 +282,13 @@ export default function CategoriesManagement() {
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: '48px', color: 'var(--dash-text-muted)' }}>
-                      <i className="fa fa-spinner fa-spin fa-2x" style={{ display: 'block', marginBottom: '8px' }}></i>
-                      Memuat kategori...
-                    </td>
-                  </tr>
-                ) : categories.length === 0 ? (
+                {categories.length === 0 && !loading ? (
                   <tr>
                     <td colSpan="5">
                       <EmptyState
                         icon="fa-folder-open-o"
                         title="Belum Ada Kategori"
-                        description="Mulai tambahkan kategori berita menggunakan formulir di sebelah kiri."
+                        description="Mulai buat kategori berita pertama Anda menggunakan formulir di sebelah kiri."
                       />
                     </td>
                   </tr>

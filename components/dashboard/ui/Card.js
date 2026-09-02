@@ -124,3 +124,31 @@ export const CardFooter = React.forwardRef(({ className = '', style = {}, childr
   </div>
 ))
 CardFooter.displayName = 'CardFooter'
+
+export const CardLoadingOverlay = ({ loading, text = 'Memuat data...' }) => {
+  if (!loading) return null
+  return (
+    <div className="dash-card-overlay">
+      <div
+        style={{
+          width: '32px',
+          height: '32px',
+          border: '3px solid rgba(148, 163, 184, 0.25)',
+          borderTopColor: '#da0105',
+          borderRadius: '50%',
+          animation: 'dashSpin 0.7s linear infinite'
+        }}
+      />
+      {text && (
+        <span style={{ marginTop: '12px', fontSize: '13px', fontWeight: 600, color: 'var(--dash-text-muted)' }}>
+          {text}
+        </span>
+      )}
+      <style jsx>{`
+        @keyframes dashSpin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </div>
+  )
+}
