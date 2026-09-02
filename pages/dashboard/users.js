@@ -220,8 +220,8 @@ export default function DashboardUsers() {
 
       {/* Main Single Card with Unified Toolbar */}
       <Card>
-        <CardHeader style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+        <CardHeader style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '14px', alignItems: 'stretch' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', width: '100%' }}>
             <CardTitle icon="fa-address-book-o">
               Daftar Pengguna & Tim Redaksi ({filteredUsers.length})
             </CardTitle>
