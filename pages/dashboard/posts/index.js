@@ -19,6 +19,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export default function PostsManagement() {
+  const [currentUser, setCurrentUser] = useState(null)
   const [posts, setPosts] = useState([])
   const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(true)
@@ -47,8 +48,15 @@ export default function PostsManagement() {
     { id: 'status', label: 'Status' }
   ]
 
-  // Fetch categories for filter dropdown
+  // Fetch current user and categories
   useEffect(() => {
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.user) setCurrentUser(data.user)
+      })
+      .catch(console.error)
+
     fetch('/api/categories')
       .then(res => res.json())
       .then(data => {
@@ -57,17 +65,23 @@ export default function PostsManagement() {
       .catch(console.error)
   }, [])
 
-  const fetchPosts = async (page = 1) => {
+  const fetchPosts = async (page = 1, user = currentUser) => {
     setLoading(true)
     try {
-      const query = new URLSearchParams({
+      const params = {
         page,
         limit: 15,
         search,
         category: selectedCat,
         status: selectedStatus,
         postType: selectedType
-      })
+      }
+
+      if (user?.role === 'AUTHOR' && user.author?.id) {
+        params.authorId = user.author.id
+      }
+
+      const query = new URLSearchParams(params)
       const res = await fetch(`/api/posts?${query.toString()}`)
       const data = await res.json()
       if (data.success) {
@@ -82,8 +96,8 @@ export default function PostsManagement() {
   }
 
   useEffect(() => {
-    fetchPosts(1)
-  }, [selectedCat, selectedStatus, selectedType])
+    fetchPosts(1, currentUser)
+  }, [selectedCat, selectedStatus, selectedType, currentUser])
 
   const handleSearchSubmit = (e) => {
     e.preventDefault()
@@ -388,22 +402,26 @@ export default function PostsManagement() {
                         >
                           <i className="fa fa-external-link"></i>
                         </Link>
-                        <Link
-                          href={`/dashboard/posts/edit/${post.id}`}
-                          className="dash-icon-btn"
-                          style={{ width: '32px', height: '32px', fontSize: '12px', borderRadius: '8px', textDecoration: 'none' }}
-                          title="Sunting Artikel"
-                        >
-                          <i className="fa fa-pencil"></i>
-                        </Link>
-                        <button
-                          onClick={() => setDeleteTarget(post)}
-                          className="dash-icon-btn"
-                          style={{ width: '32px', height: '32px', fontSize: '12px', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#ef4444', borderRadius: '8px' }}
-                          title="Hapus Artikel"
-                        >
-                          <i className="fa fa-trash"></i>
-                        </button>
+                        {(currentUser?.role !== 'AUTHOR' || (currentUser?.author?.id && post.authorId === currentUser.author.id)) && (
+                          <>
+                            <Link
+                              href={`/dashboard/posts/edit/${post.id}`}
+                              className="dash-icon-btn"
+                              style={{ width: '32px', height: '32px', fontSize: '12px', borderRadius: '8px', textDecoration: 'none' }}
+                              title="Sunting Artikel"
+                            >
+                              <i className="fa fa-pencil"></i>
+                            </Link>
+                            <button
+                              onClick={() => setDeleteTarget(post)}
+                              className="dash-icon-btn"
+                              style={{ width: '32px', height: '32px', fontSize: '12px', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#ef4444', borderRadius: '8px' }}
+                              title="Hapus Artikel"
+                            >
+                              <i className="fa fa-trash"></i>
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>

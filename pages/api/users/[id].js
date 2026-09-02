@@ -1,12 +1,23 @@
 import prisma from '@/lib/prisma'
 import { hashPassword } from '@/lib/auth'
+import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 
 export default async function handler(req, res) {
+  const authUser = await requireApiAuth(req, res)
+  if (!authUser) return
+
   const { id } = req.query
   const userId = parseInt(id)
 
   if (isNaN(userId)) {
     return res.status(400).json({ success: false, message: 'Invalid user ID' })
+  }
+
+  const isAdmin = authUser.role === ROLES.ADMIN
+  const isSelf = authUser.id === userId
+
+  if (!isAdmin && !isSelf) {
+    return res.status(403).json({ success: false, message: 'Forbidden. You do not have permission to access or modify this user.' })
   }
 
   // GET single user
@@ -43,7 +54,8 @@ export default async function handler(req, res) {
 
       if (name !== undefined) updateData.name = name.trim()
       if (email !== undefined) updateData.email = email.trim().toLowerCase()
-      if (role !== undefined) updateData.role = role
+      // Only admin can change role
+      if (role !== undefined && isAdmin) updateData.role = role
       if (bio !== undefined) updateData.bio = bio
       if (avatar !== undefined) updateData.avatar = avatar
       if (password) updateData.password = hashPassword(password)
@@ -71,6 +83,12 @@ export default async function handler(req, res) {
 
   // DELETE user
   if (req.method === 'DELETE') {
+    if (!isAdmin) {
+      return res.status(403).json({ success: false, message: 'Only administrators can delete user accounts' })
+    }
+    if (authUser.id === userId) {
+      return res.status(400).json({ success: false, message: 'You cannot delete your own admin account' })
+    }
     try {
       await prisma.user.delete({
         where: { id: userId }

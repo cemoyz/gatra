@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 
 const defaultSettings = {
   layout_grid: 'three-column',
@@ -90,6 +91,9 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST' || req.method === 'PUT') {
+    const authUser = await requireApiAuth(req, res, [ROLES.ADMIN])
+    if (!authUser) return
+
     try {
       const payload = req.body
 

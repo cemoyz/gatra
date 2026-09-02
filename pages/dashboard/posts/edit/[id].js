@@ -17,10 +17,12 @@ import ImageUploader from '@/components/elements/ImageUploader'
 export default function EditPost() {
   const router = useRouter()
   const { id } = router.query
+  const [currentUser, setCurrentUser] = useState(null)
   const [categories, setCategories] = useState([])
   const [authors, setAuthors] = useState([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [forbidden, setForbidden] = useState(false)
   const [toast, setToast] = useState(null)
 
   const [formData, setFormData] = useState({
@@ -69,6 +71,13 @@ export default function EditPost() {
   ]
 
   useEffect(() => {
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.user) setCurrentUser(data.user)
+      })
+      .catch(console.error)
+
     Promise.all([
       fetch('/api/categories').then(r => r.json()),
       fetch('/api/authors').then(r => r.json())
@@ -88,6 +97,17 @@ export default function EditPost() {
       .then(data => {
         if (data.success && data.post) {
           const p = data.post
+
+          // If current user is an AUTHOR, verify post ownership
+          if (currentUser && currentUser.role === 'AUTHOR') {
+            const authorId = p.authorId || (p.author?.id)
+            if (currentUser.author?.id && authorId !== currentUser.author.id) {
+              setForbidden(true)
+              setLoading(false)
+              return
+            }
+          }
+
           setFormData({
             title: p.title || '',
             slug: p.slug || '',
@@ -115,7 +135,7 @@ export default function EditPost() {
       })
       .catch(() => setToast({ msg: 'Failed to fetch post', type: 'error' }))
       .finally(() => setLoading(false))
-  }, [id])
+  }, [id, currentUser])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -182,6 +202,42 @@ export default function EditPost() {
         <div style={{ textAlign: 'center', padding: '60px', color: '#94a3b8' }}>
           <i className="fa fa-spinner fa-spin fa-2x" style={{ marginBottom: '12px' }}></i>
           <div>Loading article data...</div>
+        </div>
+      ) : forbidden ? (
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '60px 20px',
+          background: 'var(--dash-card-bg)',
+          borderRadius: '16px',
+          border: '1px solid var(--dash-border)',
+          textAlign: 'center'
+        }}>
+          <div style={{
+            width: '60px',
+            height: '60px',
+            borderRadius: '50%',
+            background: 'rgba(218, 1, 5, 0.12)',
+            color: '#da0105',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '26px',
+            marginBottom: '16px'
+          }}>
+            <i className="fa fa-lock"></i>
+          </div>
+          <h2 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '8px', color: 'var(--dash-text-main)' }}>
+            Akses Ditolak
+          </h2>
+          <p style={{ color: 'var(--dash-text-muted)', fontSize: '14px', maxWidth: '420px', marginBottom: '24px' }}>
+            Sebagai Penulis (<strong>AUTHOR</strong>), Anda hanya memiliki izin untuk mengedit artikel karya Anda sendiri.
+          </p>
+          <Link href="/dashboard/posts" className="dash-btn dash-btn-primary" style={{ textDecoration: 'none' }}>
+            <i className="fa fa-arrow-left"></i> Kembali ke Daftar Artikel
+          </Link>
         </div>
       ) : (
         <>

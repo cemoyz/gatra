@@ -10,6 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator
 } from '@/components/dashboard/ui'
+import { canAccessRoute } from '@/lib/rbac'
 
 export default function DashboardLayout({ children, title = 'Dashboard' }) {
   const router = useRouter()
@@ -205,16 +206,35 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
     ? formattedMessages
     : allNotifications
 
-  const navItems = [
-    { label: 'Ringkasan / Analytics', path: '/dashboard', icon: 'fa-tachometer' },
-    { label: 'Semua Artikel', path: '/dashboard/posts', icon: 'fa-newspaper-o' },
-    { label: 'Tulis Artikel Baru', path: '/dashboard/posts/new', icon: 'fa-pencil-square-o' },
-    { label: 'Kategori Berita', path: '/dashboard/categories', icon: 'fa-folder-open-o' },
-    { label: 'Pengguna', path: '/dashboard/users', icon: 'fa-users' },
-    { label: 'Komentar Pembaca', path: '/dashboard/comments', icon: 'fa-comments-o', badge: recentComments.length },
-    { label: 'Pesan Masuk (Inbox)', path: '/dashboard/messages', icon: 'fa-envelope-o', badge: unreadMessagesCount },
-    { label: 'Pengaturan Website', path: '/dashboard/settings', icon: 'fa-sliders' },
+  const getRoleBadgeStyle = (role) => {
+    switch (role) {
+      case 'ADMIN':
+        return { background: 'rgba(218, 1, 5, 0.12)', color: '#da0105', border: '1px solid rgba(218, 1, 5, 0.25)' }
+      case 'EDITOR':
+        return { background: 'rgba(99, 102, 241, 0.12)', color: '#6366f1', border: '1px solid rgba(99, 102, 241, 0.25)' }
+      case 'AUTHOR':
+        return { background: 'rgba(16, 185, 129, 0.12)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.25)' }
+      default:
+        return { background: 'rgba(100, 116, 139, 0.12)', color: '#64748b', border: '1px solid rgba(100, 116, 139, 0.25)' }
+    }
+  }
+
+  const userRole = currentUser?.role || 'SUBSCRIBER'
+
+  const allNavItems = [
+    { label: 'Ringkasan / Analytics', path: '/dashboard', icon: 'fa-tachometer', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: userRole === 'AUTHOR' ? 'Artikel Saya' : 'Semua Artikel', path: '/dashboard/posts', icon: 'fa-newspaper-o', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: 'Tulis Artikel Baru', path: '/dashboard/posts/new', icon: 'fa-pencil-square-o', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: 'Kategori Berita', path: '/dashboard/categories', icon: 'fa-folder-open-o', roles: ['ADMIN', 'EDITOR'] },
+    { label: 'Tim Penulis / Authors', path: '/dashboard/authors', icon: 'fa-user-circle-o', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: 'Manajemen Pengguna', path: '/dashboard/users', icon: 'fa-users', roles: ['ADMIN'] },
+    { label: 'Komentar Pembaca', path: '/dashboard/comments', icon: 'fa-comments-o', badge: recentComments.length, roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: 'Pesan Masuk (Inbox)', path: '/dashboard/messages', icon: 'fa-envelope-o', badge: unreadMessagesCount, roles: ['ADMIN', 'EDITOR'] },
+    { label: 'Pengaturan Website', path: '/dashboard/settings', icon: 'fa-sliders', roles: ['ADMIN'] },
   ]
+
+  const navItems = allNavItems.filter(item => !item.roles || item.roles.includes(userRole))
+  const isRouteForbidden = !canAccessRoute(userRole, router.pathname)
 
   if (authLoading || !currentUser) {
     return (
@@ -349,11 +369,23 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     onError={(e) => { e.currentTarget.src = '/avatar.png' }}
                   />
                   <div style={{ flex: 1, minWidth: 0, lineHeight: 1.2 }}>
-                    <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {currentUser?.name || 'Redaksi Hoom'}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {currentUser?.name || 'Redaksi Hoom'}
+                      </span>
                     </div>
-                    <div style={{ fontSize: '11px', color: 'var(--dash-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                      {currentUser?.email || 'admin@hoom.id'}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                      <span style={{
+                        fontSize: '9.5px',
+                        fontWeight: 800,
+                        padding: '1px 5px',
+                        borderRadius: '4px',
+                        letterSpacing: '0.4px',
+                        textTransform: 'uppercase',
+                        ...getRoleBadgeStyle(userRole)
+                      }}>
+                        {userRole}
+                      </span>
                     </div>
                   </div>
                   <i className="fa fa-sort" style={{ color: 'var(--dash-text-muted)', fontSize: '12px' }}></i>
@@ -366,18 +398,38 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     {currentUser?.name || 'Redaksi Hoom'}
                   </div>
                   <div style={{ color: 'var(--dash-text-muted)', fontSize: '11px', fontWeight: 500, textTransform: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: '1px' }}>
-                    Role: {currentUser?.role || 'ADMIN'}
+                    {currentUser?.email || 'admin@hoom.id'}
+                  </div>
+                  <div style={{ marginTop: '6px' }}>
+                    <span style={{
+                      fontSize: '10px',
+                      fontWeight: 800,
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      textTransform: 'uppercase',
+                      ...getRoleBadgeStyle(userRole)
+                    }}>
+                      Role: {userRole}
+                    </span>
                   </div>
                 </DropdownMenuLabel>
 
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem href="/dashboard/users" icon="fa-user-circle">
-                  Kelola Akun & Penulis
-                </DropdownMenuItem>
+                {userRole === 'ADMIN' && (
+                  <DropdownMenuItem href="/dashboard/users" icon="fa-user-circle">
+                    Kelola Pengguna & Redaksi
+                  </DropdownMenuItem>
+                )}
 
-                <DropdownMenuItem href="/dashboard/settings" icon="fa-sliders">
-                  Pengaturan Web
+                {userRole === 'ADMIN' && (
+                  <DropdownMenuItem href="/dashboard/settings" icon="fa-sliders">
+                    Pengaturan Website
+                  </DropdownMenuItem>
+                )}
+
+                <DropdownMenuItem href="/dashboard/posts" icon="fa-newspaper-o">
+                  {userRole === 'AUTHOR' ? 'Artikel Saya' : 'Semua Artikel'}
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator />
@@ -761,16 +813,36 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     <div style={{ color: 'var(--dash-text-muted)', fontSize: '11px', fontWeight: 500, textTransform: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: '1px' }}>
                       {currentUser?.email || 'admin@hoom.id'}
                     </div>
+                    <div style={{ marginTop: '6px' }}>
+                      <span style={{
+                        fontSize: '10px',
+                        fontWeight: 800,
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        textTransform: 'uppercase',
+                        ...getRoleBadgeStyle(userRole)
+                      }}>
+                        Role: {userRole}
+                      </span>
+                    </div>
                   </DropdownMenuLabel>
 
                   <DropdownMenuSeparator />
 
-                  <DropdownMenuItem href="/dashboard/users" icon="fa-user-circle">
-                    Kelola Akun & Penulis
-                  </DropdownMenuItem>
+                  {userRole === 'ADMIN' && (
+                    <DropdownMenuItem href="/dashboard/users" icon="fa-user-circle">
+                      Kelola Pengguna & Redaksi
+                    </DropdownMenuItem>
+                  )}
 
-                  <DropdownMenuItem href="/dashboard/settings" icon="fa-sliders">
-                    Pengaturan Website
+                  {userRole === 'ADMIN' && (
+                    <DropdownMenuItem href="/dashboard/settings" icon="fa-sliders">
+                      Pengaturan Website
+                    </DropdownMenuItem>
+                  )}
+
+                  <DropdownMenuItem href="/dashboard/posts" icon="fa-newspaper-o">
+                    {userRole === 'AUTHOR' ? 'Artikel Saya' : 'Semua Artikel'}
                   </DropdownMenuItem>
 
                   <DropdownMenuItem href="/" target="_blank" icon="fa-globe">
@@ -789,7 +861,61 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
 
           {/* Page Content */}
           <main className="dash-content">
-            {children}
+            {isRouteForbidden ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '60vh',
+                textAlign: 'center',
+                padding: '40px 20px',
+                background: 'var(--dash-card-bg)',
+                borderRadius: '16px',
+                border: '1px solid var(--dash-border)',
+                margin: '20px'
+              }}>
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  borderRadius: '50%',
+                  background: 'rgba(218, 1, 5, 0.1)',
+                  color: '#da0105',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '28px',
+                  marginBottom: '16px'
+                }}>
+                  <i className="fa fa-ban"></i>
+                </div>
+                <h2 style={{ fontSize: '22px', fontWeight: 800, marginBottom: '8px', color: 'var(--dash-text-main)' }}>
+                  403 - Akses Ditolak
+                </h2>
+                <p style={{ color: 'var(--dash-text-muted)', maxWidth: '440px', fontSize: '14px', lineHeight: 1.5, marginBottom: '24px' }}>
+                  Akun Anda dengan peran <strong style={{ color: 'var(--dash-text-main)' }}>{userRole}</strong> tidak memiliki izin untuk mengakses halaman ini.
+                </p>
+                <Link
+                  href="/dashboard"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 20px',
+                    background: '#da0105',
+                    color: '#fff',
+                    borderRadius: '8px',
+                    fontWeight: 600,
+                    fontSize: '14px',
+                    textDecoration: 'none'
+                  }}
+                >
+                  <i className="fa fa-arrow-left"></i> Kembali ke Dashboard
+                </Link>
+              </div>
+            ) : (
+              children
+            )}
           </main>
         </div>
       </div>

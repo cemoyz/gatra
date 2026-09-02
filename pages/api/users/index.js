@@ -1,7 +1,10 @@
 import prisma from '@/lib/prisma'
 import { hashPassword } from '@/lib/auth'
+import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 
 export default async function handler(req, res) {
+  const authUser = await requireApiAuth(req, res, [ROLES.ADMIN])
+  if (!authUser) return
   // GET all users with author details
   if (req.method === 'GET') {
     try {

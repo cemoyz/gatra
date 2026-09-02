@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { sendDashboardEvent } from '@/lib/events'
+import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -42,6 +43,8 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'GET') {
+    const authUser = await requireApiAuth(req, res, [ROLES.ADMIN, ROLES.EDITOR])
+    if (!authUser) return
     try {
       const { status } = req.query
       const whereClause = {}

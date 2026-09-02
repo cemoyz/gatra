@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -51,6 +52,9 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
+    const authUser = await requireApiAuth(req, res, [ROLES.ADMIN, ROLES.EDITOR])
+    if (!authUser) return
+
     try {
       const { name, slug, description, showInHeader } = req.body
 

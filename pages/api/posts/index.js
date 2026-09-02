@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -157,6 +158,9 @@ export default async function handler(req, res) {
   }
 
   if (req.method === 'POST') {
+    const authUser = await requireApiAuth(req, res, [ROLES.ADMIN, ROLES.EDITOR, ROLES.AUTHOR])
+    if (!authUser) return
+
     try {
       const {
         title,
@@ -181,6 +185,25 @@ export default async function handler(req, res) {
 
       if (!title) {
         return res.status(400).json({ success: false, message: 'Title is required' })
+      }
+
+      // If user is AUTHOR, automatically bind to their author profile
+      let effectiveAuthorId = authorId ? parseInt(authorId) : null
+      if (authUser.role === ROLES.AUTHOR) {
+        if (authUser.author?.id) {
+          effectiveAuthorId = authUser.author.id
+        } else {
+          const newAuthor = await prisma.author.create({
+            data: {
+              name: authUser.name,
+              email: authUser.email,
+              avatar: authUser.avatar || '/avatar.png',
+              bio: authUser.bio || 'Penulis di Hoom Magazine',
+              userId: authUser.id
+            }
+          })
+          effectiveAuthorId = newAuthor.id
+        }
       }
 
       const generatedSlug = slug || title
@@ -211,7 +234,7 @@ export default async function handler(req, res) {
           content: content || '',
           img: img || 'blog-2-1.webp',
           categoryId: categoryId ? parseInt(categoryId) : null,
-          authorId: authorId ? parseInt(authorId) : null,
+          authorId: effectiveAuthorId,
           tags: tagConnections,
           status: status || 'PUBLISHED',
           featured: Boolean(featured),

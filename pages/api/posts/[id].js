@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { sendDashboardEvent } from '@/lib/events'
+import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 
 // In-memory de-duplication cache with 5s cooldown per IP+Post to prevent React StrictMode double mounts
 const recentViewsCache = new Map()
@@ -100,7 +101,22 @@ export default async function handler(req, res) {
 
   // PUT update post
   if (req.method === 'PUT') {
+    const authUser = await requireApiAuth(req, res, [ROLES.ADMIN, ROLES.EDITOR, ROLES.AUTHOR])
+    if (!authUser) return
+
     try {
+      const existingPost = await prisma.post.findUnique({ where: { id: postId } })
+      if (!existingPost) {
+        return res.status(404).json({ success: false, message: 'Post not found' })
+      }
+
+      if (authUser.role === ROLES.AUTHOR) {
+        const isOwner = authUser.author?.id && existingPost.authorId === authUser.author.id
+        if (!isOwner) {
+          return res.status(403).json({ success: false, message: 'Akses ditolak. Anda hanya dapat mengubah artikel milik Anda sendiri.' })
+        }
+      }
+
       const {
         title,
         slug,
@@ -130,7 +146,12 @@ export default async function handler(req, res) {
       if (content !== undefined) updateData.content = content
       if (img !== undefined) updateData.img = img
       if (categoryId !== undefined) updateData.categoryId = categoryId ? parseInt(categoryId) : null
-      if (authorId !== undefined) updateData.authorId = authorId ? parseInt(authorId) : null
+      
+      // Only ADMIN and EDITOR can change the author of a post
+      if (authorId !== undefined && authUser.role !== ROLES.AUTHOR) {
+        updateData.authorId = authorId ? parseInt(authorId) : null
+      }
+
       if (status !== undefined) updateData.status = status
       if (featured !== undefined) updateData.featured = Boolean(featured)
       if (views !== undefined) updateData.views = parseInt(views)
@@ -177,7 +198,22 @@ export default async function handler(req, res) {
 
   // DELETE post
   if (req.method === 'DELETE') {
+    const authUser = await requireApiAuth(req, res, [ROLES.ADMIN, ROLES.EDITOR, ROLES.AUTHOR])
+    if (!authUser) return
+
     try {
+      const existingPost = await prisma.post.findUnique({ where: { id: postId } })
+      if (!existingPost) {
+        return res.status(404).json({ success: false, message: 'Post not found' })
+      }
+
+      if (authUser.role === ROLES.AUTHOR) {
+        const isOwner = authUser.author?.id && existingPost.authorId === authUser.author.id
+        if (!isOwner) {
+          return res.status(403).json({ success: false, message: 'Akses ditolak. Anda hanya dapat menghapus artikel milik Anda sendiri.' })
+        }
+      }
+
       await prisma.post.delete({
         where: { id: postId }
       })

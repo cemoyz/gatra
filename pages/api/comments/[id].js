@@ -1,6 +1,10 @@
 import prisma from '@/lib/prisma'
+import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 
 export default async function handler(req, res) {
+  const authUser = await requireApiAuth(req, res, [ROLES.ADMIN, ROLES.EDITOR])
+  if (!authUser) return
+
   const { id } = req.query
   const commentId = parseInt(id)
 
