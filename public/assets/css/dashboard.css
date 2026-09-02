@@ -196,19 +196,19 @@
 }
 
 .dash-sidebar-nav {
-  padding: 10px 8px;
+  padding: 12px 10px;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .dash-sidebar-footer {
   flex-shrink: 0;
-  padding: 8px 10px;
+  padding: 10px 12px;
   border-top: 1px solid var(--dash-border);
   background-color: var(--dash-sidebar-bg);
   z-index: 10;

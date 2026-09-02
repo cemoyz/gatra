@@ -353,15 +353,15 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '7px 11px',
-                    borderRadius: '8px',
-                    fontSize: '13px',
+                    padding: '8.5px 12px',
+                    borderRadius: '9px',
+                    fontSize: '13.5px',
                     fontWeight: isActive ? 700 : 600,
-                    marginBottom: '1px'
+                    marginBottom: '2px'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <i className={`fa ${item.icon}`} style={{ width: '16px', textAlign: 'center', fontSize: '14px' }}></i>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '11px' }}>
+                    <i className={`fa ${item.icon}`} style={{ width: '18px', textAlign: 'center', fontSize: '15px' }}></i>
                     <span>{item.label}</span>
                   </div>
                 </Link>
@@ -369,7 +369,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
             })}
 
             {/* Quick Live Preview Link */}
-            <div style={{ marginTop: 'auto', paddingTop: '8px' }}>
+            <div style={{ marginTop: 'auto', paddingTop: '10px' }}>
               <Link
                 href="/"
                 target="_blank"
@@ -378,46 +378,46 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '7px 11px',
-                  borderRadius: '8px',
+                  padding: '8.5px 12px',
+                  borderRadius: '9px',
                   border: '1px dashed var(--dash-border)',
                   color: 'var(--dash-text-muted)',
-                  fontSize: '12.5px'
+                  fontSize: '13px'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <i className="fa fa-globe" style={{ fontSize: '14px', color: '#09090b' }}></i>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <i className="fa fa-globe" style={{ fontSize: '15px', color: '#09090b' }}></i>
                   <span style={{ fontWeight: 600 }}>Lihat Website Live</span>
                 </div>
-                <i className="fa fa-external-link" style={{ fontSize: '10px', opacity: 0.6 }}></i>
+                <i className="fa fa-external-link" style={{ fontSize: '11px', opacity: 0.6 }}></i>
               </Link>
             </div>
           </div>
 
           {/* User Card at Sidebar Bottom */}
-          <div className="dash-sidebar-footer" style={{ padding: '8px 10px' }}>
+          <div className="dash-sidebar-footer" style={{ padding: '10px 12px' }}>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className="dash-user-card-compact" style={{ padding: '4px 6px' }}>
+                <div className="dash-user-card-compact" style={{ padding: '6px 8px' }}>
                   <img
                     src={currentUser?.avatar || '/avatar.png'}
                     alt=""
                     className="dash-user-avatar-sm"
-                    style={{ width: '28px', height: '28px' }}
+                    style={{ width: '32px', height: '32px' }}
                     onError={(e) => { e.currentTarget.src = '/avatar.png' }}
                   />
                   <div style={{ flex: 1, minWidth: 0, lineHeight: 1.2 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {currentUser?.name || 'Redaksi Hoom'}
                       </span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '1px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
                       <span style={{
-                        fontSize: '9px',
+                        fontSize: '9.5px',
                         fontWeight: 800,
-                        padding: '1px 4px',
-                        borderRadius: '3px',
+                        padding: '1px 5px',
+                        borderRadius: '4px',
                         letterSpacing: '0.4px',
                         textTransform: 'uppercase',
                         ...getRoleBadgeStyle(userRole)
@@ -426,7 +426,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                       </span>
                     </div>
                   </div>
-                  <i className="fa fa-sort" style={{ color: 'var(--dash-text-muted)', fontSize: '11px' }}></i>
+                  <i className="fa fa-sort" style={{ color: 'var(--dash-text-muted)', fontSize: '12px' }}></i>
                 </div>
               </DropdownMenuTrigger>
 
