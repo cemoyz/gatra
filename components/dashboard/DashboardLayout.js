@@ -303,24 +303,47 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
           <div className="dash-sidebar-header">
             <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', width: '100%' }}>
               {siteSettings.site_logo ? (
-                <img
-                  src={siteSettings.site_logo.startsWith('http') || siteSettings.site_logo.startsWith('/') ? siteSettings.site_logo : `/assets/img/logo/${siteSettings.site_logo}`}
-                  alt=""
+                <div
                   style={{
                     width: '36px',
                     height: '36px',
-                    borderRadius: '10px',
-                    objectFit: 'contain',
-                    background: '#da0105',
-                    padding: '3px',
+                    borderRadius: '8px',
+                    background: '#09090b',
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '2px',
+                    flexShrink: 0,
+                    overflow: 'hidden'
+                  }}
+                >
+                  <img
+                    src={siteSettings.site_logo.startsWith('http') || siteSettings.site_logo.startsWith('/') ? siteSettings.site_logo : `/assets/img/logo/${siteSettings.site_logo}`}
+                    alt=""
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain'
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
+                </div>
+              ) : (
+                <div
+                  className="dash-sidebar-logo-icon"
+                  style={{
+                    background: '#09090b',
+                    color: '#fff',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12)',
                     flexShrink: 0
                   }}
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none'
-                  }}
-                />
-              ) : (
-                <div className="dash-sidebar-logo-icon" style={{ background: '#da0105', color: '#fff', flexShrink: 0 }}>
+                >
                   <i className="fa fa-newspaper-o"></i>
                 </div>
               )}
