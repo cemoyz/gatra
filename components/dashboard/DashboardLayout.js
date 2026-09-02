@@ -364,11 +364,6 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     <i className={`fa ${item.icon}`} style={{ width: '18px', textAlign: 'center', fontSize: '15px' }}></i>
                     <span>{item.label}</span>
                   </div>
-                  {item.badge > 0 && (
-                    <span style={{ fontSize: '10px', background: '#da0105', color: '#fff', padding: '2px 7px', borderRadius: '10px', fontWeight: 800 }}>
-                      {item.badge}
-                    </span>
-                  )}
                 </Link>
               )
             })}
@@ -390,7 +385,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <i className="fa fa-globe" style={{ fontSize: '15px', color: '#10b981' }}></i>
+                  <i className="fa fa-globe" style={{ fontSize: '15px', color: '#09090b' }}></i>
                   <span style={{ fontWeight: 600 }}>Lihat Website Live</span>
                 </div>
                 <i className="fa fa-external-link" style={{ fontSize: '11px', opacity: 0.6 }}></i>
@@ -504,7 +499,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                   target="_blank"
                   className="dash-topbar-link"
                 >
-                  <i className="fa fa-globe" style={{ marginRight: '6px', color: '#10b981' }}></i> Website Live
+                  <i className="fa fa-globe" style={{ marginRight: '6px', color: '#09090b' }}></i> Website Live
                 </Link>
                 <Link
                   href="/dashboard"
@@ -523,26 +518,6 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
 
             {/* Right Nav */}
             <div className="dash-topbar-right">
-              {/* Real-time Live Sync Indicator */}
-              <div
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  color: '#10b981',
-                  background: 'rgba(16, 185, 129, 0.1)',
-                  border: '1px solid rgba(16, 185, 129, 0.25)',
-                  padding: '4px 10px',
-                  borderRadius: '20px',
-                  letterSpacing: '0.5px'
-                }}
-                title="Sistem sinkronisasi real-time aktif (otomatis update tanpa reload)"
-              >
-                <span className="dash-pulse-dot" />
-                LIVE
-              </div>
 
               {/* Search Box */}
               <form
