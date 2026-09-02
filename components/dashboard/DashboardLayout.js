@@ -14,6 +14,7 @@ import {
 export default function DashboardLayout({ children, title = 'Dashboard' }) {
   const router = useRouter()
   const [currentUser, setCurrentUser] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
   const [themeMode, setThemeMode] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -53,15 +54,20 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
     const mainEl = document.querySelector('.dash-main')
     if (mainEl) mainEl.addEventListener('scroll', onScroll, { passive: true })
 
-    // Load logged in user
+    // Load logged in user & enforce auth guard
     fetch('/api/auth/me')
       .then(res => res.json())
       .then(data => {
-        if (data.success && data.user) {
+        if (data.success && data.user && ['ADMIN', 'EDITOR', 'AUTHOR'].includes(data.user.role)) {
           setCurrentUser(data.user)
+          setAuthLoading(false)
+        } else {
+          router.replace('/login')
         }
       })
-      .catch(console.error)
+      .catch(() => {
+        router.replace('/login')
+      })
 
     // Function to load both messages and comments notifications
     const refreshNotifications = () => {
@@ -140,10 +146,11 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST' })
-      setCurrentUser(null)
-      router.push('/login')
     } catch (err) {
-      router.push('/login')
+      console.error(err)
+    } finally {
+      setCurrentUser(null)
+      window.location.href = '/login'
     }
   }
 
@@ -208,6 +215,41 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
     { label: 'Pesan Masuk (Inbox)', path: '/dashboard/messages', icon: 'fa-envelope-o', badge: unreadMessagesCount },
     { label: 'Pengaturan Website', path: '/dashboard/settings', icon: 'fa-sliders' },
   ]
+
+  if (authLoading || !currentUser) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#0f172a',
+        color: '#f8fafc',
+        fontFamily: 'Inter, system-ui, sans-serif'
+      }}>
+        <Head>
+          <title>Memuat Panel Dashboard...</title>
+        </Head>
+        <div style={{
+          width: '38px',
+          height: '38px',
+          border: '3px solid rgba(255,255,255,0.1)',
+          borderTopColor: '#da0105',
+          borderRadius: '50%',
+          animation: 'dashSpin 0.7s linear infinite'
+        }} />
+        <p style={{ marginTop: '16px', color: '#94a3b8', fontSize: '13.5px', fontWeight: 500 }}>
+          Memverifikasi hak akses...
+        </p>
+        <style jsx>{`
+          @keyframes dashSpin {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+      </div>
+    )
+  }
 
   return (
     <>
