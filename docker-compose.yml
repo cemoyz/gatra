@@ -14,8 +14,8 @@ services:
       - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@db:5432/duanarasi?schema=public}
       - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-this}
       - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
     depends_on:
       db:
         condition: service_healthy
