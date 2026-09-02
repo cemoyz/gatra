@@ -13,8 +13,9 @@ const defaultSettings = {
   posts_per_page: '12',
   header_style: '1',
   footer_style: '1',
-  site_title: 'Hoom Magazine',
-  site_tagline: 'Modern Blog & News Publishing Platform',
+  site_title: 'Dua Narasi',
+  site_tagline: 'Portal Berita & Opini Terpercaya',
+  site_logo: '', // uploaded logo/icon image URL
   show_author_bio: 'true',
   show_related_posts: 'true',
   show_newsletter: 'true',

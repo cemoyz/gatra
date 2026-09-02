@@ -1,4 +1,5 @@
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import ImageUploader from '@/components/elements/ImageUploader'
 import {
   PageHeader,
   Card,
@@ -27,8 +28,9 @@ export default function DashboardSettings() {
   const [allPosts, setAllPosts] = useState([])
 
   const [settings, setSettings] = useState({
-    site_title: 'Hoom Magazine',
-    site_tagline: 'Modern Blog & News Publishing Platform',
+    site_title: 'Dua Narasi',
+    site_tagline: 'Portal Berita & Opini Terpercaya',
+    site_logo: '',
     show_featured_posts: 'true',
     title_featured_posts: 'Featured Post',
     featured_posts_mode: 'manual',
@@ -245,10 +247,22 @@ export default function DashboardSettings() {
                     <div className="dash-form-group" style={{ margin: 0 }}>
                       <Label>Tagline Situs</Label>
                       <Input
-                        placeholder="Contoh: Modern Blog & News Publishing Platform"
+                        placeholder="Contoh: Portal Berita & Opini Terpercaya"
                         value={settings.site_tagline || ''}
                         onChange={(e) => setSettings({ ...settings, site_tagline: e.target.value })}
                       />
+                    </div>
+
+                    <div className="dash-form-group" style={{ gridColumn: '1 / -1', margin: 0 }}>
+                      <ImageUploader
+                        label="Logo / Icon Header Menu & Website"
+                        value={settings.site_logo || ''}
+                        onChange={(val) => setSettings({ ...settings, site_logo: val })}
+                        presetImages={['logo-1.webp', 'logo-2.webp', 'logo-white.webp']}
+                      />
+                      <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', marginTop: '4px' }}>
+                        <i className="fa fa-info-circle"></i> Icon yang Anda unggah akan otomatis tampil pada header menu sidebar dashboard dan branding website.
+                      </div>
                     </div>
                   </div>
                 </CardContent>

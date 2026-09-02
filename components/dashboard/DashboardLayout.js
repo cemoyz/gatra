@@ -34,9 +34,26 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
   const [recentComments, setRecentComments] = useState([])
   const [lastSeenTime, setLastSeenTime] = useState(0)
   const [scrolled, setScrolled] = useState(false)
+  const [siteSettings, setSiteSettings] = useState({
+    site_title: 'Dua Narasi',
+    site_tagline: 'Editorial Control Panel',
+    site_logo: ''
+  })
   const notifRef = useRef(null)
 
   useEffect(() => {
+    // Fetch site settings for dynamic logo and title
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.settings) {
+          setSiteSettings(prev => ({
+            ...prev,
+            ...data.settings
+          }))
+        }
+      })
+      .catch(() => {})
     try {
       const savedTheme = localStorage.getItem('dash-theme')
       if (savedTheme && savedTheme !== themeMode) {
@@ -274,7 +291,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
   return (
     <>
       <Head>
-        <title>{title} &bull; Hoom Magazine Control Panel</title>
+        <title>{title} &bull; {siteSettings.site_title || 'Dua Narasi'} Control Panel</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
       </Head>
@@ -284,13 +301,36 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
         <aside className="dash-sidebar">
           {/* Logo Header */}
           <div className="dash-sidebar-header">
-            <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-              <div className="dash-sidebar-logo-icon" style={{ background: '#da0105', color: '#fff' }}>
-                <i className="fa fa-newspaper-o"></i>
-              </div>
-              <div className="dash-sidebar-logo-text">
-                <span className="dash-sidebar-logo-title" style={{ fontSize: '16px', fontWeight: 800 }}>Hoom Magazine</span>
-                <span className="dash-sidebar-logo-subtitle">Editorial Control Panel</span>
+            <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', width: '100%' }}>
+              {siteSettings.site_logo ? (
+                <img
+                  src={siteSettings.site_logo.startsWith('http') || siteSettings.site_logo.startsWith('/') ? siteSettings.site_logo : `/assets/img/logo/${siteSettings.site_logo}`}
+                  alt=""
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    objectFit: 'contain',
+                    background: '#da0105',
+                    padding: '3px',
+                    flexShrink: 0
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none'
+                  }}
+                />
+              ) : (
+                <div className="dash-sidebar-logo-icon" style={{ background: '#da0105', color: '#fff', flexShrink: 0 }}>
+                  <i className="fa fa-newspaper-o"></i>
+                </div>
+              )}
+              <div className="dash-sidebar-logo-text" style={{ minWidth: 0, flex: 1 }}>
+                <span className="dash-sidebar-logo-title" style={{ fontSize: '15px', fontWeight: 800, color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                  {siteSettings.site_title || 'Dua Narasi'}
+                </span>
+                <span className="dash-sidebar-logo-subtitle" style={{ color: 'var(--dash-text-muted)', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                  {siteSettings.site_tagline || 'Editorial Control Panel'}
+                </span>
               </div>
             </Link>
           </div>
