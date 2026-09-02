@@ -1,9 +1,16 @@
 const { PrismaClient } = require('@prisma/client')
 const fs = require('fs')
 const path = require('path')
-const bcrypt = require('bcryptjs')
 
 const prisma = new PrismaClient()
+
+// Precomputed bcrypt hashes (cost factor 10)
+const HASHED_PASSWORDS = {
+  admin: '$2b$10$RfpAOodCDL4Z4DEkIN7CcuRFF4.EiL9CuozCqqFoWfNuQ1A2lq5EG', // admin123
+  editor: '$2b$10$qRbV8mNimzHPBtXZQ0704ewEiPPNXjqf/uEf/AsPo.0KJzKpP.LuO', // editor123
+  author: '$2b$10$NBgteF.PCpyHSCfGBcEiBew1JTciPNP12o8HpCn3UQeT5/Gsfs7hq', // author123
+  user: '$2b$10$YI/yhtfTQB69crpwc3ZDe.p.0hQ8A1DzgDJYKwNhVSEmAsZUSIK.6' // user123
+}
 
 async function main() {
   console.log('🌱 Starting database relational & user seeding...')
@@ -13,7 +20,7 @@ async function main() {
     {
       name: 'Admin Hoom',
       email: 'admin@hoom.com',
-      password: bcrypt.hashSync('admin123', 10),
+      password: HASHED_PASSWORDS.admin,
       role: 'ADMIN',
       avatar: '/assets/img/author/qa-author.webp',
       bio: 'System Administrator & Chief Editor.'
@@ -21,7 +28,7 @@ async function main() {
     {
       name: 'Sarah Connor (Editor)',
       email: 'editor@hoom.com',
-      password: bcrypt.hashSync('editor123', 10),
+      password: HASHED_PASSWORDS.editor,
       role: 'EDITOR',
       avatar: '/assets/img/author/author-2.webp',
       bio: 'Senior Content Editor & Publisher.'
@@ -29,7 +36,7 @@ async function main() {
     {
       name: 'Alexis Dowson (Author)',
       email: 'author@hoom.com',
-      password: bcrypt.hashSync('author123', 10),
+      password: HASHED_PASSWORDS.author,
       role: 'AUTHOR',
       avatar: '/assets/img/author/author-1.webp',
       bio: 'Tech Columnist & UI Architect.'
@@ -37,7 +44,7 @@ async function main() {
     {
       name: 'John Reader',
       email: 'subscriber@hoom.com',
-      password: bcrypt.hashSync('user123', 10),
+      password: HASHED_PASSWORDS.user,
       role: 'SUBSCRIBER',
       avatar: '/assets/img/author/author-1.webp',
       bio: 'Active Community Reader.'
