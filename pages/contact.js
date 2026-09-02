@@ -144,31 +144,39 @@ export default function Contact() {
                                     </div>
 
                                     {/* Branch 2 */}
-                                    <div className="ta-info-lists mb-30" style={{ background: '#f8fafc', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                                        <h4 className="ta-title" style={{ fontSize: '18px', color: '#1e293b', marginBottom: '14px' }}>
-                                            {settings.contact_branch_2 || 'London'}
-                                        </h4>
-                                        <ul className="list-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: 0 }}>
-                                            <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <i className="far fa-envelope-open" style={{ color: '#3b82f6', width: '20px' }} />
-                                                <Link href={`mailto:${settings.contact_email_2 || 'support@webmail.com'}`} style={{ color: '#334155', fontWeight: 500 }}>
-                                                    {settings.contact_email_2 || 'support@webmail.com'}
-                                                </Link>
-                                            </li>
-                                            <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <i className="far fa-phone" style={{ color: '#10b981', width: '20px' }} />
-                                                <Link href={`tel:${settings.contact_phone_2 || '+99988855566'}`} style={{ color: '#334155', fontWeight: 500 }}>
-                                                    {settings.contact_phone_2 || '+999 888 555 66'}
-                                                </Link>
-                                            </li>
-                                            <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                                                <i className="far fa-map-marker-alt" style={{ color: '#f59e0b', width: '20px', marginTop: '4px' }} />
-                                                <p style={{ margin: 0, color: '#64748b' }}>
-                                                    {settings.contact_address_2 || '12/A, Booston Studio, UK'}
-                                                </p>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    {settings.contact_branch_2 && (
+                                        <div className="ta-info-lists mb-30" style={{ background: '#f8fafc', padding: '24px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                                            <h4 className="ta-title" style={{ fontSize: '18px', color: '#1e293b', marginBottom: '14px' }}>
+                                                {settings.contact_branch_2}
+                                            </h4>
+                                            <ul className="list-unstyled" style={{ display: 'flex', flexDirection: 'column', gap: '10px', margin: 0 }}>
+                                                {settings.contact_email_2 && (
+                                                    <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                        <i className="far fa-envelope-open" style={{ color: '#3b82f6', width: '20px' }} />
+                                                        <Link href={`mailto:${settings.contact_email_2}`} style={{ color: '#334155', fontWeight: 500 }}>
+                                                            {settings.contact_email_2}
+                                                        </Link>
+                                                    </li>
+                                                )}
+                                                {settings.contact_phone_2 && (
+                                                    <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                        <i className="far fa-phone" style={{ color: '#10b981', width: '20px' }} />
+                                                        <Link href={`tel:${settings.contact_phone_2}`} style={{ color: '#334155', fontWeight: 500 }}>
+                                                            {settings.contact_phone_2}
+                                                        </Link>
+                                                    </li>
+                                                )}
+                                                {settings.contact_address_2 && (
+                                                    <li style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                                                        <i className="far fa-map-marker-alt" style={{ color: '#f59e0b', width: '20px', marginTop: '4px' }} />
+                                                        <p style={{ margin: 0, color: '#64748b' }}>
+                                                            {settings.contact_address_2}
+                                                        </p>
+                                                    </li>
+                                                )}
+                                            </ul>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Dynamic Social Media */}
@@ -184,10 +192,10 @@ export default function Contact() {
                             <div className="col-xl-7 col-lg-7">
                                 <div className="ta-contact-form-wrapper ta-input-field ta-stroke" style={{ background: '#ffffff', padding: '40px', borderRadius: '16px' }}>
                                     <h3 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '8px', color: '#0f172a' }}>
-                                        Kirim Pesan Langsung
+                                        {settings.contact_form_title || 'Kirim Pesan Langsung'}
                                     </h3>
                                     <p style={{ color: '#64748b', fontSize: '14px', marginBottom: '24px' }}>
-                                        Isi formulir di bawah ini untuk mengirimkan pertanyaan atau kerja sama langsung ke kotak masuk tim kami.
+                                        {settings.contact_form_subtitle || 'Isi formulir di bawah ini untuk mengirimkan pertanyaan atau kerja sama langsung ke kotak masuk tim kami.'}
                                     </p>
 
                                     {alert && (

@@ -66,7 +66,21 @@ const defaultSettings = {
   social_pinterest: 'https://pinterest.com',
   social_tiktok: 'https://tiktok.com',
   social_whatsapp: 'https://wa.me/',
-  social_telegram: 'https://t.me/'
+  social_telegram: 'https://t.me/',
+  // Dynamic Contact Page Settings
+  contact_title: 'Hubungi Redaksi Dua Narasi',
+  contact_subtitle: 'Punya aspirasi, koreksi berita, penawaran liputan khusus, atau pertanyaan kerja sama? Tim redaksi kami siap terhubung dengan Anda.',
+  contact_branch_1: 'Kantor Redaksi Utama',
+  contact_email_1: 'redaksi@duanarasi.com',
+  contact_phone_1: '+62 21 555 7890',
+  contact_address_1: 'Gedung Pers Graha Dua Narasi, Jl. Merdeka No. 10, Jakarta Pusat',
+  contact_branch_2: 'Biro Redaksi Daerah',
+  contact_email_2: 'biro@duanarasi.com',
+  contact_phone_2: '+62 22 765 4321',
+  contact_address_2: 'Jl. R.E. Martadinata No. 45, Bandung, Jawa Barat',
+  contact_map_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.28298717812!2d106.759478!3d-6.2297465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e49fe3e071%3A0x2a597a7a58e235e1!2sJakarta!5e0!3m2!1sid!2sid!4v1656749326947!5m2!1sid!2sid',
+  contact_form_title: 'Kirim Pesan Langsung',
+  contact_form_subtitle: 'Isi formulir di bawah ini untuk mengirimkan pertanyaan atau kerja sama langsung ke kotak masuk tim kami.'
 }
 
 export default async function handler(req, res) {

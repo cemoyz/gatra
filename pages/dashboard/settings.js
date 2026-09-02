@@ -60,7 +60,21 @@ export default function DashboardSettings() {
     site_url: 'http://localhost:3000',
     google_site_verification: '',
     google_analytics_id: '',
-    google_news_name: 'Hoom Magazine'
+    google_news_name: 'Hoom Magazine',
+    // Contact Page Settings
+    contact_title: 'Hubungi Redaksi Dua Narasi',
+    contact_subtitle: 'Punya aspirasi, koreksi berita, penawaran liputan khusus, atau pertanyaan kerja sama? Tim redaksi kami siap terhubung dengan Anda.',
+    contact_branch_1: 'Kantor Redaksi Utama',
+    contact_email_1: 'redaksi@duanarasi.com',
+    contact_phone_1: '+62 21 555 7890',
+    contact_address_1: 'Gedung Pers Graha Dua Narasi, Jl. Merdeka No. 10, Jakarta Pusat',
+    contact_branch_2: 'Biro Redaksi Daerah',
+    contact_email_2: 'biro@duanarasi.com',
+    contact_phone_2: '+62 22 765 4321',
+    contact_address_2: 'Jl. R.E. Martadinata No. 45, Bandung, Jawa Barat',
+    contact_map_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.28298717812!2d106.759478!3d-6.2297465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e49fe3e071%3A0x2a597a7a58e235e1!2sJakarta!5e0!3m2!1sid!2sid!4v1656749326947!5m2!1sid!2sid',
+    contact_form_title: 'Kirim Pesan Langsung',
+    contact_form_subtitle: 'Isi formulir di bawah ini untuk mengirimkan pertanyaan atau kerja sama langsung ke kotak masuk tim kami.'
   })
   const [pinging, setPinging] = useState(false)
 
@@ -199,6 +213,9 @@ export default function DashboardSettings() {
             </TabsTrigger>
             <TabsTrigger value="social" icon="fa-share-alt">
               Media Sosial & Footer
+            </TabsTrigger>
+            <TabsTrigger value="contact" icon="fa-envelope">
+              Halaman Kontak
             </TabsTrigger>
             <TabsTrigger value="seo" icon="fa-search">
               Google Indexing & SEO
@@ -854,6 +871,204 @@ export default function DashboardSettings() {
                         <i className="fa fa-external-link" style={{ marginLeft: 'auto', opacity: 0.6, fontSize: '11px' }}></i>
                       </a>
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+            </div>
+          </TabsContent>
+
+          {/* ================= TAB: HALAMAN KONTAK ================= */}
+          <TabsContent value="contact">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              
+              {/* Card 1: Judul & Informasi Header */}
+              <Card>
+                <CardHeader>
+                  <CardTitle icon="fa-header">Judul & Pengantar Halaman Kontak</CardTitle>
+                  <CardDescription>Teks judul, deskripsi, dan formulir kirim pesan pada laman <strong>/contact</strong>.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Judul Utama Halaman Kontak</Label>
+                      <Input
+                        placeholder="Contoh: Hubungi Redaksi Dua Narasi"
+                        value={settings.contact_title || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_title: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Judul Formulir Pesan</Label>
+                      <Input
+                        placeholder="Contoh: Kirim Pesan Langsung"
+                        value={settings.contact_form_title || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_form_title: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="dash-form-group" style={{ gridColumn: '1 / -1', margin: 0 }}>
+                      <Label>Subjudul / Pengantar Kontak</Label>
+                      <textarea
+                        className="dash-input"
+                        rows={2}
+                        placeholder="Deskripsi singkat pengantar di bawah judul..."
+                        value={settings.contact_subtitle || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_subtitle: e.target.value })}
+                        style={{ width: '100%', resize: 'vertical' }}
+                      />
+                    </div>
+
+                    <div className="dash-form-group" style={{ gridColumn: '1 / -1', margin: 0 }}>
+                      <Label>Deskripsi Petunjuk Formulir</Label>
+                      <textarea
+                        className="dash-input"
+                        rows={2}
+                        placeholder="Petunjuk untuk pembaca sebelum mengirimkan pesan..."
+                        value={settings.contact_form_subtitle || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_form_subtitle: e.target.value })}
+                        style={{ width: '100%', resize: 'vertical' }}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Card 2: Kantor Redaksi Utama (Branch 1) */}
+              <Card>
+                <CardHeader>
+                  <CardTitle icon="fa-building">Kantor Redaksi Utama (Branch 1)</CardTitle>
+                  <CardDescription>Informasi kontak kantor utama untuk surat menyurat dan kerja sama.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Nama Kantor / Lokasi</Label>
+                      <Input
+                        placeholder="Contoh: Kantor Redaksi Utama - Jakarta"
+                        value={settings.contact_branch_1 || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_branch_1: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Alamat Email Redaksi</Label>
+                      <Input
+                        type="email"
+                        placeholder="redaksi@duanarasi.com"
+                        value={settings.contact_email_1 || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_email_1: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Nomor Telepon / Hotline</Label>
+                      <Input
+                        placeholder="+62 21 555 7890"
+                        value={settings.contact_phone_1 || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_phone_1: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="dash-form-group" style={{ gridColumn: '1 / -1', margin: 0 }}>
+                      <Label>Alamat Fisik Lengkap</Label>
+                      <textarea
+                        className="dash-input"
+                        rows={2}
+                        placeholder="Alamat gedung, jalan, kota, dan kode pos..."
+                        value={settings.contact_address_1 || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_address_1: e.target.value })}
+                        style={{ width: '100%', resize: 'vertical' }}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Card 3: Biro Redaksi Daerah / Cabang 2 */}
+              <Card>
+                <CardHeader>
+                  <CardTitle icon="fa-map-pin">Biro Redaksi Daerah / Kantor Cabang (Branch 2 - Opsional)</CardTitle>
+                  <CardDescription>Kosongkan nama kantor jika hanya memiliki satu kantor tunggal.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Nama Biro / Cabang</Label>
+                      <Input
+                        placeholder="Contoh: Biro Redaksi - Bandung"
+                        value={settings.contact_branch_2 || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_branch_2: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Email Biro</Label>
+                      <Input
+                        type="email"
+                        placeholder="biro@duanarasi.com"
+                        value={settings.contact_email_2 || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_email_2: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Nomor Telepon Biro</Label>
+                      <Input
+                        placeholder="+62 22 765 4321"
+                        value={settings.contact_phone_2 || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_phone_2: e.target.value })}
+                      />
+                    </div>
+
+                    <div className="dash-form-group" style={{ gridColumn: '1 / -1', margin: 0 }}>
+                      <Label>Alamat Lengkap Biro</Label>
+                      <textarea
+                        className="dash-input"
+                        rows={2}
+                        placeholder="Alamat biro cabang..."
+                        value={settings.contact_address_2 || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_address_2: e.target.value })}
+                        style={{ width: '100%', resize: 'vertical' }}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Card 4: Google Maps Embed */}
+              <Card>
+                <CardHeader>
+                  <CardTitle icon="fa-map">Peta Lokasi Interaktif (Google Maps)</CardTitle>
+                  <CardDescription>Masukkan URL embed dari Google Maps untuk menampilkan peta lokasi kantor Anda.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>URL Google Maps Embed (src pada iframe)</Label>
+                      <Input
+                        placeholder="https://www.google.com/maps/embed?pb=..."
+                        value={settings.contact_map_url || ''}
+                        onChange={(e) => setSettings({ ...settings, contact_map_url: e.target.value })}
+                      />
+                      <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', marginTop: '6px' }}>
+                        <i className="fa fa-info-circle"></i> Cara mengambil URL: Buka Google Maps &rarr; Cari lokasi kantor &rarr; Klik <strong>Share / Bagikan</strong> &rarr; Pilih <strong>Embed a map / Sematkan peta</strong> &rarr; Salin URL di dalam atribut <code>src="..."</code>.
+                      </div>
+                    </div>
+
+                    {settings.contact_map_url && (
+                      <div style={{ marginTop: '10px' }}>
+                        <Label style={{ marginBottom: '8px', display: 'block' }}>Pratinjau Peta:</Label>
+                        <div style={{ borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--dash-border)', height: '260px' }}>
+                          <iframe
+                            src={settings.contact_map_url}
+                            style={{ width: '100%', height: '100%', border: 0 }}
+                            loading="lazy"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
