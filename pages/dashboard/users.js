@@ -518,7 +518,7 @@ export default function DashboardUsers() {
         icon="fa-pencil"
       >
         {editUserModal && (
-          <form onSubmit={handleSaveEdit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <form onSubmit={handleEditUser} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div className="dash-form-group" style={{ margin: 0 }}>
               <Label>Nama Lengkap *</Label>
               <Input
