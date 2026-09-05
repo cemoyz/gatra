@@ -2,7 +2,7 @@ import { Head, Html, Main, NextScript } from 'next/document'
 
 export default function Document() {
     return (
-        <Html lang="id">
+        <Html lang="id" data-scroll-behavior="smooth">
             <Head>
                 <meta charSet="utf-8" />
                 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />

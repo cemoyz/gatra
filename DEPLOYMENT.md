@@ -138,6 +138,80 @@ sudo certbot --nginx -d duanarasi.com -d www.duanarasi.com
 
 ---
 
+## 🤖 Setup Auto-Deploy Otomatis (CI/CD via GitHub Actions)
+
+Repositori ini telah dilengkapi dengan workflow GitHub Actions di `.github/workflows/deploy.yml`. Setiap kali Anda melakukan `git push origin main`, server akan otomatis melakukan pull kode terbaru, build container / aplikasi, migrasi database Prisma, dan restart service tanpa perlu login manual ke VPS.
+
+### 1. Tambahkan Secrets di Repositori GitHub
+Buka repositori GitHub Anda di browser:
+👉 **Settings &rarr; Secrets and variables &rarr; Actions &rarr; New repository secret**
+
+Tambahkan variabel-variabel berikut:
+
+| Secret Name | Deskripsi | Contoh Nilai |
+|---|---|---|
+| `SERVER_HOST` | Alamat IP Publik VPS Anda | `103.187.147.20` atau domain server |
+| `SERVER_USER` | Username login SSH | `root` atau `ubuntu` |
+| `SERVER_SSH_KEY` | Private SSH Key server (`id_ed25519` / `id_rsa`) | *(Isi konten file `~/.ssh/id_rsa`)* |
+| `SERVER_PASSWORD` | *(Opsional)* Password SSH jika tidak menggunakan SSH Key | `password-vps-anda` |
+| `SERVER_PORT` | *(Opsional)* Port SSH server (default: 22) | `22` |
+| `SERVER_APP_DIR` | Lokasi folder clone proyek di server | `/var/www/duanarasi.com` atau `/root/duanarasi.com` |
+
+---
+
+### 2. Cara Membuat & Memasang SSH Key (Jika Belum Ada)
+
+Jalankan perintah ini di VPS Anda untuk membuat pasangan kunci SSH khusus deploy:
+```bash
+# 1. Generate SSH key baru di server
+ssh-keygen -t ed25519 -C "deploy@duanarasi.com" -f ~/.ssh/github_deploy -N ""
+
+# 2. Masukkan public key ke authorized_keys agar server mengizinkan login
+cat ~/.ssh/github_deploy.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+
+# 3. Tampilkan private key untuk disalin ke GitHub Secret (SERVER_SSH_KEY)
+cat ~/.ssh/github_deploy
+```
+> Salin seluruh isi output private key (termasuk baris `-----BEGIN OPENSSH PRIVATE KEY-----` sampai `-----END OPENSSH PRIVATE KEY-----`) dan tempel ke **`SERVER_SSH_KEY`** di GitHub Secrets.
+
+---
+
+### 3. Persiapan Pertama Kali di Server VPS
+
+Pastikan repository sudah di-clone pertama kali di path `SERVER_APP_DIR`:
+```bash
+# Contoh direktori /var/www/duanarasi.com
+sudo mkdir -p /var/www
+cd /var/www
+git clone https://github.com/cemoyz/duanarasi.com.git
+cd duanarasi.com
+
+# Salin dan isi environment variables .env
+cp .env.example .env
+nano .env
+
+# Beri izin eksekusi pada script deploy
+chmod +x deploy.sh
+```
+
+---
+
+### 4. Menguji Auto-Deploy
+
+Sekarang, cukup lakukan push perubahan dari komputer lokal Anda:
+```bash
+git add .
+git commit -m "feat: setup auto deploy"
+git push origin main
+```
+
+Buka tab **Actions** di GitHub repository Anda:
+- Anda akan melihat workflow **Auto Deploy to Production Server** berjalan otomatis.
+- Klik workflow tersebut untuk melihat live log proses pull, build, migrasi database, dan restart server.
+
+---
+
 ## 🔑 Akun Default Administrator & Redaksi (Setelah Seeding)
 
 Jika menjalankan `npm run seed:users`, akun berikut dapat langsung digunakan untuk login di `/login`:

@@ -96,8 +96,17 @@ const defaultSettings = {
   contact_form_subtitle: 'Isi formulir di bawah ini untuk mengirimkan pertanyaan atau kerja sama langsung ke kotak masuk tim kami.'
 }
 
+let memoryCache = null
+let lastCacheTime = 0
+const CACHE_TTL_MS = 30000 // 30 seconds
+
 export default async function handler(req, res) {
   if (req.method === 'GET') {
+    const now = Date.now()
+    if (memoryCache && (now - lastCacheTime < CACHE_TTL_MS)) {
+      return res.status(200).json({ success: true, settings: memoryCache })
+    }
+
     try {
       const records = await prisma.setting.findMany()
       const settingsObj = { ...defaultSettings }
@@ -105,6 +114,9 @@ export default async function handler(req, res) {
       records.forEach(item => {
         settingsObj[item.key] = item.value
       })
+
+      memoryCache = settingsObj
+      lastCacheTime = now
 
       return res.status(200).json({ success: true, settings: settingsObj })
     } catch (error) {
@@ -135,12 +147,19 @@ export default async function handler(req, res) {
 
       await Promise.all(updatePromises)
 
+      // Invalidate memory cache
+      memoryCache = null
+      lastCacheTime = 0
+
       // Fetch updated
       const records = await prisma.setting.findMany()
       const settingsObj = { ...defaultSettings }
       records.forEach(item => {
         settingsObj[item.key] = item.value
       })
+
+      memoryCache = settingsObj
+      lastCacheTime = Date.now()
 
       return res.status(200).json({
         success: true,

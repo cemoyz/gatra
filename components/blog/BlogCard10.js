@@ -1,13 +1,28 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { getImageUrl } from "@/lib/imageUtils"
 
-export default function BlogCard10({ item }) {
+export default function BlogCard10({ item = {} }) {
+    const router = useRouter()
+
+    const handleCardClick = (e) => {
+        const selection = window.getSelection()
+        if (selection && selection.toString().length > 0) return
+        if (e.target.closest('a, button, input, textarea, select, .ta-blog-box__cats, .author-wrapper, .ta-blog-box__share-info')) {
+            return
+        }
+        if (item?.id) {
+            router.push(`/blog/${item.id}`)
+        }
+    }
+
     return (
         <>
-
-            <article className="ta-blog-box mt-60 ta-sticky-post">
+            <article className="ta-blog-box mt-60 ta-sticky-post" style={{ cursor: 'pointer' }} onClick={handleCardClick}>
                 <div className="thumb ta-stroke ">
-                    <img src={getImageUrl(item.img, "blog-1.webp")} alt="blog" />
+                    <Link href={`/blog/${item.id || ''}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img src={getImageUrl(item.img, "blog-1.webp")} alt="blog" />
+                    </Link>
                     <div className="ta-blog-box__cats">
                         <Link href="#0">Technology</Link>
                     </div>

@@ -121,34 +121,67 @@ function PinterestIcon({ width = '15px', height = '15px', style = {} }) {
   )
 }
 
+let cachedSettingsData = null
+let cachedSettingsPromise = null
+
+function fetchSharedSettings() {
+  if (cachedSettingsData) {
+    return Promise.resolve(cachedSettingsData)
+  }
+  if (!cachedSettingsPromise) {
+    cachedSettingsPromise = fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.success && data.settings) {
+          cachedSettingsData = data.settings
+        }
+        return data
+      })
+      .catch(err => {
+        cachedSettingsPromise = null
+        throw err
+      })
+  }
+  return cachedSettingsPromise
+}
+
 export default function SocialLinks({ className = '', showLabels = false, style = {} }) {
-  const [settings, setSettings] = useState({
-    show_social_links: 'true',
-    enable_whatsapp: 'true',
-    enable_telegram: 'true',
-    enable_facebook: 'true',
-    enable_twitter: 'true',
-    enable_instagram: 'true',
-    enable_youtube: 'true',
-    enable_linkedin: 'true',
-    enable_pinterest: 'true',
-    enable_tiktok: 'true',
-    social_whatsapp: 'https://wa.me/',
-    social_telegram: 'https://t.me/',
-    social_facebook: 'https://facebook.com',
-    social_twitter: 'https://twitter.com',
-    social_instagram: 'https://instagram.com',
-    social_youtube: 'https://youtube.com',
-    social_linkedin: 'https://linkedin.com',
-    social_pinterest: 'https://pinterest.com',
-    social_tiktok: 'https://tiktok.com'
+  const [settings, setSettings] = useState(() => {
+    return cachedSettingsData ? { ...cachedSettingsData } : {
+      show_social_links: 'true',
+      enable_whatsapp: 'true',
+      enable_telegram: 'true',
+      enable_facebook: 'true',
+      enable_twitter: 'true',
+      enable_instagram: 'true',
+      enable_youtube: 'true',
+      enable_linkedin: 'true',
+      enable_pinterest: 'true',
+      enable_tiktok: 'true',
+      social_whatsapp: 'https://wa.me/',
+      social_telegram: 'https://t.me/',
+      social_facebook: 'https://facebook.com',
+      social_twitter: 'https://twitter.com',
+      social_instagram: 'https://instagram.com',
+      social_youtube: 'https://youtube.com',
+      social_linkedin: 'https://linkedin.com',
+      social_pinterest: 'https://pinterest.com',
+      social_tiktok: 'https://tiktok.com'
+    }
   })
 
   useEffect(() => {
-    fetch('/api/settings')
-      .then(res => res.json())
+    if (cachedSettingsData) {
+      setSettings(prev => ({
+        ...prev,
+        ...cachedSettingsData
+      }))
+      return
+    }
+
+    fetchSharedSettings()
       .then(data => {
-        if (data.success && data.settings) {
+        if (data && data.success && data.settings) {
           setSettings(prev => ({
             ...prev,
             ...data.settings

@@ -1,8 +1,10 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 import VideoPopup from "../elements/VideoPopup"
 import { getImageUrl } from "@/lib/imageUtils"
 
 export default function BlogCard1({ col, desc, video, formatIcon, item = {} }) {
+    const router = useRouter()
     const comments = item.commentsCount ?? item._count?.comments ?? (item.comments ? item.comments.length : 0)
     const views = item.views ?? 0
     const categoryName = typeof item.category === 'string' ? item.category : (item.category?.name || 'General')
@@ -12,17 +14,34 @@ export default function BlogCard1({ col, desc, video, formatIcon, item = {} }) {
         : `March 21, ${new Date().getFullYear()}`
     const imageSrc = getImageUrl(item.img, "blog-1.webp")
 
+    const handleCardClick = (e) => {
+        const selection = window.getSelection()
+        if (selection && selection.toString().length > 0) return
+        if (e.target.closest('a, button, input, textarea, select, .ta-blog-box__cats, .author-wrapper, .video-popup, .popup-video')) {
+            return
+        }
+        if (item?.id) {
+            router.push(`/blog/${item.id}`)
+        }
+    }
+
     return (
         <>
             <div className={`${col ? col : ""} d-flex`}>
-                <article className="ta-blog-box ta-thumb-zoom ta-blog-box__style-2 ta-stroke w-100 d-flex flex-column" style={{ height: '100%' }}>
+                <article
+                    className="ta-blog-box ta-thumb-zoom ta-blog-box__style-2 ta-stroke w-100 d-flex flex-column"
+                    style={{ height: '100%', cursor: 'pointer' }}
+                    onClick={handleCardClick}
+                >
                     <div className="thumb" style={{ height: '240px', overflow: 'hidden', flexShrink: 0, position: 'relative', background: '#f1f5f9' }}>
-                        <img src={imageSrc} alt={item.title || "blog"} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        <Link href={`/blog/${item.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                            <img src={imageSrc} alt={item.title || "blog"} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </Link>
                         <div className="ta-blog-box__cats ta-blog-box__cats--right">
                             <Link href={`/blog-filter-category?category=${item.categorySlug || categoryName}`}>{categoryName}</Link>
                         </div>
                         {formatIcon &&
-                            <span className="post-format-icon">
+                            <span className="post-format-icon" style={{ pointerEvents: 'none' }}>
                                 {item.postType === "photo" && <i className="fas fa-images" />}
                                 {item.postType === "video" && <i className="fas fa-video" />}
                                 {item.postType === "audio" && <i className="fas fa-microphone" />}

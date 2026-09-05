@@ -7457,6 +7457,34 @@ body {
   color: #ffffff !important;
 }
 
+/* Card Clickable and Hover Effects */
+.ta-blog-box {
+  cursor: pointer;
+}
+
+.ta-blog-box:hover .ta-border-effect a,
+.ta-blog-box:hover .ta-blog-box__title a {
+  background-size: 100% 2px, 0 2px;
+  color: #da0105;
+}
+
+.dark .ta-blog-box:hover .ta-border-effect a,
+.dark .ta-blog-box:hover .ta-blog-box__title a {
+  color: #ef4444;
+}
+
+.ta-latest-posts > div {
+  cursor: pointer;
+}
+
+.ta-latest-posts > div:hover {
+  background: #f8fafc;
+}
+
+.dark .ta-latest-posts > div:hover {
+  background: #1e293b;
+}
+
 /*# sourceMappingURL=main.css.map */
 
 

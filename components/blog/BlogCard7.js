@@ -1,17 +1,32 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 
 export default function BlogCard7({ item = {} }) {
+    const router = useRouter()
     const categoryName = typeof item.category === 'string' ? item.category : (item.category?.name || 'PHOTO')
     const authorName = typeof item.author === 'string' ? item.author : (item.author?.name || 'Alexis D.')
     const formattedDate = item.createdAt
         ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
         : `March 21, ${new Date().getFullYear()}`
 
+    const handleCardClick = (e) => {
+        const selection = window.getSelection()
+        if (selection && selection.toString().length > 0) return
+        if (e.target.closest('a, button, input, textarea, select, .ta-blog-box__cats, .author-wrapper')) {
+            return
+        }
+        if (item?.id) {
+            router.push(`/blog/${item.id}`)
+        }
+    }
+
     return (
         <>
-            <article className="ta-blog-box ta-blog-box__style-3">
+            <article className="ta-blog-box ta-blog-box__style-3" style={{ cursor: 'pointer' }} onClick={handleCardClick}>
                 <div className="thumb ta-stroke">
-                    <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-3-3.webp"} alt="blog" />
+                    <Link href={`/blog/${item.id || 1}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-3-3.webp"} alt="blog" />
+                    </Link>
                     <div className="inner-content text-center pb-75 pl-60 pr-60">
                         <div className="ta-blog-box__cats position-static">
                             <Link href={`/blog-filter-category?category=${item.categorySlug || categoryName}`}>{categoryName}</Link>

@@ -1,7 +1,9 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { getImageUrl } from "@/lib/imageUtils"
 
 export default function BlogCard3({ col, desc, item = {} }) {
+    const router = useRouter()
     const comments = item.commentsCount ?? item._count?.comments ?? (item.comments ? item.comments.length : 0)
     const views = item.views ?? 0
     const categoryName = typeof item.category === 'string' ? item.category : (item.category?.name || 'General')
@@ -11,22 +13,39 @@ export default function BlogCard3({ col, desc, item = {} }) {
         : `March 21, ${new Date().getFullYear()}`
     const imageSrc = getImageUrl(item.img, "blog-3-1.webp")
 
+    const handleCardClick = (e) => {
+        const selection = window.getSelection()
+        if (selection && selection.toString().length > 0) return
+        if (e.target.closest('a, button, input, textarea, select, .ta-blog-box__cats, .author-wrapper, .video-popup, .popup-video, .share-info')) {
+            return
+        }
+        if (item?.id) {
+            router.push(`/blog/${item.id}`)
+        }
+    }
+
     return (
         <>
             <div className={`${col ? col : ""} d-flex flex-column h-100`}>
-                <article className="ta-blog-box ta-thumb-zoom ta-blog-box__featured p-0 ta-stroke w-100 d-flex flex-column h-100" style={{ height: '100%' }}>
+                <article
+                    className="ta-blog-box ta-thumb-zoom ta-blog-box__featured p-0 ta-stroke w-100 d-flex flex-column h-100"
+                    style={{ height: '100%', cursor: 'pointer' }}
+                    onClick={handleCardClick}
+                >
                     <div className="thumb ta-brd-b-none" style={{ flex: '1 1 0', minHeight: 0, position: 'relative', overflow: 'hidden', background: '#f1f5f9' }}>
                         <div className="ta-post-gallery w-100 h-100" style={{ position: 'relative', width: '100%', height: '100%' }}>
-                            <img
-                                src={imageSrc}
-                                alt={item.title || "blog"}
-                                style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-                            />
+                            <Link href={`/blog/${item.id}`} style={{ display: 'block', width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 1 }}>
+                                <img
+                                    src={imageSrc}
+                                    alt={item.title || "blog"}
+                                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            </Link>
                         </div>
                         <div className="ta-blog-box__cats ta-blog-box__cats--right">
                             <Link href={`/blog-filter-category?category=${item.categorySlug || categoryName}`}>{categoryName}</Link>
                         </div>
-                        <span className="post-format-icon"><i className="fal fa-newspaper" /></span>
+                        <span className="post-format-icon" style={{ pointerEvents: 'none' }}><i className="fal fa-newspaper" /></span>
                     </div>
                     <div className="content position-relative d-flex flex-column justify-content-between p-4 flex-shrink-0" style={{ background: '#ffffff' }}>
                         <div>

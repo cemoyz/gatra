@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   // GET single post with relations and increment view counter
   if (req.method === 'GET') {
     try {
-      const clientIp = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1'
+      const clientIp = req.headers['cf-connecting-ip'] || (typeof req.headers['x-forwarded-for'] === 'string' ? req.headers['x-forwarded-for'].split(',')[0].trim() : null) || req.socket?.remoteAddress || '127.0.0.1'
       const viewKey = `${clientIp}_${postId}`
       const now = Date.now()
       const lastViewTime = recentViewsCache.get(viewKey)

@@ -1,6 +1,8 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 
 export default function BlogCard5({ item = {} }) {
+    const router = useRouter()
     const comments = item.commentsCount ?? item._count?.comments ?? (item.comments ? item.comments.length : 0)
     const views = item.views ?? 0
     const categoryName = typeof item.category === 'string' ? item.category : (item.category?.name || 'Technology')
@@ -9,11 +11,24 @@ export default function BlogCard5({ item = {} }) {
         ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
         : `March 21, ${new Date().getFullYear()}`
 
+    const handleCardClick = (e) => {
+        const selection = window.getSelection()
+        if (selection && selection.toString().length > 0) return
+        if (e.target.closest('a, button, input, textarea, select, .ta-blog-box__cats, .author-wrapper, .share-info')) {
+            return
+        }
+        if (item?.id) {
+            router.push(`/blog/${item.id}`)
+        }
+    }
+
     return (
         <>
-            <article className="ta-blog-box mt-60">
+            <article className="ta-blog-box mt-60" style={{ cursor: 'pointer' }} onClick={handleCardClick}>
                 <div className="thumb ta-stroke ">
-                    <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-1.webp"} alt="blog" />
+                    <Link href={`/blog/${item.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                        <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-1.webp"} alt="blog" />
+                    </Link>
                     <div className="ta-blog-box__cats">
                         <Link href={`/blog-filter-category?category=${item.categorySlug || categoryName}`}>{categoryName}</Link>
                     </div>

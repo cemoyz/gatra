@@ -1,10 +1,12 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { Autoplay, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import SocialLinks from "@/components/elements/SocialLinks"
 
 export default function BlogSidebar({ settings: initialSettings }) {
+    const router = useRouter()
     const [categories, setCategories] = useState([])
     const [popularPosts, setPopularPosts] = useState([])
     const [trendingPosts, setTrendingPosts] = useState([])
@@ -245,24 +247,33 @@ export default function BlogSidebar({ settings: initialSettings }) {
                             trendingPosts.map((post, idx) => (
                                 <div
                                     key={post.id}
+                                    onClick={(e) => {
+                                        const selection = window.getSelection()
+                                        if (selection && selection.toString().length > 0) return
+                                        if (e.target.closest('a, button')) return
+                                        if (post?.id) router.push(`/blog/${post.id}`)
+                                    }}
                                     style={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '12px',
                                         padding: '6px',
                                         borderRadius: '8px',
-                                        transition: 'background 0.2s ease'
+                                        transition: 'background 0.2s ease',
+                                        cursor: 'pointer'
                                     }}
                                 >
                                     <div style={{ position: 'relative', width: '74px', height: '74px', flexShrink: 0, overflow: 'hidden', borderRadius: '8px', background: '#f1f5f9' }}>
-                                        <img
-                                            src={getPostImage(post.img, post.id)}
-                                            alt={post.title}
-                                            onError={(e) => {
-                                                e.currentTarget.src = `/assets/img/blog/blog-2-${(post.id % 12) + 1}.webp`
-                                            }}
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                                        />
+                                        <Link href={`/blog/${post.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                                            <img
+                                                src={getPostImage(post.img, post.id)}
+                                                alt={post.title}
+                                                onError={(e) => {
+                                                    e.currentTarget.src = `/assets/img/blog/blog-2-${(post.id % 12) + 1}.webp`
+                                                }}
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                                            />
+                                        </Link>
                                         <span style={{
                                             position: 'absolute',
                                             top: '4px',
@@ -275,7 +286,8 @@ export default function BlogSidebar({ settings: initialSettings }) {
                                             borderRadius: '4px',
                                             lineHeight: '1.2',
                                             boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                                            zIndex: 2
+                                            zIndex: 2,
+                                            pointerEvents: 'none'
                                         }}>
                                             #{idx + 1}
                                         </span>
@@ -322,24 +334,33 @@ export default function BlogSidebar({ settings: initialSettings }) {
                             popularPosts.map((post, idx) => (
                                 <div
                                     key={post.id}
+                                    onClick={(e) => {
+                                        const selection = window.getSelection()
+                                        if (selection && selection.toString().length > 0) return
+                                        if (e.target.closest('a, button')) return
+                                        if (post?.id) router.push(`/blog/${post.id}`)
+                                    }}
                                     style={{
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '12px',
                                         padding: '6px',
                                         borderRadius: '8px',
-                                        transition: 'background 0.2s ease'
+                                        transition: 'background 0.2s ease',
+                                        cursor: 'pointer'
                                     }}
                                 >
                                     <div style={{ position: 'relative', width: '74px', height: '74px', flexShrink: 0, overflow: 'hidden', borderRadius: '8px', background: '#f1f5f9' }}>
-                                        <img
-                                            src={getPostImage(post.img, post.id)}
-                                            alt={post.title}
-                                            onError={(e) => {
-                                                e.currentTarget.src = `/assets/img/blog/blog-2-${(post.id % 12) + 1}.webp`
-                                            }}
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                                        />
+                                        <Link href={`/blog/${post.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                                            <img
+                                                src={getPostImage(post.img, post.id)}
+                                                alt={post.title}
+                                                onError={(e) => {
+                                                    e.currentTarget.src = `/assets/img/blog/blog-2-${(post.id % 12) + 1}.webp`
+                                                }}
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                                            />
+                                        </Link>
                                         <span style={{
                                             position: 'absolute',
                                             top: '4px',
@@ -352,7 +373,8 @@ export default function BlogSidebar({ settings: initialSettings }) {
                                             borderRadius: '4px',
                                             lineHeight: '1.2',
                                             boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-                                            zIndex: 2
+                                            zIndex: 2,
+                                            pointerEvents: 'none'
                                         }}>
                                             #{idx + 1}
                                         </span>

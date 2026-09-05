@@ -1,7 +1,9 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 import VideoPopup from "../elements/VideoPopup"
 
 export default function BlogCard4({ formatIcon, video, item = {} }) {
+    const router = useRouter()
     const comments = item.commentsCount ?? item._count?.comments ?? (item.comments ? item.comments.length : 0)
     const views = item.views ?? 0
     const categoryName = typeof item.category === 'string' ? item.category : (item.category?.name || 'General')
@@ -10,15 +12,32 @@ export default function BlogCard4({ formatIcon, video, item = {} }) {
         ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
         : `March 21, ${new Date().getFullYear()}`
 
+    const handleCardClick = (e) => {
+        const selection = window.getSelection()
+        if (selection && selection.toString().length > 0) return
+        if (e.target.closest('a, button, input, textarea, select, .ta-blog-box__cats, .author-wrapper, .video-popup, .popup-video, .share-info')) {
+            return
+        }
+        if (item?.id) {
+            router.push(`/blog/${item.id}`)
+        }
+    }
+
     return (
         <>
             <div className="col-xl-12 mt-30">
-                <article className="ta-blog-box ta-blog-box__featured ta-blog-box__style-4 ta-stroke ">
+                <article
+                    className="ta-blog-box ta-blog-box__featured ta-blog-box__style-4 ta-stroke "
+                    style={{ cursor: 'pointer' }}
+                    onClick={handleCardClick}
+                >
                     <div className="row">
                         <div className="col-xl-5">
                             <div className="thumb ta-stroke">
                                 <div className="ta-post-gallery ta-radious-40 ta-stroke">
-                                    <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-1.webp"} alt="blog" />
+                                    <Link href={`/blog/${item.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                                        <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-1.webp"} alt="blog" />
+                                    </Link>
                                 </div>
                                 <div className="ta-blog-box__cats ta-blog-box__cats--right">
                                     <Link href={`/blog-filter-category?category=${item.categorySlug || categoryName}`}>{categoryName}</Link>

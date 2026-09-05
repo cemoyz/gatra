@@ -1,18 +1,33 @@
 import Link from "next/link"
+import { useRouter } from "next/router"
 
 export default function BlogCard8({ col, item = {} }) {
+    const router = useRouter()
     const categoryName = typeof item.category === 'string' ? item.category : (item.category?.name || 'General')
     const authorName = typeof item.author === 'string' ? item.author : (item.author?.name || 'Alexis Dowson')
     const formattedDate = item.createdAt
         ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
         : `March 21, ${new Date().getFullYear()}`
 
+    const handleCardClick = (e) => {
+        const selection = window.getSelection()
+        if (selection && selection.toString().length > 0) return
+        if (e.target.closest('a, button, input, textarea, select, .ta-blog-box__cats, .author-wrapper')) {
+            return
+        }
+        if (item?.id) {
+            router.push(`/blog/${item.id}`)
+        }
+    }
+
     return (
         <>
             <div className={`${col ? col : ""}`}>
-                <article className="ta-blog-box ta-blog-box__style-3 ta-stroke">
+                <article className="ta-blog-box ta-blog-box__style-3 ta-stroke" style={{ cursor: 'pointer' }} onClick={handleCardClick}>
                     <div className="thumb">
-                        <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-1.webp"} alt="blog" />
+                        <Link href={`/blog/${item.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                            <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-1.webp"} alt="blog" />
+                        </Link>
                         <div className="ta-blog-box__cats ta-blog-box__cats--right">
                             <Link href={`/blog-filter-category?category=${item.categorySlug || categoryName}`}>{categoryName}</Link>
                         </div>
