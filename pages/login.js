@@ -39,6 +39,8 @@ export default function LoginPage() {
             localStorage.setItem('hoom_token', data.token)
             sessionStorage.setItem('hoom_token', data.token)
             sessionStorage.setItem('dash_user', JSON.stringify(data.user))
+            // Set auth token cookie for middleware protection
+            document.cookie = `hoom_auth_token=${data.token}; path=/; max-age=86400; SameSite=Lax;`
           } catch (e) {}
         }
         showToast(`Selamat datang kembali, ${data.user?.name}!`, 'success')
