@@ -246,9 +246,9 @@ export default function SocialLinks({ className = '', showLabels = false, style 
           align-items: center !important;
           justify-content: center !important;
           flex-shrink: 0 !important;
-          background: transparent;
-          border: 1.5px solid currentColor;
-          color: inherit;
+          background: #1e293b !important;
+          border: 1.5px solid #1e293b !important;
+          color: #ffffff !important;
           padding: 0 !important;
           margin: 0 !important;
           text-decoration: none !important;

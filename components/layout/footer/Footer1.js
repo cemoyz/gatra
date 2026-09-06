@@ -31,7 +31,7 @@ export default function Footer1({ settings = {} }) {
                                     <img src={footerLogo} alt={settings.site_title || "Duanarasi"} style={{ height: '38px', width: 'auto', objectFit: 'contain' }} />
                                 </Link>
                                 <p style={{ fontSize: '14px', lineHeight: '1.7', color: '#94a3b8', marginBottom: '20px' }}>
-                                    Hoom Magazine menyajikan berita terkini, artikel mendalam, tren teknologi, gaya hidup, dan wawasan terpercaya untuk pembaca modern di seluruh Indonesia.
+                                    {settings.site_tagline || `${settings.site_title || 'Hoom Magazine'} menyajikan berita terkini, artikel mendalam, tren teknologi, gaya hidup, dan wawasan terpercaya untuk pembaca modern di seluruh Indonesia.`}
                                 </p>
                                 <SocialLinks className="d-flex align-items-center" />
                             </div>
@@ -118,7 +118,7 @@ export default function Footer1({ settings = {} }) {
                         <div className="row align-items-center">
                             <div className="col-md-6 text-center text-md-start mb-2 mb-md-0">
                                 <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>
-                                    &copy; {new Date().getFullYear()} <strong style={{ color: '#f8fafc' }}>Hoom Magazine</strong>. Seluruh hak cipta dilindungi.
+                                    &copy; {new Date().getFullYear()} <strong style={{ color: '#f8fafc' }}>{settings.site_title || 'Hoom Magazine'}</strong>. Seluruh hak cipta dilindungi.
                                 </p>
                             </div>
                             <div className="col-md-6 text-center text-md-end">
