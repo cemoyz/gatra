@@ -254,7 +254,7 @@ export default function SocialLinks({ className = '', showLabels = false, style 
           text-decoration: none !important;
           cursor: pointer !important;
           position: relative !important;
-          z-index: 10 !important;
+          z-index: 1 !important;
           pointer-events: auto !important;
           transition: all 0.2s ease-in-out !important;
         }
@@ -284,6 +284,17 @@ export default function SocialLinks({ className = '', showLabels = false, style 
           line-height: 1 !important;
           margin: auto !important;
           pointer-events: none !important;
+        }
+
+        @media (max-width: 575px) {
+          .social-circle-btn {
+            width: 32px !important;
+            height: 32px !important;
+            min-width: 32px !important;
+            max-width: 32px !important;
+            min-height: 32px !important;
+            max-height: 32px !important;
+          }
         }
       `}</style>
     </div>

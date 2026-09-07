@@ -289,7 +289,7 @@ export default function PostsManagement() {
         </CardHeader>
 
         {/* Table Content */}
-        <div style={{ overflowX: 'auto' }}>
+        <div className="dash-table-wrapper dash-desktop-table" style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ background: 'var(--dash-muted-bg)', borderBottom: '1px solid var(--dash-border)' }}>
@@ -437,6 +437,77 @@ export default function PostsManagement() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Cards List */}
+        <div className="dash-mobile-cards">
+          {posts.length === 0 && !loading ? (
+            <EmptyState
+              icon="fa-newspaper-o"
+              title="Tidak Ada Artikel Ditemukan"
+              description="Tidak ada artikel yang cocok dengan kata kunci atau filter Anda."
+            />
+          ) : (
+            posts.map((post) => (
+              <div key={post.id} className="dash-mobile-card-item">
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <img
+                    src={post.img?.startsWith('http') ? post.img : `/assets/img/blog/${post.img || 'blog-2-1.webp'}`}
+                    alt=""
+                    style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
+                    onError={(e) => { e.currentTarget.src = '/assets/img/blog/blog-2-1.webp' }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                      <span className="dash-badge" style={{ fontSize: '10.5px' }}>{post.category || 'Berita'}</span>
+                      <Badge variant={post.status === 'PUBLISHED' ? 'success' : 'warning'} dot style={{ fontSize: '10px' }}>
+                        {post.status === 'PUBLISHED' ? 'Terbit' : 'Draf'}
+                      </Badge>
+                      <span style={{ fontSize: '11px', color: 'var(--dash-text-muted)', marginLeft: 'auto' }}>
+                        <i className={`fa ${getTypeIcon(post.postType)}`}></i>
+                      </span>
+                    </div>
+                    <Link
+                      href={`/dashboard/posts/edit/${post.id}`}
+                      style={{ fontSize: '14px', fontWeight: 700, color: 'var(--dash-text-main)', lineHeight: 1.3, display: 'block', textDecoration: 'none', marginBottom: '6px' }}
+                    >
+                      {post.title}
+                    </Link>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '11.5px', color: 'var(--dash-text-muted)' }}>
+                      <span><i className="fa fa-user"></i> {post.author || 'Redaksi'}</span>
+                      <span><i className="fa fa-eye"></i> {post.views?.toLocaleString() || 0}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '8px', borderTop: '1px solid var(--dash-border)' }}>
+                  <Link
+                    href={getPreviewUrl(post)}
+                    target="_blank"
+                    className="dash-btn dash-btn-outline dash-btn-sm"
+                  >
+                    <i className="fa fa-external-link"></i> Lihat
+                  </Link>
+                  {(currentUser?.role !== 'AUTHOR' || (currentUser?.author?.id && post.authorId === currentUser.author.id)) && (
+                    <>
+                      <Link
+                        href={`/dashboard/posts/edit/${post.id}`}
+                        className="dash-btn dash-btn-secondary dash-btn-sm"
+                      >
+                        <i className="fa fa-pencil"></i> Edit
+                      </Link>
+                      <button
+                        onClick={() => setDeleteTarget(post)}
+                        className="dash-btn dash-btn-danger dash-btn-sm"
+                      >
+                        <i className="fa fa-trash"></i>
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Pagination Bar */}

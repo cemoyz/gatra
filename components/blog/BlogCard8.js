@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { getImageUrl } from "@/lib/imageUtils"
 
 export default function BlogCard8({ col, item = {} }) {
     const router = useRouter()
@@ -8,6 +9,7 @@ export default function BlogCard8({ col, item = {} }) {
     const formattedDate = item.createdAt
         ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
         : `March 21, ${new Date().getFullYear()}`
+    const imageSrc = getImageUrl(item.img, "blog-1.webp")
 
     const handleCardClick = (e) => {
         const selection = window.getSelection()
@@ -26,7 +28,7 @@ export default function BlogCard8({ col, item = {} }) {
                 <article className="ta-blog-box ta-blog-box__style-3 ta-stroke" style={{ cursor: 'pointer' }} onClick={handleCardClick}>
                     <div className="thumb">
                         <Link href={`/blog/${item.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
-                            <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-1.webp"} alt="blog" />
+                            <img src={imageSrc} alt="blog" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </Link>
                         <div className="ta-blog-box__cats ta-blog-box__cats--right">
                             <Link href={`/blog-filter-category?category=${item.categorySlug || categoryName}`}>{categoryName}</Link>

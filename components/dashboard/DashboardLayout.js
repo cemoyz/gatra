@@ -79,7 +79,12 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
       site_logo: ''
     }
   })
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const notifRef = useRef(null)
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [router.pathname])
 
   useEffect(() => {
     // Fetch site settings for dynamic logo and title
@@ -366,8 +371,16 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
       </Head>
 
       <div className={`dash-container ${themeMode === 'dark' ? 'dash-theme-dark' : 'dash-theme-light'}`}>
+        {/* Mobile Backdrop Overlay */}
+        {isMobileMenuOpen && (
+          <div
+            className="dash-sidebar-overlay"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
         {/* Sidebar Nav */}
-        <aside className="dash-sidebar">
+        <aside className={`dash-sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           {/* Logo Header */}
           <div className="dash-sidebar-header">
             <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', width: '100%' }}>
@@ -411,6 +424,16 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                 </span>
               </div>
             </Link>
+
+            {/* Mobile Close Button inside Sidebar */}
+            <button
+              type="button"
+              className="dash-mobile-sidebar-close"
+              onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close menu"
+            >
+              <i className="fa fa-times"></i>
+            </button>
           </div>
 
           {/* Navigation Links */}
@@ -421,6 +444,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                 <Link
                   key={item.path}
                   href={item.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className={`dash-menu-subitem ${isActive ? 'active' : ''}`}
                   style={{
                     display: 'flex',
@@ -446,6 +470,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
               <Link
                 href="/"
                 target="_blank"
+                onClick={() => setIsMobileMenuOpen(false)}
                 className="dash-menu-subitem"
                 style={{
                   display: 'flex',
@@ -569,6 +594,23 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
           >
             {/* Left Nav (matching main-files header-quick-link) */}
             <div className="dash-topbar-left">
+              {/* Mobile Hamburger Toggle */}
+              <button
+                type="button"
+                className="dash-mobile-toggle-btn"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                aria-label="Toggle Mobile Menu"
+              >
+                <i className={`fa ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+              </button>
+
+              {/* Mobile Brand Title */}
+              <div className="dash-mobile-brand">
+                <span className="dash-mobile-brand-title">
+                  {siteSettings.site_title || 'Dua Narasi'}
+                </span>
+              </div>
+
               <div className="dash-topbar-links">
                 <Link
                   href="/"

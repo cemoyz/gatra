@@ -294,7 +294,8 @@ export default function DashboardUsers() {
           </div>
         </CardHeader>
 
-        <div style={{ overflowX: 'auto' }}>
+        {/* Desktop Table */}
+        <div className="dash-table-wrapper dash-desktop-table" style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ background: 'var(--dash-muted-bg)', borderBottom: '1px solid var(--dash-border)' }}>
@@ -411,6 +412,57 @@ export default function DashboardUsers() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Cards List */}
+        <div className="dash-mobile-cards">
+          {filteredUsers.length === 0 && !loading ? (
+            <EmptyState
+              icon="fa-users"
+              title="Tidak Ada Pengguna"
+              description="Tidak ada pengguna yang cocok dengan kriteria Anda."
+            />
+          ) : (
+            filteredUsers.map((u) => (
+              <div key={u.id} className="dash-mobile-card-item">
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <img
+                    src={u.avatar || '/assets/img/author/author-1.webp'}
+                    alt=""
+                    style={{ width: '46px', height: '46px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--dash-border)', flexShrink: 0 }}
+                    onError={(e) => { e.currentTarget.src = '/avatar.png' }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--dash-text-main)' }}>{u.name}</div>
+                    <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.email}</div>
+                  </div>
+                  <Badge variant={getRoleBadgeVariant(u.role)} style={{ fontSize: '10.5px' }}>{u.role || 'SUBSCRIBER'}</Badge>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid var(--dash-border)' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)' }}>
+                    <i className="fa fa-file-text-o"></i> {u.postsCount || 0} artikel
+                  </div>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={() => openEditModal(u)}
+                      className="dash-btn dash-btn-secondary dash-btn-sm"
+                    >
+                      <i className="fa fa-pencil"></i> Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTarget(u)}
+                      className="dash-btn dash-btn-danger dash-btn-sm"
+                    >
+                      <i className="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </Card>
 

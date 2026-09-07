@@ -25,7 +25,7 @@ export function Tabs({ defaultValue, value, onValueChange, children, className =
 export function TabsList({ activeTab, onTabChange, children, className = '', style = {} }) {
   return (
     <div
-      className={`dash-tabs-list ${className}`}
+      className={`dash-tabs-list dash-tabs-nav ${className}`}
       style={{
         display: 'inline-flex',
         alignItems: 'center',
@@ -35,7 +35,8 @@ export function TabsList({ activeTab, onTabChange, children, className = '', sty
         border: '1px solid var(--dash-border)',
         gap: '4px',
         marginBottom: '24px',
-        flexWrap: 'wrap',
+        maxWidth: '100%',
+        overflowX: 'auto',
         ...style
       }}
     >

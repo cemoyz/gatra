@@ -187,7 +187,7 @@ export default function CategoriesManagement() {
         icon="fa-folder-open-o"
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 380px) 1fr', gap: '24px', alignItems: 'start' }}>
+      <div className="dash-responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 380px) 1fr', gap: '24px', alignItems: 'start' }}>
         {/* Create Category Form Card */}
         <Card>
           <CardHeader>
@@ -270,7 +270,8 @@ export default function CategoriesManagement() {
           <CardHeader>
             <CardTitle icon="fa-folder-o">Daftar Kategori ({categories.length})</CardTitle>
           </CardHeader>
-          <div style={{ overflowX: 'auto' }}>
+          {/* Desktop Table */}
+          <div className="dash-table-wrapper dash-desktop-table" style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ background: 'var(--dash-muted-bg)', borderBottom: '1px solid var(--dash-border)' }}>
@@ -386,6 +387,62 @@ export default function CategoriesManagement() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards List */}
+          <div className="dash-mobile-cards">
+            {categories.length === 0 && !loading ? (
+              <EmptyState
+                icon="fa-folder-open-o"
+                title="Belum Ada Kategori"
+                description="Mulai buat kategori berita pertama Anda."
+              />
+            ) : (
+              categories.map((cat) => (
+                <div key={cat.id} className="dash-mobile-card-item">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
+                    <div>
+                      <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--dash-text-main)' }}>{cat.name}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', marginTop: '2px' }}>/{cat.slug}</div>
+                    </div>
+                    <Badge variant="outline">{cat.postsCount || 0} Artikel</Badge>
+                  </div>
+
+                  {cat.description && (
+                    <div style={{ fontSize: '12.5px', color: 'var(--dash-text-muted)', lineHeight: 1.4 }}>
+                      {cat.description}
+                    </div>
+                  )}
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid var(--dash-border)' }}>
+                    <button
+                      type="button"
+                      onClick={() => handleToggleHeader(cat)}
+                      disabled={togglingId === cat.id}
+                      style={{ border: 'none', background: 'transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: cat.showInHeader ? '#10b981' : 'var(--dash-text-muted)', fontWeight: 600 }}
+                    >
+                      <i className={`fa ${cat.showInHeader ? 'fa-toggle-on' : 'fa-toggle-off'}`} style={{ fontSize: '16px' }}></i>
+                      <span>Header Menu: {cat.showInHeader ? 'Tampil' : 'Sembunyi'}</span>
+                    </button>
+
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button
+                        onClick={() => setEditTarget(cat)}
+                        className="dash-btn dash-btn-secondary dash-btn-sm"
+                      >
+                        <i className="fa fa-pencil"></i> Edit
+                      </button>
+                      <button
+                        onClick={() => setDeleteTarget(cat)}
+                        className="dash-btn dash-btn-danger dash-btn-sm"
+                      >
+                        <i className="fa fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </Card>
       </div>

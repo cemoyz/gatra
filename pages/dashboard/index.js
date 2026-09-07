@@ -105,11 +105,11 @@ export default function DashboardOverview() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         
         {/* ROW 1: Growth & Editorial Insights (6 cols), Total Views (3 cols), Total Articles (3 cols) */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '24px' }}>
+        <div className="dash-grid-12" style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '24px' }}>
           
           {/* CARD 1: Growth & Editorial Insights (Welcome Banner) */}
           <div
-            className="dash-card dash-animate-fade-in"
+            className="dash-card dash-animate-fade-in dash-stack-mobile"
             style={{
               gridColumn: 'span 6',
               display: 'flex',
@@ -130,7 +130,7 @@ export default function DashboardOverview() {
               <p style={{ fontSize: '13px', color: 'var(--dash-text-muted)', lineHeight: '1.5', margin: 0 }}>
                 Portal memiliki <strong>{stats.totalPosts}</strong> total artikel pada <strong>{stats.totalCategories}</strong> kategori dengan <strong>{stats.totalViews?.toLocaleString() || 0}</strong> akumulasi pembaca aktif.
               </p>
-              <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '6px', flexWrap: 'wrap' }}>
                 <Link
                   href="/dashboard/posts/new"
                   className="dash-btn dash-btn-primary"
@@ -202,7 +202,7 @@ export default function DashboardOverview() {
         </div>
 
         {/* ROW 2: Activity Insights & Monochrome Animated Performance Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '24px' }}>
+        <div className="dash-grid-12" style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '24px' }}>
           
           {/* CARD 4: Activity Insights (Real 7-Day View & Interaction Waves) */}
           <div className="dash-card dash-animate-fade-in" style={{ gridColumn: 'span 6' }}>
@@ -398,7 +398,8 @@ export default function DashboardOverview() {
             </Link>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
+          {/* Desktop Table */}
+          <div className="dash-table-wrapper dash-desktop-table" style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--dash-border)', background: 'var(--dash-muted-bg)' }}>
@@ -482,6 +483,65 @@ export default function DashboardOverview() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Cards List */}
+          <div className="dash-mobile-cards">
+            {recentPosts.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '24px', color: 'var(--dash-text-muted)', fontSize: '13px' }}>
+                {loading ? 'Memuat artikel...' : 'Belum ada artikel.'}
+              </div>
+            ) : (
+              recentPosts.slice(0, 6).map((post) => (
+                <div key={post.id} className="dash-mobile-card-item">
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <img
+                      src={post.img?.startsWith('http') ? post.img : `/assets/img/blog/${post.img || 'blog-2-1.webp'}`}
+                      alt=""
+                      style={{ width: '52px', height: '52px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
+                      onError={(e) => { e.currentTarget.src = '/assets/img/blog/blog-2-1.webp' }}
+                    />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                        <span className="dash-badge" style={{ fontSize: '10.5px' }}>{post.category || 'Berita'}</span>
+                        <span style={{
+                          fontSize: '10px',
+                          fontWeight: 700,
+                          padding: '2px 6px',
+                          borderRadius: '12px',
+                          background: post.status === 'PUBLISHED' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                          color: post.status === 'PUBLISHED' ? '#10b981' : '#f59e0b'
+                        }}>
+                          {post.status}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--dash-text-main)', lineHeight: 1.3, marginBottom: '6px' }}>
+                        {post.title}
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: 'var(--dash-text-muted)' }}>
+                        <span><i className="fa fa-user"></i> {post.author || 'Redaksi'}</span>
+                        <span><i className="fa fa-eye"></i> {post.views?.toLocaleString() || 0}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '8px', borderTop: '1px solid var(--dash-border)' }}>
+                    <Link
+                      href={`/dashboard/posts/edit/${post.id}`}
+                      className="dash-btn dash-btn-secondary dash-btn-sm"
+                    >
+                      <i className="fa fa-pencil"></i> Edit
+                    </Link>
+                    <Link
+                      href={`/blog/${post.id}`}
+                      target="_blank"
+                      className="dash-btn dash-btn-outline dash-btn-sm"
+                    >
+                      <i className="fa fa-external-link"></i> Lihat
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

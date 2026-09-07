@@ -117,115 +117,197 @@ export default function DashboardMessages() {
       />
 
       {/* Messages Layout Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: selectedMessage ? '1.1fr 1.9fr' : '1fr', gap: '24px' }}>
+      <div className={`dash-inbox-grid ${selectedMessage ? 'has-selected' : ''}`} style={{ display: 'grid', gridTemplateColumns: selectedMessage ? '1.1fr 1.9fr' : '1fr', gap: '24px' }}>
         {/* Messages List Card */}
-        <Card>
-          <CardHeader>
-            <CardTitle icon="fa-list">Daftar Pesan Masuk ({messages.length})</CardTitle>
-          </CardHeader>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ background: 'var(--dash-muted-bg)', borderBottom: '1px solid var(--dash-border)' }}>
-                  <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Pengirim</th>
-                  <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Subjek</th>
-                  <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Tanggal</th>
-                  <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Status</th>
-                  <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700, textAlign: 'right' }}>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: 'center', padding: '48px', color: 'var(--dash-text-muted)' }}>
-                      <i className="fa fa-spinner fa-spin fa-2x" style={{ display: 'block', marginBottom: '8px' }}></i>
-                      Memuat pesan masuk...
-                    </td>
+        <div className="dash-inbox-list">
+          <Card>
+            <CardHeader>
+              <CardTitle icon="fa-list">Daftar Pesan Masuk ({messages.length})</CardTitle>
+            </CardHeader>
+            {/* Desktop Table */}
+            <div className="dash-table-wrapper dash-desktop-table" style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: 'var(--dash-muted-bg)', borderBottom: '1px solid var(--dash-border)' }}>
+                    <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Pengirim</th>
+                    <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Subjek</th>
+                    <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Tanggal</th>
+                    <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Status</th>
+                    <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700, textAlign: 'right' }}>Aksi</th>
                   </tr>
-                ) : messages.length === 0 ? (
-                  <tr>
-                    <td colSpan="5">
-                      <EmptyState
-                        icon="fa-inbox"
-                        title="Tidak Ada Pesan"
-                        description="Tidak ada pesan masuk pada filter yang dipilih saat ini."
-                      />
-                    </td>
-                  </tr>
-                ) : (
-                  messages.map((msg) => (
-                    <tr
-                      key={msg.id}
-                      onClick={() => setSelectedMessage(msg)}
-                      style={{
-                        cursor: 'pointer',
-                        background: selectedMessage?.id === msg.id ? 'var(--dash-muted-bg)' : 'transparent',
-                        borderBottom: '1px solid var(--dash-border)',
-                        transition: 'background 0.15s ease'
-                      }}
-                    >
-                      <td style={{ padding: '14px 18px' }}>
-                        <div style={{ fontWeight: msg.status === 'UNREAD' ? 800 : 600, color: 'var(--dash-text-main)', fontSize: '13.5px' }}>
-                          {msg.name}
-                        </div>
-                        <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)' }}>{msg.email}</div>
-                      </td>
-                      <td style={{ padding: '14px 18px', maxWidth: '220px' }}>
-                        <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--dash-text-main)' }}>{msg.subject || 'Umum'}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {msg.message}
-                        </div>
-                      </td>
-                      <td style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', whiteSpace: 'nowrap' }}>
-                        {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : '—'}
-                      </td>
-                      <td style={{ padding: '14px 18px' }}>
-                        <Badge variant={msg.status === 'UNREAD' ? 'danger' : 'default'} dot={msg.status === 'UNREAD'}>
-                          {msg.status === 'UNREAD' ? 'Baru' : 'Dibaca'}
-                        </Badge>
-                      </td>
-                      <td style={{ padding: '14px 18px', textAlign: 'right' }}>
-                        <div style={{ display: 'inline-flex', gap: '6px' }} onClick={(e) => e.stopPropagation()}>
-                          <button
-                            onClick={() => handleToggleStatus(msg)}
-                            className="dash-icon-btn"
-                            style={{ width: '30px', height: '30px', fontSize: '12px', borderRadius: '8px' }}
-                            title={msg.status === 'UNREAD' ? 'Tandai sudah dibaca' : 'Tandai belum dibaca'}
-                          >
-                            <i className={`fa ${msg.status === 'UNREAD' ? 'fa-envelope-open' : 'fa-envelope'}`}></i>
-                          </button>
-                          <button
-                            onClick={() => handleDelete(msg.id, msg.name)}
-                            disabled={deletingId === msg.id}
-                            className="dash-icon-btn"
-                            style={{ width: '30px', height: '30px', fontSize: '12px', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#ef4444', borderRadius: '8px' }}
-                            title="Hapus Pesan"
-                          >
-                            <i className={`fa ${deletingId === msg.id ? 'fa-spinner fa-spin' : 'fa-trash'}`}></i>
-                          </button>
-                        </div>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: 'center', padding: '48px', color: 'var(--dash-text-muted)' }}>
+                        <i className="fa fa-spinner fa-spin fa-2x" style={{ display: 'block', marginBottom: '8px' }}></i>
+                        Memuat pesan masuk...
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+                  ) : messages.length === 0 ? (
+                    <tr>
+                      <td colSpan="5">
+                        <EmptyState
+                          icon="fa-inbox"
+                          title="Tidak Ada Pesan"
+                          description="Tidak ada pesan masuk pada filter yang dipilih saat ini."
+                        />
+                      </td>
+                    </tr>
+                  ) : (
+                    messages.map((msg) => (
+                      <tr
+                        key={msg.id}
+                        onClick={() => setSelectedMessage(msg)}
+                        style={{
+                          cursor: 'pointer',
+                          background: selectedMessage?.id === msg.id ? 'var(--dash-muted-bg)' : 'transparent',
+                          borderBottom: '1px solid var(--dash-border)',
+                          transition: 'background 0.15s ease'
+                        }}
+                      >
+                        <td style={{ padding: '14px 18px' }}>
+                          <div style={{ fontWeight: msg.status === 'UNREAD' ? 800 : 600, color: 'var(--dash-text-main)', fontSize: '13.5px' }}>
+                            {msg.name}
+                          </div>
+                          <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)' }}>{msg.email}</div>
+                        </td>
+                        <td style={{ padding: '14px 18px', maxWidth: '220px' }}>
+                          <div style={{ fontWeight: 600, fontSize: '13px', color: 'var(--dash-text-main)' }}>{msg.subject || 'Umum'}</div>
+                          <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {msg.message}
+                          </div>
+                        </td>
+                        <td style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', whiteSpace: 'nowrap' }}>
+                          {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : '—'}
+                        </td>
+                        <td style={{ padding: '14px 18px' }}>
+                          <Badge variant={msg.status === 'UNREAD' ? 'danger' : 'default'} dot={msg.status === 'UNREAD'}>
+                            {msg.status === 'UNREAD' ? 'Baru' : 'Dibaca'}
+                          </Badge>
+                        </td>
+                        <td style={{ padding: '14px 18px', textAlign: 'right' }}>
+                          <div style={{ display: 'inline-flex', gap: '6px' }} onClick={(e) => e.stopPropagation()}>
+                            <button
+                              onClick={() => handleToggleStatus(msg)}
+                              className="dash-icon-btn"
+                              style={{ width: '30px', height: '30px', fontSize: '12px', borderRadius: '8px' }}
+                              title={msg.status === 'UNREAD' ? 'Tandai sudah dibaca' : 'Tandai belum dibaca'}
+                            >
+                              <i className={`fa ${msg.status === 'UNREAD' ? 'fa-envelope-open' : 'fa-envelope'}`}></i>
+                            </button>
+                            <button
+                              onClick={() => handleDelete(msg.id, msg.name)}
+                              disabled={deletingId === msg.id}
+                              className="dash-icon-btn"
+                              style={{ width: '30px', height: '30px', fontSize: '12px', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#ef4444', borderRadius: '8px' }}
+                              title="Hapus Pesan"
+                            >
+                              <i className={`fa ${deletingId === msg.id ? 'fa-spinner fa-spin' : 'fa-trash'}`}></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards List */}
+            <div className="dash-mobile-cards">
+              {messages.length === 0 && !loading ? (
+                <EmptyState
+                  icon="fa-inbox"
+                  title="Tidak Ada Pesan"
+                  description="Tidak ada pesan masuk."
+                />
+              ) : (
+                messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    onClick={() => setSelectedMessage(msg)}
+                    className="dash-mobile-card-item"
+                    style={{
+                      cursor: 'pointer',
+                      borderLeft: msg.status === 'UNREAD' ? '3px solid #da0105' : '1px solid var(--dash-border)'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
+                      <div>
+                        <div style={{ fontSize: '14.5px', fontWeight: msg.status === 'UNREAD' ? 800 : 700, color: 'var(--dash-text-main)' }}>
+                          {msg.name}
+                        </div>
+                        <div style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)' }}>{msg.email}</div>
+                      </div>
+                      <Badge variant={msg.status === 'UNREAD' ? 'danger' : 'default'} dot={msg.status === 'UNREAD'} style={{ fontSize: '10px' }}>
+                        {msg.status === 'UNREAD' ? 'Baru' : 'Dibaca'}
+                      </Badge>
+                    </div>
+
+                    <div>
+                      <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--dash-text-main)', marginBottom: '2px' }}>
+                        {msg.subject || 'Pertanyaan Umum'}
+                      </div>
+                      <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', lineHeight: 1.4 }}>
+                        {msg.message}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid var(--dash-border)' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--dash-text-muted)' }}>
+                        {msg.createdAt ? new Date(msg.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }) : ''}
+                      </span>
+
+                      <div style={{ display: 'flex', gap: '6px' }} onClick={(e) => e.stopPropagation()}>
+                        <button
+                          onClick={() => handleToggleStatus(msg)}
+                          className="dash-btn dash-btn-secondary dash-btn-sm"
+                        >
+                          <i className={`fa ${msg.status === 'UNREAD' ? 'fa-envelope-open' : 'fa-envelope'}`}></i>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(msg.id, msg.name)}
+                          disabled={deletingId === msg.id}
+                          className="dash-btn dash-btn-danger dash-btn-sm"
+                        >
+                          <i className="fa fa-trash"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </Card>
+        </div>
 
         {/* Selected Message Detail Viewer Card */}
         {selectedMessage && (
-          <Card>
-            <CardHeader>
-              <CardTitle icon="fa-envelope-open-o">Detail Pesan Masuk</CardTitle>
-              <button
-                onClick={() => setSelectedMessage(null)}
-                className="dash-icon-btn"
-                style={{ width: '28px', height: '28px' }}
-              >
-                <i className="fa fa-times"></i>
-              </button>
-            </CardHeader>
+          <div className="dash-inbox-detail">
+            <Card>
+              <CardHeader>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedMessage(null)}
+                    className="dash-btn dash-btn-secondary dash-btn-sm"
+                    style={{ padding: '4px 10px', fontSize: '12px' }}
+                  >
+                    <i className="fa fa-arrow-left"></i>
+                    <span>Kembali</span>
+                  </button>
+                  <CardTitle icon="fa-envelope-open-o">Detail Pesan</CardTitle>
+                </div>
+                <button
+                  onClick={() => setSelectedMessage(null)}
+                  className="dash-icon-btn"
+                  style={{ width: '28px', height: '28px' }}
+                  title="Tutup Pesan"
+                >
+                  <i className="fa fa-times"></i>
+                </button>
+              </CardHeader>
             <CardBody>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--dash-border)', paddingBottom: '16px', marginBottom: '16px' }}>
                 <div>
@@ -308,6 +390,7 @@ export default function DashboardMessages() {
               </div>
             </CardBody>
           </Card>
+        </div>
         )}
       </div>
     </DashboardLayout>

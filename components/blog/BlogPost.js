@@ -65,20 +65,26 @@ export default function BlogPost({
             .then(res => res.json())
             .then(resData => {
                 if (resData.success && resData.posts && resData.posts.length > 0) {
-                    // If showStart/showEnd specified and not filtering, slice
-                    let finalPosts = resData.posts
-                    if (!category && !search && !postType && !sortBy && !tag && (showStart > 0 || showEnd < 50)) {
-                        finalPosts = resData.posts.slice(showStart, showEnd)
-                        if (finalPosts.length === 0) finalPosts = resData.posts
+                    // Deduplicate posts by ID
+                    const uniqueMap = new Map()
+                    resData.posts.forEach(p => uniqueMap.set(p.id, p))
+                    let posts = Array.from(uniqueMap.values())
+
+                    // Slice posts by showStart & showEnd if not using explicit ids
+                    if (!ids && (showStart > 0 || showEnd < 50)) {
+                        const sliced = posts.slice(showStart, showEnd)
+                        if (sliced.length > 0) {
+                            posts = sliced
+                        }
                     }
-                    setData(finalPosts)
+                    setData(posts)
                 }
             })
             .catch(() => {
                 // Fallback to static json data on error
                 setData(initialFallback)
             })
-    }, [postsData, category, search, postType, sortBy, featured, tag, showStart, showEnd])
+    }, [postsData, category, search, postType, sortBy, featured, tag, showStart, showEnd, ids])
 
     useEffect(() => {
         const totalPages = Math.ceil(data.length / limit) || 1

@@ -230,7 +230,8 @@ export default function DashboardAuthors() {
           <CardTitle icon="fa-users">Daftar Penulis & Profil</CardTitle>
           <Badge variant="outline">{authors.length} Penulis</Badge>
         </CardHeader>
-        <div style={{ overflowX: 'auto' }}>
+        {/* Desktop Table */}
+        <div className="dash-table-wrapper dash-desktop-table" style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
             <thead>
               <tr style={{ background: 'var(--dash-muted-bg)', borderBottom: '1px solid var(--dash-border)' }}>
@@ -347,6 +348,68 @@ export default function DashboardAuthors() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile Cards List */}
+        <div className="dash-mobile-cards">
+          {authors.length === 0 && !loading ? (
+            <EmptyState
+              icon="fa-user-circle-o"
+              title="Belum Ada Penulis"
+              description="Klik 'Tambah Penulis Baru' untuk membuat profil penulis."
+            />
+          ) : (
+            authors.map((author) => (
+              <div key={author.id} className="dash-mobile-card-item">
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <img
+                    src={author.avatar || '/assets/img/author/author-1.webp'}
+                    alt=""
+                    style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', border: '1px solid var(--dash-border)', flexShrink: 0 }}
+                    onError={(e) => { e.currentTarget.src = '/avatar.png' }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--dash-text-main)' }}>{author.name}</div>
+                    <div style={{ display: 'flex', gap: '6px', marginTop: '4px', flexWrap: 'wrap' }}>
+                      <Badge variant="default" style={{ fontSize: '10px' }}>{author.role || 'Editor'}</Badge>
+                      <span style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)' }}>{author.postsCount || 0} artikel</span>
+                    </div>
+                  </div>
+                </div>
+
+                {author.bio && (
+                  <div style={{ fontSize: '12.5px', color: 'var(--dash-text-muted)', lineHeight: 1.4 }}>
+                    {author.bio}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '8px', borderTop: '1px solid var(--dash-border)' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)' }}>
+                    {author.linkedUser ? (
+                      <span style={{ color: '#10b981', fontWeight: 600 }}><i className="fa fa-check-circle"></i> User: {author.linkedUser.name}</span>
+                    ) : (
+                      <span>Profil Mandiri</span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button
+                      onClick={() => handleOpenModal(author)}
+                      className="dash-btn dash-btn-secondary dash-btn-sm"
+                    >
+                      <i className="fa fa-pencil"></i> Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(author.id, author.name)}
+                      disabled={deletingId === author.id}
+                      className="dash-btn dash-btn-danger dash-btn-sm"
+                    >
+                      <i className="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </Card>
 

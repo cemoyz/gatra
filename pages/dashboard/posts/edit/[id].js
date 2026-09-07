@@ -278,9 +278,9 @@ export default function EditPost() {
           </div>
 
           <form onSubmit={handleSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+            <div className="dash-grid-12" style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '24px' }}>
               {/* Main Column */}
-              <div>
+              <div style={{ gridColumn: 'span 8', display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {/* Dynamic format inputs */}
                 {formData.postType === 'link' && (
                   <div className="dash-card" style={{ borderColor: 'rgba(59, 130, 246, 0.4)', background: 'var(--dash-card-bg)' }}>
@@ -505,7 +505,7 @@ export default function EditPost() {
               </div>
 
               {/* Sidebar */}
-              <div>
+              <div style={{ gridColumn: 'span 4', display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 {/* Publish Settings */}
                 <div className="dash-card">
                   <div className="dash-card-header">

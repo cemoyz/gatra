@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
 import VideoPopup from "../elements/VideoPopup"
+import { getImageUrl } from "@/lib/imageUtils"
 
 export default function BlogCard4({ formatIcon, video, item = {} }) {
     const router = useRouter()
@@ -11,6 +12,7 @@ export default function BlogCard4({ formatIcon, video, item = {} }) {
     const formattedDate = item.createdAt
         ? new Date(item.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
         : `March 21, ${new Date().getFullYear()}`
+    const imageSrc = getImageUrl(item.img, "blog-1.webp")
 
     const handleCardClick = (e) => {
         const selection = window.getSelection()
@@ -33,10 +35,10 @@ export default function BlogCard4({ formatIcon, video, item = {} }) {
                 >
                     <div className="row">
                         <div className="col-xl-5">
-                            <div className="thumb ta-stroke">
-                                <div className="ta-post-gallery ta-radious-40 ta-stroke">
+                            <div className="thumb ta-stroke" style={{ minHeight: '200px', height: '100%', position: 'relative' }}>
+                                <div className="ta-post-gallery ta-radious-40 ta-stroke" style={{ width: '100%', height: '100%' }}>
                                     <Link href={`/blog/${item.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
-                                        <img src={item.img ? (item.img.startsWith('http') || item.img.startsWith('/') ? item.img : `/assets/img/blog/${item.img}`) : "/assets/img/blog/blog-1.webp"} alt="blog" />
+                                        <img src={imageSrc} alt="blog" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     </Link>
                                 </div>
                                 <div className="ta-blog-box__cats ta-blog-box__cats--right">
