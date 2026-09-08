@@ -37,6 +37,7 @@ export default function BlogPost({
     // Initial fallback data
     const initialFallback = allData.slice(showStart, showEnd)
     const [data, setData] = useState(postsData || initialFallback)
+    const [loading, setLoading] = useState(!postsData)
     const [currentPage, setCurrentPage] = useState(1)
     const [pagination, setPagination] = useState([])
     const limit = showItem || 6
@@ -47,9 +48,11 @@ export default function BlogPost({
     useEffect(() => {
         if (postsData) {
             setData(postsData)
+            setLoading(false)
             return
         }
 
+        setLoading(true)
         const params = new URLSearchParams()
         params.append('status', 'PUBLISHED')
         params.append('limit', '50')
@@ -84,6 +87,9 @@ export default function BlogPost({
                 // Fallback to static json data on error
                 setData(initialFallback)
             })
+            .finally(() => {
+                setLoading(false)
+            })
     }, [postsData, category, search, postType, sortBy, featured, tag, showStart, showEnd, ids])
 
     useEffect(() => {
@@ -115,7 +121,37 @@ export default function BlogPost({
 
     return (
         <>
-            {getPaginatedProducts.length === 0 && (
+            {loading && (
+                <>
+                    {Array.from({ length: showItem || 1 }).map((_, idx) => (
+                        <div key={idx} className={`${col ? col : ""} w-100 mb-3`}>
+                            <div className="ta-skeleton-card ta-stroke w-100 p-0 d-flex flex-column h-100 position-relative" style={{ minHeight: style === 3 ? '420px' : '220px' }}>
+                                <div className="ta-skeleton-box w-100" style={{ height: style === 3 ? '260px' : '150px', background: '#e2e8f0', position: 'relative', overflow: 'hidden' }}>
+                                    <div className="ta-skeleton-shimmer" />
+                                </div>
+                                <div className="p-3 d-flex flex-column flex-grow-1" style={{ background: '#ffffff' }}>
+                                    <div className="mb-2" style={{ width: '35%', height: '12px', background: '#cbd5e1', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+                                        <div className="ta-skeleton-shimmer" />
+                                    </div>
+                                    <div className="mb-2" style={{ width: '90%', height: '18px', background: '#cbd5e1', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+                                        <div className="ta-skeleton-shimmer" />
+                                    </div>
+                                    <div className="mb-2" style={{ width: '65%', height: '18px', background: '#cbd5e1', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+                                        <div className="ta-skeleton-shimmer" />
+                                    </div>
+                                    {desc && (
+                                        <div className="mt-2" style={{ width: '80%', height: '12px', background: '#cbd5e1', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+                                            <div className="ta-skeleton-shimmer" />
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </>
+            )}
+
+            {!loading && getPaginatedProducts.length === 0 && (
                 <div style={{ padding: '40px 0', textAlign: 'center', color: '#64748b', width: '100%' }}>
                     <h4>No Articles Found</h4>
                     <p>No posts match the current filter criteria.</p>

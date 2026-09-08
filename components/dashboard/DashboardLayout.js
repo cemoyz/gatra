@@ -318,6 +318,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
     { label: 'Kategori Berita', path: '/dashboard/categories', icon: 'fa-folder-open-o', roles: ['ADMIN', 'EDITOR'] },
     { label: 'Tim Penulis / Authors', path: '/dashboard/authors', icon: 'fa-user-circle-o', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
     { label: 'Manajemen Pengguna', path: '/dashboard/users', icon: 'fa-users', roles: ['ADMIN'] },
+    { label: 'Pelanggan / Subscriber', path: '/dashboard/subscribers', icon: 'fa-paper-plane-o', roles: ['ADMIN', 'EDITOR'] },
     { label: 'Komentar Pembaca', path: '/dashboard/comments', icon: 'fa-comments-o', badge: recentComments.length, roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
     { label: 'Pesan Masuk (Inbox)', path: '/dashboard/messages', icon: 'fa-envelope-o', badge: unreadMessagesCount, roles: ['ADMIN', 'EDITOR'] },
     { label: 'Pengaturan Website', path: '/dashboard/settings', icon: 'fa-sliders', roles: ['ADMIN'] },

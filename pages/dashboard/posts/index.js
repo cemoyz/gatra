@@ -154,15 +154,8 @@ export default function PostsManagement() {
   }
 
   const getPreviewUrl = (post) => {
-    switch (post.postType) {
-      case 'video': return '/blog-details-video'
-      case 'audio': return '/blog-details-audio'
-      case 'gallery': return '/blog-details-gallery'
-      case 'quote': return '/blog-details-quote'
-      case 'link': return '/blog-details-link'
-      case 'status': return '/blog-details-status'
-      default: return `/blog/${post.id}`
-    }
+    if (!post || !post.id) return '/blog'
+    return `/blog/${post.id}`
   }
 
   const isFiltered = search || selectedCat !== 'all' || selectedStatus !== 'all' || selectedType !== 'all'

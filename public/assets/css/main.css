@@ -5817,24 +5817,49 @@ img.show-on-dark {
 }
 .ta-blog-widget .ta-sidebar-ad {
   position: relative;
+  background: #ffffff;
+  z-index: 1;
+}
+.ta-blog-widget .ta-sidebar-ad.ta-stroke::before {
+  z-index: -1;
+}
+.ta-blog-widget .ta-sidebar-ad.ta-stroke::after {
+  z-index: 2;
+  pointer-events: none;
+}
+.ta-blog-widget .ta-sidebar-ad .thumb {
+  overflow: hidden;
+  position: relative;
 }
 .ta-blog-widget .ta-sidebar-ad .thumb img {
   width: 100%;
+  height: auto;
+  display: block;
 }
 .ta-blog-widget .ta-sidebar-ad .content {
   background: #ffffff;
-  padding: 20px 30px;
-  position: absolute;
-  width: calc(100% - 60px);
-  bottom: 30px;
-  left: 50%;
-  translate: -50% 0%;
+  padding: 14px 18px;
+  position: relative;
+  width: 100%;
+  bottom: auto;
+  left: auto;
+  translate: none;
+  text-align: center;
+  border-top: 2px solid #262626;
 }
 .ta-blog-widget .ta-sidebar-ad .content .title {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
   font-family: "Syne", sans-serif;
+  line-height: 1.3;
+  color: #262626;
+}
+.ta-blog-widget .ta-sidebar-ad .content p {
+  font-size: 12px;
+  color: #525252;
+  margin: 0;
+  line-height: 1.4;
 }
 
 .tagcloud {
@@ -7501,6 +7526,53 @@ body {
 
 .dark .ta-latest-posts > div:hover {
   background: #1e293b;
+}
+
+/* Featured Post Skeleton Overlay Styling */
+.ta-skeleton-card {
+  position: relative;
+  background: #ffffff;
+  overflow: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.ta-skeleton-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(241, 245, 249, 0.4) 0%,
+    rgba(203, 213, 225, 0.7) 50%,
+    rgba(241, 245, 249, 0.4) 100%
+  );
+  background-size: 200% 100%;
+  animation: ta-shimmer-animation 1.5s infinite ease-in-out;
+}
+
+@keyframes ta-shimmer-animation {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.dark .ta-skeleton-card {
+  background: #0f172a !important;
+}
+
+.dark .ta-skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 41, 59, 0.4) 0%,
+    rgba(51, 65, 85, 0.7) 50%,
+    rgba(30, 41, 59, 0.4) 100%
+  );
+  background-size: 200% 100%;
 }
 
 /*# sourceMappingURL=main.css.map */

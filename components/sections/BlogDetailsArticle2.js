@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Audio from "./PostAudio"
 import PostGallery from "./PostGallery"
 import PostLink from "./PostLink"
@@ -12,6 +12,20 @@ import ShareModal from "@/components/elements/ShareModal"
 
 export default function BlogDetailsArticle2({ type }) {
     const [isShareOpen, setIsShareOpen] = useState(false)
+    const [settings, setSettings] = useState({ site_title: 'Dua Narasi' })
+
+    useEffect(() => {
+        fetch('/api/settings')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.settings) {
+                    setSettings(data.settings)
+                }
+            })
+            .catch(console.error)
+    }, [])
+
+    const siteTitle = settings.site_title || 'Dua Narasi'
     return (
         <>
             <article className="ta-blog-box ta-stroke">
@@ -150,7 +164,7 @@ export default function BlogDetailsArticle2({ type }) {
                             <ShareModal
                                 isOpen={isShareOpen}
                                 onClose={() => setIsShareOpen(false)}
-                                title="Hoom News & Magazine Article"
+                                title={`Artikel ${siteTitle}`}
                             />
                         </div>
                     </div>

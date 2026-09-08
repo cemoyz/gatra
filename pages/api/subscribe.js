@@ -15,12 +15,41 @@ export default async function handler(req, res) {
 
     const cleanEmail = email.trim().toLowerCase()
     const cleanName = (name || cleanEmail.split('@')[0]).trim()
+    const topicsStr = Array.isArray(topics) ? topics.join(', ') : (topics || 'Semua Topik')
 
-    // 1. Check if user already exists or create subscriber contact record
-    const topicsStr = Array.isArray(topics) ? topics.join(', ') : String(topics)
-    const subNote = `[Newsletter Subscriber] Topik: ${topicsStr || 'Semua Topik'} | Frekuensi: ${frequency}`
+    // 1. Save or update subscriber in DB
+    try {
+      if (prisma.subscriber) {
+        await prisma.subscriber.upsert({
+          where: { email: cleanEmail },
+          update: {
+            name: cleanName,
+            topics: topicsStr,
+            frequency,
+            status: 'ACTIVE'
+          },
+          create: {
+            name: cleanName,
+            email: cleanEmail,
+            topics: topicsStr,
+            frequency,
+            status: 'ACTIVE'
+          }
+        })
+      }
+    } catch (err) {
+      console.warn('Prisma subscriber upsert fallback:', err.message)
+      // Fallback via raw SQL if client generator was locked
+      await prisma.$executeRawUnsafe(
+        `INSERT INTO subscribers (email, name, topics, frequency, status, "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, 'ACTIVE', NOW(), NOW())
+         ON CONFLICT (email) DO UPDATE SET name = $2, topics = $3, frequency = $4, status = 'ACTIVE', "updatedAt" = NOW()`,
+        cleanEmail, cleanName, topicsStr, frequency
+      ).catch(() => {})
+    }
 
-    // Create or log as contact message / subscriber lead
+    // 2. Also log as contact message lead for inbox tracking
+    const subNote = `[Newsletter Subscriber] Topik: ${topicsStr} | Frekuensi: ${frequency}`
     await prisma.contactMessage.create({
       data: {
         name: cleanName,
@@ -30,14 +59,15 @@ export default async function handler(req, res) {
         message: subNote,
         status: 'UNREAD'
       }
-    }).catch(console.error)
+    }).catch(() => {})
 
-    // 2. Emit real-time event to dashboard
+    // 3. Emit real-time notification to dashboard
     try {
-      sendDashboardEvent('new_message', {
+      sendDashboardEvent('new_subscriber', {
         title: 'Pelanggan Newsletter Baru',
         email: cleanEmail,
-        name: cleanName
+        name: cleanName,
+        topics: topicsStr
       })
     } catch (e) {}
 
@@ -46,7 +76,9 @@ export default async function handler(req, res) {
       message: 'Selamat! Anda telah berhasil berlangganan newsletter Dua Narasi. Cek inbox Anda untuk konfirmasi.',
       subscriber: {
         name: cleanName,
-        email: cleanEmail
+        email: cleanEmail,
+        topics: topicsStr,
+        frequency
       }
     })
   } catch (error) {

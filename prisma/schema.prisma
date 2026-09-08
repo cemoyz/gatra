@@ -144,3 +144,16 @@ model ContactMessage {
 
   @@map("contact_messages")
 }
+
+model Subscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  topics    String?  @default("Semua Topik")
+  frequency String?  @default("weekly")
+  status    String   @default("ACTIVE") // "ACTIVE" | "UNSUBSCRIBED"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscribers")
+}

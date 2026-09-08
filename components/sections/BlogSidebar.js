@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { Autoplay, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 import SocialLinks from "@/components/elements/SocialLinks"
+import { getImageUrl } from "@/lib/imageUtils"
 
 export default function BlogSidebar({ settings: initialSettings }) {
     const router = useRouter()
@@ -14,27 +15,36 @@ export default function BlogSidebar({ settings: initialSettings }) {
     const [leadAuthor, setLeadAuthor] = useState(null)
     const [email, setEmail] = useState('')
     const [subscribed, setSubscribed] = useState(false)
-    const [settings, setSettings] = useState(initialSettings || {
-        show_sidebar_ad: 'true',
-        sidebar_ad_title: 'Dua Narasi',
-        sidebar_ad_subtitle: 'Portal Berita & Opini Terpercaya',
-        sidebar_ad_image: '/assets/img/bg/sidebar-ad.webp',
-        sidebar_ad_url: '',
-        sidebar_ad_open_new_tab: 'true'
+    const [settings, setSettings] = useState(() => {
+        if (initialSettings && Object.keys(initialSettings).length > 0) {
+            return initialSettings
+        }
+        return {
+            show_sidebar_ad: 'true',
+            sidebar_ad_title: 'Dua Narasi',
+            sidebar_ad_subtitle: 'Portal Berita & Opini Terpercaya',
+            sidebar_ad_image: '/assets/img/bg/sidebar-ad.webp',
+            sidebar_ad_url: '',
+            sidebar_ad_open_new_tab: 'true'
+        }
     })
 
     useEffect(() => {
-        // Fetch settings if not provided
-        if (!initialSettings) {
+        if (initialSettings && Object.keys(initialSettings).length > 0) {
+            setSettings(prev => ({ ...prev, ...initialSettings }))
+        } else {
             fetch('/api/settings')
                 .then(res => res.json())
                 .then(data => {
                     if (data.success && data.settings) {
-                        setSettings(data.settings)
+                        setSettings(prev => ({ ...prev, ...data.settings }))
                     }
                 })
                 .catch(console.error)
         }
+    }, [initialSettings])
+
+    useEffect(() => {
         // Fetch real categories
         fetch('/api/categories')
             .then(res => res.json())
@@ -77,12 +87,29 @@ export default function BlogSidebar({ settings: initialSettings }) {
             .catch(console.error)
     }, [])
 
-    const handleSubscribe = (e) => {
+    const [subscribing, setSubscribing] = useState(false)
+    const handleSubscribe = async (e) => {
         e.preventDefault()
-        if (email.trim()) {
-            setSubscribed(true)
-            setEmail('')
-            setTimeout(() => setSubscribed(false), 5000)
+        if (!email.trim() || subscribing) return
+        setSubscribing(true)
+        try {
+            const res = await fetch('/api/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email.trim(), topics: ['General News'], frequency: 'weekly' })
+            })
+            const data = await res.json()
+            if (data.success) {
+                setSubscribed(true)
+                setEmail('')
+                setTimeout(() => setSubscribed(false), 5000)
+            } else {
+                alert(data.message || 'Gagal berlangganan. Silakan coba lagi.')
+            }
+        } catch (err) {
+            console.error('Subscription error:', err)
+        } finally {
+            setSubscribing(false)
         }
     }
 
@@ -497,7 +524,7 @@ export default function BlogSidebar({ settings: initialSettings }) {
                 {/* Ad Banner */}
                 {settings.show_sidebar_ad !== 'false' && (
                     <div className="ta-blog-widget widget mt-60">
-                        <div className="ta-sidebar-ad ta-stroke" style={{ overflow: 'hidden', position: 'relative' }}>
+                        <div className="ta-sidebar-ad ta-stroke" style={{ position: 'relative', background: '#ffffff' }}>
                             {settings.sidebar_ad_url ? (
                                 <a
                                     href={settings.sidebar_ad_url}
@@ -505,36 +532,36 @@ export default function BlogSidebar({ settings: initialSettings }) {
                                     rel="noopener noreferrer"
                                     style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}
                                 >
-                                    <div className="thumb">
+                                    <div className="thumb" style={{ overflow: 'hidden' }}>
                                         <img
-                                            src={settings.sidebar_ad_image || '/assets/img/bg/sidebar-ad.webp'}
+                                            src={getImageUrl(settings.sidebar_ad_image, "/assets/img/bg/sidebar-ad.webp")}
                                             alt={settings.sidebar_ad_title || 'Ad Banner'}
                                             style={{ width: '100%', height: 'auto', display: 'block' }}
                                         />
                                     </div>
                                     {(settings.sidebar_ad_title || settings.sidebar_ad_subtitle) && (
-                                        <div className="content ta-stroke">
+                                        <div className="content">
                                             {settings.sidebar_ad_title && <h6 className="title">{settings.sidebar_ad_title}</h6>}
                                             {settings.sidebar_ad_subtitle && <p>{settings.sidebar_ad_subtitle}</p>}
                                         </div>
                                     )}
                                 </a>
                             ) : (
-                                <>
-                                    <div className="thumb">
+                                <div>
+                                    <div className="thumb" style={{ overflow: 'hidden' }}>
                                         <img
-                                            src={settings.sidebar_ad_image || '/assets/img/bg/sidebar-ad.webp'}
+                                            src={getImageUrl(settings.sidebar_ad_image, "/assets/img/bg/sidebar-ad.webp")}
                                             alt={settings.sidebar_ad_title || 'Ad Banner'}
                                             style={{ width: '100%', height: 'auto', display: 'block' }}
                                         />
                                     </div>
                                     {(settings.sidebar_ad_title || settings.sidebar_ad_subtitle) && (
-                                        <div className="content ta-stroke">
+                                        <div className="content">
                                             {settings.sidebar_ad_title && <h6 className="title">{settings.sidebar_ad_title}</h6>}
                                             {settings.sidebar_ad_subtitle && <p>{settings.sidebar_ad_subtitle}</p>}
                                         </div>
                                     )}
-                                </>
+                                </div>
                             )}
                         </div>
                     </div>

@@ -26,6 +26,7 @@ export default function BlogDetailsArticle({ blogPost }) {
     } = blogPost
 
     const [isShareOpen, setIsShareOpen] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [settings, setSettings] = useState({
         show_author_bio: 'true',
         show_related_posts: 'true'
@@ -33,6 +34,16 @@ export default function BlogDetailsArticle({ blogPost }) {
     const [relatedPosts, setRelatedPosts] = useState([])
 
     useEffect(() => {
+        // Check if user is logged in
+        fetch('/api/auth/me')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.user) {
+                    setIsLoggedIn(true)
+                }
+            })
+            .catch(() => setIsLoggedIn(false))
+
         // Fetch display settings
         fetch('/api/settings')
             .then(res => res.json())
@@ -345,9 +356,11 @@ export default function BlogDetailsArticle({ blogPost }) {
                     <Link href="/" className="ta-inline-btn" style={{ fontWeight: 600, color: '#475569', textDecoration: 'none' }}>
                         <i className="fa fa-long-arrow-left" style={{ marginRight: '6px' }} /> Kembali ke Beranda
                     </Link>
-                    <Link href="/dashboard/posts" className="ta-inline-btn" style={{ fontWeight: 600, color: '#3b82f6', textDecoration: 'none' }}>
-                        <i className="fa fa-sliders" style={{ marginRight: '6px' }} /> Kelola di Dashboard
-                    </Link>
+                    {isLoggedIn && (
+                        <Link href="/dashboard/posts" className="ta-inline-btn" style={{ fontWeight: 600, color: '#3b82f6', textDecoration: 'none' }}>
+                            <i className="fa fa-sliders" style={{ marginRight: '6px' }} /> Kelola di Dashboard
+                        </Link>
+                    )}
                 </div>
             </div>
         </>

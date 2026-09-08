@@ -1,26 +1,56 @@
 import Layout from "@/components/layout/Layout"
 import Link from "next/link"
 import Head from "next/head"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
+const defaultTopics = [
+    { id: 'Politik', label: 'Politik & Kebijakan', icon: 'fa-balance-scale' },
+    { id: 'Teknologi', label: 'Teknologi & Digital', icon: 'fa-microchip' },
+    { id: 'Bisnis', label: 'Bisnis & Ekonomi', icon: 'fa-line-chart' },
+    { id: 'Opini', label: 'Opini & Kolom Redaksi', icon: 'fa-pencil-square-o' },
+    { id: 'Gaya Hidup', label: 'Gaya Hidup & Budaya', icon: 'fa-coffee' },
+    { id: 'Olahraga', label: 'Olahraga & Kesehatan', icon: 'fa-trophy' },
+]
+
+const getTopicIcon = (name = '') => {
+    const n = name.toLowerCase()
+    if (n.includes('tekno') || n.includes('ai') || n.includes('tech')) return 'fa-microchip'
+    if (n.includes('politik') || n.includes('hukum')) return 'fa-balance-scale'
+    if (n.includes('bisnis') || n.includes('ekonomi') || n.includes('finan')) return 'fa-line-chart'
+    if (n.includes('opini') || n.includes('kolom')) return 'fa-pencil-square-o'
+    if (n.includes('gaya') || n.includes('hiburan') || n.includes('kuliner')) return 'fa-coffee'
+    if (n.includes('sains') || n.includes('lingkungan')) return 'fa-globe'
+    if (n.includes('olahraga') || n.includes('sport')) return 'fa-trophy'
+    return 'fa-newspaper-o'
+}
 
 export default function SubscribePage() {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [frequency, setFrequency] = useState('weekly')
-    const [selectedTopics, setSelectedTopics] = useState(['tech', 'politics', 'opinion'])
+    const [topics, setTopics] = useState(defaultTopics)
+    const [selectedTopics, setSelectedTopics] = useState(['Politik', 'Teknologi', 'Bisnis'])
     const [submitting, setSubmitting] = useState(false)
     const [submitted, setSubmitted] = useState(false)
     const [alert, setAlert] = useState(null)
     const [openFaq, setOpenFaq] = useState(null)
 
-    const topics = [
-        { id: 'tech', label: 'Teknologi & AI', icon: 'fa-microchip' },
-        { id: 'politics', label: 'Politik & Kebijakan', icon: 'fa-balance-scale' },
-        { id: 'business', label: 'Bisnis & Finansial', icon: 'fa-line-chart' },
-        { id: 'opinion', label: 'Opini & Kolom Redaksi', icon: 'fa-pencil-square-o' },
-        { id: 'lifestyle', label: 'Gaya Hidup & Budaya', icon: 'fa-coffee' },
-        { id: 'science', label: 'Sains & Lingkungan', icon: 'fa-globe' },
-    ]
+    useEffect(() => {
+        fetch('/api/categories')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && Array.isArray(data.categories) && data.categories.length > 0) {
+                    const fetchedTopics = data.categories.map(cat => ({
+                        id: cat.name,
+                        label: cat.name,
+                        icon: getTopicIcon(cat.name)
+                    }))
+                    setTopics(fetchedTopics)
+                    setSelectedTopics(fetchedTopics.slice(0, 4).map(t => t.id))
+                }
+            })
+            .catch(console.error)
+    }, [])
 
     const toggleTopic = (id) => {
         if (selectedTopics.includes(id)) {
