@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -10,6 +10,27 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState(null)
+  const [siteSettings, setSiteSettings] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = sessionStorage.getItem('dash_site_settings')
+        if (saved) return JSON.parse(saved)
+      } catch (e) {}
+    }
+    return { site_title: 'Dua Narasi', logo_header: '/assets/img/logo/logo.webp' }
+  })
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.settings) {
+          try { sessionStorage.setItem('dash_site_settings', JSON.stringify(data.settings)) } catch (e) {}
+          setSiteSettings(prev => ({ ...prev, ...data.settings }))
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type })
@@ -77,7 +98,7 @@ export default function LoginPage() {
   return (
     <>
       <Head>
-        <title>Login &bull; Hoom Magazine Portal</title>
+        <title>Login &bull; {siteSettings.site_title || 'Dua Narasi'}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/assets/css/dashboard.css" />
@@ -125,7 +146,7 @@ export default function LoginPage() {
 
         <div style={{ width: '100%', maxWidth: '420px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* Brand Logo Header matching main-files basic login */}
+          {/* Brand Logo Header matching settings */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
             <div
               style={{
@@ -144,7 +165,7 @@ export default function LoginPage() {
               <i className="fa fa-newspaper-o"></i>
             </div>
             <span style={{ fontSize: '18px', fontWeight: 800, color: '#090d16', letterSpacing: '-0.3px' }}>
-              Hoom Magazine
+              {siteSettings.site_title || 'Dua Narasi'}
             </span>
           </div>
 

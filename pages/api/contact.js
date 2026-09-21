@@ -76,5 +76,24 @@ export default async function handler(req, res) {
     }
   }
 
+  if (req.method === 'PUT') {
+    const authUser = await requireApiAuth(req, res, [ROLES.ADMIN, ROLES.EDITOR])
+    if (!authUser) return
+    try {
+      const { action } = req.body
+      if (action === 'mark_all_read') {
+        await prisma.contactMessage.updateMany({
+          where: { status: 'UNREAD' },
+          data: { status: 'READ' }
+        })
+        return res.status(200).json({ success: true, message: 'Semua pesan berhasil ditandai sebagai sudah dibaca' })
+      }
+      return res.status(400).json({ success: false, message: 'Aksi tidak valid' })
+    } catch (error) {
+      console.error('Error updating contact messages:', error)
+      return res.status(500).json({ success: false, message: error.message })
+    }
+  }
+
   return res.status(405).json({ message: 'Method Not Allowed' })
 }

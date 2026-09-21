@@ -223,3 +223,33 @@ Jika menjalankan `npm run seed:users`, akun berikut dapat langsung digunakan unt
 | **Author** | `author@hoom.com` | `author123` |
 
 > ⚠️ **PENTING**: Segera ganti password akun administrator di menu **Dashboard &rarr; Manajemen Pengguna** setelah proses deploy pertama selesai!
+
+---
+
+## 🛠️ Solusi Error Connection / Authentication Database ("FATAL: password authentication failed")
+
+Jika muncul eror `Invalid prisma.user.findUnique() invocation: Authentication failed against database server at db` atau `FATAL: password authentication failed for user "postgres"` saat deployment:
+
+### 1. Jika Menggunakan Docker Compose (Paling Sering)
+PostgreSQL Docker menyerap `POSTGRES_PASSWORD` **hanya pada pembuatan volume data pertama kali**. Mengubah `.env` **TIDAK** otomatis mengubah password pada volume `pgdata` yang sudah ada.
+
+**Opsi A (Reset Volume Database - jika belum ada data penting):**
+```bash
+docker-compose down -v
+docker-compose up -d --build
+docker-compose exec web npx prisma db push
+docker-compose exec web npm run seed:users
+```
+
+**Opsi B (Ubah Password Postgres di dalam Container tanpa hapus data):**
+```bash
+docker-compose exec db psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+docker-compose restart web
+```
+
+### 2. Jika Menggunakan Native VPS (PM2)
+Update password `postgres` langsung di PostgreSQL OS:
+```bash
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'password_yang_ada_di_env';"
+```
+

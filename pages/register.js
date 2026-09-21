@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Register() {
   const router = useRouter()
@@ -14,6 +14,27 @@ export default function Register() {
   })
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState(null)
+  const [siteSettings, setSiteSettings] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = sessionStorage.getItem('dash_site_settings')
+        if (saved) return JSON.parse(saved)
+      } catch (e) {}
+    }
+    return { site_title: 'Dua Narasi', logo_header: '/assets/img/logo/logo.webp' }
+  })
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.settings) {
+          try { sessionStorage.setItem('dash_site_settings', JSON.stringify(data.settings)) } catch (e) {}
+          setSiteSettings(prev => ({ ...prev, ...data.settings }))
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   const handleRegister = async (e) => {
     e.preventDefault()
@@ -69,7 +90,7 @@ export default function Register() {
   return (
     <>
       <Head>
-        <title>Create Account &bull; Hoom Magazine</title>
+        <title>Create Account &bull; {siteSettings.site_title || 'Dua Narasi'}</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/assets/css/dashboard.css" />
       </Head>
@@ -90,13 +111,13 @@ export default function Register() {
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: '28px' }}>
             <Link href="/" style={{ display: 'inline-block', textDecoration: 'none', marginBottom: '14px' }}>
-              <img src="/assets/img/logo/logo-white.webp" alt="Hoom Logo" style={{ height: '36px' }} />
+              <img src={siteSettings.logo_header_dark || siteSettings.logo_header || "/assets/img/logo/logo-white.webp"} alt={siteSettings.site_title || "Logo"} style={{ height: '36px', objectFit: 'contain' }} />
             </Link>
             <h2 style={{ color: '#f8fafc', fontSize: '24px', fontWeight: 700, margin: '0 0 6px 0' }}>
               Create an Account
             </h2>
             <p style={{ color: '#94a3b8', fontSize: '14px', margin: 0 }}>
-              Join Hoom Magazine as a reader, writer, or editor
+              Join {siteSettings.site_title || 'Dua Narasi'} as a reader, writer, or editor
             </p>
           </div>
 

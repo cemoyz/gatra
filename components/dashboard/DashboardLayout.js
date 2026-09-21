@@ -55,10 +55,19 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
   })
   const [userDropdownOpen, setUserDropdownOpen] = useState(false)
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false)
-  const [notifFilter, setNotifFilter] = useState('all') // 'all' | 'comments' | 'messages'
+  const [notifFilter, setNotifFilter] = useState('all') // 'all' | 'unread' | 'comments' | 'messages'
   const [messages, setMessages] = useState(cachedMessages)
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(cachedUnreadCount)
   const [recentComments, setRecentComments] = useState(cachedComments)
+  const [readCommentIds, setReadCommentIds] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('dash_read_comment_ids')
+        return saved ? JSON.parse(saved) : []
+      } catch (e) {}
+    }
+    return []
+  })
   const [lastSeenTime, setLastSeenTime] = useState(0)
   const [scrolled, setScrolled] = useState(false)
   const [siteSettings, setSiteSettings] = useState(() => {
@@ -164,7 +173,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
           if (data.success && Array.isArray(data.messages)) {
             cachedMessages = data.messages
             setMessages(data.messages)
-            const unread = data.messages.filter(m => !m.isRead).length
+            const unread = data.messages.filter(m => m.status === 'UNREAD').length
             cachedUnreadCount = unread
             setUnreadMessagesCount(unread)
           }
@@ -172,7 +181,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
         .catch(() => {})
 
       // 2. Fetch Recent Comments
-      fetch('/api/comments?limit=5')
+      fetch('/api/comments?limit=10')
         .then(res => res.json())
         .then(data => {
           if (data.success && Array.isArray(data.comments)) {
@@ -245,52 +254,104 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
     }
   }
 
-  // Handle open notifications: mark as seen and clear the red active badge
-  const handleOpenNotif = () => {
-    const nextState = !notifDropdownOpen
-    setNotifDropdownOpen(nextState)
-    if (nextState) {
-      const now = Date.now()
-      setLastSeenTime(now)
-      try {
-        localStorage.setItem('dash_last_seen_notif', String(now))
-      } catch (e) {}
+  // Mark single comment as read
+  const markCommentAsRead = (commentId) => {
+    setReadCommentIds(prev => {
+      if (prev.includes(commentId)) return prev
+      const next = [...prev, commentId]
+      try { localStorage.setItem('dash_read_comment_ids', JSON.stringify(next)) } catch (e) {}
+      return next
+    })
+  }
+
+  // Mark single message as read
+  const markMessageAsRead = async (messageId) => {
+    try {
+      await fetch(`/api/contact/${messageId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'READ' })
+      })
+      setMessages(prev => prev.map(m => m.id === messageId ? { ...m, status: 'READ' } : m))
+      setUnreadMessagesCount(prev => Math.max(0, prev - 1))
+    } catch (e) {
+      console.error('Error marking message as read:', e)
     }
   }
 
-  // Active unread badge count: only items newer than lastSeenTime
-  const unreadNewMessages = messages.filter(m => !m.isRead && (!lastSeenTime || new Date(m.createdAt).getTime() > lastSeenTime)).length
-  const unreadNewComments = recentComments.filter(c => !lastSeenTime || new Date(c.createdAt).getTime() > lastSeenTime).length
-  const activeBadgeCount = unreadNewMessages + unreadNewComments
-  const totalNotifCount = unreadMessagesCount + Math.min(recentComments.length, 5)
+  // Mark all notifications (messages + comments) as read
+  const handleMarkAllAsRead = async () => {
+    try {
+      await fetch('/api/contact', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'mark_all_read' })
+      })
+      setMessages(prev => prev.map(m => ({ ...m, status: 'READ' })))
+      setUnreadMessagesCount(0)
+    } catch (e) {
+      console.error('Error marking all messages as read:', e)
+    }
 
-  // Merge and format notifications for the dropdown
-  const formattedComments = recentComments.map(c => ({
-    id: `comment-${c.id}`,
-    type: 'comment',
-    title: c.name || 'Pembaca',
-    subtitle: `Mengomentari: ${c.post?.title || 'Artikel Berita'}`,
-    content: c.content,
-    createdAt: c.createdAt,
-    link: '/dashboard/comments'
-  }))
+    if (recentComments.length > 0) {
+      const allCommentIds = recentComments.map(c => c.id)
+      setReadCommentIds(prev => {
+        const combined = Array.from(new Set([...prev, ...allCommentIds]))
+        try { localStorage.setItem('dash_read_comment_ids', JSON.stringify(combined)) } catch (e) {}
+        return combined
+      })
+    }
+  }
 
-  const formattedMessages = messages.map(m => ({
-    id: `msg-${m.id}`,
-    type: 'message',
-    title: m.name || 'Pengirim',
-    subtitle: m.subject || 'Pesan dari Form Kontak',
-    content: m.message,
-    isUnread: !m.isRead,
-    createdAt: m.createdAt,
-    link: '/dashboard/messages'
-  }))
+  // Handle open notifications: toggle popover
+  const handleOpenNotif = () => {
+    setNotifDropdownOpen(prev => !prev)
+  }
+
+  // Format comments with read state
+  const formattedComments = recentComments.map(c => {
+    const isUnread = !readCommentIds.includes(c.id)
+    return {
+      id: `comment-${c.id}`,
+      rawId: c.id,
+      type: 'comment',
+      title: c.name || 'Pembaca',
+      subtitle: `Mengomentari: ${c.post?.title || 'Artikel Berita'}`,
+      content: c.content,
+      isUnread,
+      createdAt: c.createdAt,
+      link: '/dashboard/comments'
+    }
+  })
+
+  // Format messages with read state
+  const formattedMessages = messages.map(m => {
+    const isUnread = m.status === 'UNREAD'
+    return {
+      id: `msg-${m.id}`,
+      rawId: m.id,
+      type: 'message',
+      title: m.name || 'Pengirim',
+      subtitle: m.subject || 'Pesan dari Form Kontak',
+      content: m.message,
+      isUnread,
+      createdAt: m.createdAt,
+      link: '/dashboard/messages'
+    }
+  })
+
+  // Calculate unread totals accurately
+  const unreadMessagesTotal = messages.filter(m => m.status === 'UNREAD').length
+  const unreadCommentsTotal = recentComments.filter(c => !readCommentIds.includes(c.id)).length
+  const totalUnreadNotifCount = unreadMessagesTotal + unreadCommentsTotal
 
   const allNotifications = [...formattedMessages, ...formattedComments]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 8)
+    .slice(0, 10)
 
-  const filteredNotifications = notifFilter === 'comments'
+  const filteredNotifications = notifFilter === 'unread'
+    ? allNotifications.filter(n => n.isUnread)
+    : notifFilter === 'comments'
     ? formattedComments
     : notifFilter === 'messages'
     ? formattedMessages
@@ -673,9 +734,9 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                   style={{ position: 'relative' }}
                 >
                   <i className="fa fa-bell-o"></i>
-                  {activeBadgeCount > 0 && (
+                  {totalUnreadNotifCount > 0 && (
                     <span className="dash-badge-dot" style={{ background: '#da0105', color: '#fff', fontSize: '10px', fontWeight: 800 }}>
-                      {activeBadgeCount}
+                      {totalUnreadNotifCount > 99 ? '99+' : totalUnreadNotifCount}
                     </span>
                   )}
                 </button>
@@ -687,8 +748,8 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                       position: 'absolute',
                       top: 'calc(100% + 12px)',
                       right: 0,
-                      width: '360px',
-                      maxWidth: '90vw',
+                      width: '380px',
+                      maxWidth: '92vw',
                       background: 'var(--dash-card-bg)',
                       border: '1px solid var(--dash-border)',
                       borderRadius: '14px',
@@ -712,96 +773,94 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                         <h4 style={{ margin: 0, fontSize: '14.5px', fontWeight: 700, color: 'var(--dash-text-main)' }}>
                           Pusat Notifikasi
                         </h4>
-                        {totalNotifCount > 0 && (
+                        {totalUnreadNotifCount > 0 ? (
                           <span style={{ fontSize: '11px', background: 'rgba(218, 1, 5, 0.12)', color: '#da0105', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>
-                            {totalNotifCount} Baru
+                            {totalUnreadNotifCount} Baru
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: '11px', background: 'rgba(16, 185, 129, 0.12)', color: '#10b981', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
+                            Semua Dibaca
                           </span>
                         )}
                       </div>
-                      <span style={{ fontSize: '11px', color: 'var(--dash-text-muted)' }}>
-                        <span className="dash-pulse-dot" style={{ width: '6px', height: '6px', marginRight: '4px' }} /> Realtime
-                      </span>
+
+                      {totalUnreadNotifCount > 0 && (
+                        <button
+                          type="button"
+                          onClick={handleMarkAllAsRead}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#3b82f6',
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            padding: 0
+                          }}
+                        >
+                          Tandai Semua Dibaca
+                        </button>
+                      )}
                     </div>
 
                     {/* Filter Tabs */}
                     <div
                       style={{
                         display: 'flex',
-                        padding: '6px 12px',
+                        padding: '6px 10px',
                         background: 'var(--dash-muted-bg)',
                         borderBottom: '1px solid var(--dash-border)',
-                        gap: '6px'
+                        gap: '4px'
                       }}
                     >
-                      <button
-                        type="button"
-                        onClick={() => setNotifFilter('all')}
-                        style={{
-                          flex: 1,
-                          padding: '5px 8px',
-                          fontSize: '11.5px',
-                          fontWeight: notifFilter === 'all' ? 700 : 500,
-                          border: 'none',
-                          borderRadius: '6px',
-                          background: notifFilter === 'all' ? 'var(--dash-card-bg)' : 'transparent',
-                          color: notifFilter === 'all' ? 'var(--dash-text-main)' : 'var(--dash-text-muted)',
-                          boxShadow: notifFilter === 'all' ? 'var(--dash-shadow)' : 'none',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Semua ({allNotifications.length})
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setNotifFilter('comments')}
-                        style={{
-                          flex: 1,
-                          padding: '5px 8px',
-                          fontSize: '11.5px',
-                          fontWeight: notifFilter === 'comments' ? 700 : 500,
-                          border: 'none',
-                          borderRadius: '6px',
-                          background: notifFilter === 'comments' ? 'var(--dash-card-bg)' : 'transparent',
-                          color: notifFilter === 'comments' ? '#10b981' : 'var(--dash-text-muted)',
-                          boxShadow: notifFilter === 'comments' ? 'var(--dash-shadow)' : 'none',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        💬 Komentar ({formattedComments.length})
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setNotifFilter('messages')}
-                        style={{
-                          flex: 1,
-                          padding: '5px 8px',
-                          fontSize: '11.5px',
-                          fontWeight: notifFilter === 'messages' ? 700 : 500,
-                          border: 'none',
-                          borderRadius: '6px',
-                          background: notifFilter === 'messages' ? 'var(--dash-card-bg)' : 'transparent',
-                          color: notifFilter === 'messages' ? '#da0105' : 'var(--dash-text-muted)',
-                          boxShadow: notifFilter === 'messages' ? 'var(--dash-shadow)' : 'none',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        ✉️ Pesan ({formattedMessages.length})
-                      </button>
+                      {[
+                        { id: 'all', label: `Semua (${allNotifications.length})` },
+                        { id: 'unread', label: `Belum Dibaca (${totalUnreadNotifCount})`, color: '#da0105' },
+                        { id: 'comments', label: `💬 (${formattedComments.length})` },
+                        { id: 'messages', label: `✉️ (${formattedMessages.length})` }
+                      ].map(tab => (
+                        <button
+                          key={tab.id}
+                          type="button"
+                          onClick={() => setNotifFilter(tab.id)}
+                          style={{
+                            flex: 1,
+                            padding: '5px 4px',
+                            fontSize: '11px',
+                            fontWeight: notifFilter === tab.id ? 700 : 500,
+                            border: 'none',
+                            borderRadius: '6px',
+                            background: notifFilter === tab.id ? 'var(--dash-card-bg)' : 'transparent',
+                            color: notifFilter === tab.id ? (tab.color || 'var(--dash-text-main)') : 'var(--dash-text-muted)',
+                            boxShadow: notifFilter === tab.id ? 'var(--dash-shadow)' : 'none',
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          {tab.label}
+                        </button>
+                      ))}
                     </div>
 
                     {/* Notification Item List */}
-                    <div style={{ maxHeight: '320px', overflowY: 'auto' }}>
+                    <div style={{ maxHeight: '340px', overflowY: 'auto' }}>
                       {filteredNotifications.length === 0 ? (
                         <div style={{ padding: '32px 16px', textAlign: 'center', color: 'var(--dash-text-muted)', fontSize: '13px' }}>
                           <i className="fa fa-bell-slash-o" style={{ fontSize: '24px', marginBottom: '8px', display: 'block', opacity: 0.5 }}></i>
-                          Tidak ada notifikasi saat ini
+                          Tidak ada notifikasi {notifFilter === 'unread' ? 'belum dibaca' : ''} saat ini
                         </div>
                       ) : (
                         filteredNotifications.map((item) => (
                           <Link
                             key={item.id}
                             href={item.link}
-                            onClick={() => setNotifDropdownOpen(false)}
+                            onClick={() => {
+                              if (item.isUnread) {
+                                if (item.type === 'message') markMessageAsRead(item.rawId)
+                                if (item.type === 'comment') markCommentAsRead(item.rawId)
+                              }
+                              setNotifDropdownOpen(false)
+                            }}
                             style={{
                               display: 'flex',
                               gap: '12px',
@@ -810,12 +869,19 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                               textDecoration: 'none',
                               color: 'inherit',
                               transition: 'background 0.15s ease',
-                              background: item.isUnread ? 'rgba(218, 1, 5, 0.04)' : 'transparent'
+                              background: item.isUnread
+                                ? (item.type === 'comment' ? 'rgba(16, 185, 129, 0.06)' : 'rgba(218, 1, 5, 0.06)')
+                                : 'transparent',
+                              opacity: item.isUnread ? 1 : 0.75
                             }}
                             onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--dash-muted-bg)' }}
-                            onMouseLeave={(e) => { e.currentTarget.style.background = item.isUnread ? 'rgba(218, 1, 5, 0.04)' : 'transparent' }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.background = item.isUnread
+                                ? (item.type === 'comment' ? 'rgba(16, 185, 129, 0.06)' : 'rgba(218, 1, 5, 0.06)')
+                                : 'transparent'
+                            }}
                           >
-                            {/* Type Icon */}
+                            {/* Type Icon with Status Indicator */}
                             <div
                               style={{
                                 width: '36px',
@@ -827,26 +893,47 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 fontSize: '15px',
-                                flexShrink: 0
+                                flexShrink: 0,
+                                position: 'relative'
                               }}
                             >
                               <i className={`fa ${item.type === 'comment' ? 'fa-comment' : 'fa-envelope'}`}></i>
+                              {item.isUnread && (
+                                <span
+                                  style={{
+                                    position: 'absolute',
+                                    top: '-2px',
+                                    right: '-2px',
+                                    width: '8px',
+                                    height: '8px',
+                                    borderRadius: '50%',
+                                    background: '#da0105',
+                                    border: '2px solid var(--dash-card-bg)'
+                                  }}
+                                />
+                              )}
                             </div>
 
                             {/* Content */}
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                                <strong style={{ fontSize: '13px', color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <strong style={{ fontSize: '13px', color: 'var(--dash-text-main)', fontWeight: item.isUnread ? 700 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                   {item.title}
                                 </strong>
-                                <span style={{ fontSize: '10.5px', color: 'var(--dash-text-muted)', whiteSpace: 'nowrap' }}>
-                                  {item.type === 'comment' ? 'Komentar' : 'Pesan'}
-                                </span>
+                                {item.isUnread ? (
+                                  <span style={{ fontSize: '10px', background: item.type === 'comment' ? '#10b981' : '#da0105', color: '#fff', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                                    Baru
+                                  </span>
+                                ) : (
+                                  <span style={{ fontSize: '10px', background: 'var(--dash-muted-bg)', color: 'var(--dash-text-muted)', padding: '1px 6px', borderRadius: '4px', fontWeight: 500 }}>
+                                    <i className="fa fa-check" style={{ marginRight: '3px' }} /> Dibaca
+                                  </span>
+                                )}
                               </div>
                               <div style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: '4px' }}>
                                 {item.subtitle}
                               </div>
-                              <div style={{ fontSize: '12px', color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', opacity: 0.85 }}>
+                              <div style={{ fontSize: '12px', color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', opacity: item.isUnread ? 0.95 : 0.7 }}>
                                 "{item.content}"
                               </div>
                             </div>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import BackToTop from '../elements/BackToTop'
-import ThemeSwitch from "../elements/ThemeSwitch"
 import Breadcrumb from './Breadcrumb'
 import PageHead from './PageHead'
 import Sidebar from './Sidebar'
@@ -71,7 +70,6 @@ export default function Layout({ headerStyle, footerStyle, headTitle, breadcrumb
             <PageHead headTitle={headTitle}/>
             <div className="ta-main-wrapper" dir={rtl?"rtl":""}>
 
-                <ThemeSwitch />
                 <BackToTop />
 
                 {!headerStyle && <Header1 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} />}
