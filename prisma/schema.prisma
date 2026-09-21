@@ -44,6 +44,8 @@ model Post {
   authorId    Int?
   author      Author?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
 
+  editorName  String?    // Nama Editor / Penyunting berita
+
   // Relasi Tag (Many-to-Many)
   tags        Tag[]      @relation("PostTags")
 

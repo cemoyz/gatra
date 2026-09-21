@@ -37,6 +37,7 @@ export default function DashboardSettings() {
     logo_dashboard: '/assets/img/logo/favicon.webp',
     show_post_views: 'true',
     show_post_comments: 'true',
+    show_post_editor: 'true',
     show_featured_posts: 'true',
     title_featured_posts: 'Featured Post',
     featured_posts_mode: 'manual',
@@ -452,6 +453,34 @@ export default function DashboardSettings() {
                       <Switch
                         checked={settings.show_post_comments !== 'false'}
                         onChange={(e) => setSettings({ ...settings, show_post_comments: String(e.target.checked) })}
+                      />
+                    </div>
+
+                    {/* Toggle Editor Info */}
+                    <div
+                      style={{
+                        background: 'var(--dash-muted-bg)',
+                        padding: '16px 20px',
+                        borderRadius: '10px',
+                        border: '1px solid var(--dash-border)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '16px'
+                      }}
+                    >
+                      <div>
+                        <div style={{ color: 'var(--dash-text-main)', fontWeight: 600, fontSize: '13.5px', marginBottom: '2px' }}>
+                          <i className="fa fa-pencil-square-o" style={{ color: '#da0105', marginRight: '6px' }}></i>
+                          Tampilkan Nama & Info Editor (Penyunting Berita)
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)' }}>
+                          Menampilkan atau menyembunyikan identitas Editor / Penyunting di bawah Penulis pada header dan box profil artikel.
+                        </div>
+                      </div>
+                      <Switch
+                        checked={settings.show_post_editor !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_post_editor: String(e.target.checked) })}
                       />
                     </div>
                   </div>

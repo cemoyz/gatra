@@ -113,6 +113,7 @@ export default function EditPost() {
             slug: p.slug || '',
             categoryId: p.categoryId || (p.category?.id || ''),
             authorId: p.authorId || (p.author?.id || ''),
+            editorName: p.editorName || 'Redaksi Dua Narasi',
             tagsInput: Array.isArray(p.tags) ? p.tags.map(t => t.name).join(', ') : '',
             img: p.img || 'blog-2-1.webp',
             excerpt: p.excerpt || '',
@@ -606,6 +607,17 @@ export default function EditPost() {
                           ))}
                         </SelectContent>
                       </Select>
+                    </div>
+
+                    <div className="dash-form-group">
+                      <label className="dash-form-label">Nama Editor / Penyunting Berita</label>
+                      <input
+                        type="text"
+                        className="dash-input"
+                        placeholder="Contoh: Redaksi Dua Narasi"
+                        value={formData.editorName || ''}
+                        onChange={(e) => setFormData({ ...formData, editorName: e.target.value })}
+                      />
                     </div>
 
                     <div className="dash-form-group">

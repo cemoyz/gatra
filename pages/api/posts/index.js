@@ -170,6 +170,7 @@ export default async function handler(req, res) {
         img,
         categoryId,
         authorId,
+        editorName,
         tags, // Array of string names or objects
         status = 'PUBLISHED',
         featured = false,
@@ -235,6 +236,7 @@ export default async function handler(req, res) {
           img: img || 'blog-2-1.webp',
           categoryId: categoryId ? parseInt(categoryId) : null,
           authorId: effectiveAuthorId,
+          editorName: editorName || 'Redaksi Dua Narasi',
           tags: tagConnections,
           status: status || 'PUBLISHED',
           featured: Boolean(featured),

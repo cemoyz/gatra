@@ -561,10 +561,32 @@ export default function NewPost() {
                     </SelectTrigger>
                     <SelectContent>
                       {authors.map(a => (
-                        <SelectItem key={a.id} value={String(a.id)}>{a.name} ({a.role})</SelectItem>
+                        <SelectItem key={a.id} value={String(a.id)}>{a.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 600, color: 'var(--dash-text-main)', marginBottom: '6px' }}>
+                    Nama Editor / Penyunting Berita
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Contoh: Redaksi Dua Narasi"
+                    value={formData.editorName ?? 'Redaksi Dua Narasi'}
+                    onChange={(e) => setFormData({ ...formData, editorName: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      background: 'var(--dash-muted-bg)',
+                      border: '1px solid var(--dash-border)',
+                      borderRadius: '8px',
+                      color: 'var(--dash-text-main)',
+                      fontSize: '13px',
+                      boxSizing: 'border-box'
+                    }}
+                  />
                 </div>
 
                 <div>

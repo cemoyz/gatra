@@ -26,6 +26,7 @@ const defaultSettings = {
   show_newsletter: 'true',
   show_post_views: 'true',
   show_post_comments: 'true',
+  show_post_editor: 'true',
   // Homepage Sections Management & Article Filtering
   show_featured_posts: 'true',
   title_featured_posts: 'Featured Post',

@@ -125,6 +125,7 @@ export default async function handler(req, res) {
         img,
         categoryId,
         authorId,
+        editorName,
         tags,
         status,
         featured,
@@ -146,6 +147,7 @@ export default async function handler(req, res) {
       if (content !== undefined) updateData.content = content
       if (img !== undefined) updateData.img = img
       if (categoryId !== undefined) updateData.categoryId = categoryId ? parseInt(categoryId) : null
+      if (editorName !== undefined) updateData.editorName = editorName
       
       // Only ADMIN and EDITOR can change the author of a post
       if (authorId !== undefined && authUser.role !== ROLES.AUTHOR) {

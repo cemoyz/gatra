@@ -73,6 +73,7 @@ export default function BlogDetailsArticle({ blogPost }) {
     const authorName = typeof author === 'string' ? author : (author?.name || 'Alexis D.')
     const authorBio = author?.bio || 'Penulis dan kontributor redaksi di Hoom Magazine.'
     const authorAvatar = author?.avatar || '/assets/img/author/author-1.webp'
+    const editorName = blogPost?.editorName || 'Redaksi Dua Narasi'
 
     const formattedDate = createdAt
         ? new Date(createdAt).toLocaleDateString("id-ID", { month: "long", day: "numeric", year: "numeric" })
@@ -129,9 +130,15 @@ export default function BlogDetailsArticle({ blogPost }) {
                                     style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
                                 />
                             </span>
-                            <span className="author-name">{authorName}</span>
+                            <span className="author-name">Penulis: {authorName}</span>
                         </Link>
                     </li>
+                    {settings.show_post_editor !== 'false' && (
+                        <li style={{ color: '#475569', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            <i className="fa fa-pencil-square-o" style={{ color: '#da0105' }} />
+                            Editor: <strong>{editorName}</strong>
+                        </li>
+                    )}
                     <li style={{ color: '#64748b', fontSize: '13px' }}>
                         <i className="fa fa-calendar-o" style={{ marginRight: '5px' }} />
                         {formattedDate}
@@ -264,7 +271,7 @@ export default function BlogDetailsArticle({ blogPost }) {
                 </div>
             </article>
 
-            {/* Author Bio Box (Controlled by show_author_bio setting) */}
+            {/* Author & Editor Bio Box (Controlled by show_author_bio setting) */}
             {settings.show_author_bio === 'true' && (
                 <div
                     className="ta-author-box p-4"
@@ -293,6 +300,15 @@ export default function BlogDetailsArticle({ blogPost }) {
                             </Link>
                         </h4>
                         <p style={{ margin: 0, fontSize: '14px', color: '#64748b', lineHeight: '1.5' }}>{authorBio}</p>
+
+                        {settings.show_post_editor !== 'false' && (
+                            <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#475569' }}>
+                                <span style={{ background: '#fee2e2', color: '#dc2626', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
+                                    Editor
+                                </span>
+                                <span>Penyunting Berita: <strong>{editorName}</strong></span>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
