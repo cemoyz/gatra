@@ -113,7 +113,7 @@ export default function EditPost() {
             slug: p.slug || '',
             categoryId: p.categoryId || (p.category?.id || ''),
             authorId: p.authorId || (p.author?.id || ''),
-            editorName: p.editorName || 'Redaksi Dua Narasi',
+            editorName: p.editorName || 'By Dua Narasi',
             tagsInput: Array.isArray(p.tags) ? p.tags.map(t => t.name).join(', ') : '',
             img: p.img || 'blog-2-1.webp',
             excerpt: p.excerpt || '',
@@ -614,7 +614,7 @@ export default function EditPost() {
                       <input
                         type="text"
                         className="dash-input"
-                        placeholder="Contoh: Redaksi Dua Narasi"
+                        placeholder="Contoh: By Dua Narasi"
                         value={formData.editorName || ''}
                         onChange={(e) => setFormData({ ...formData, editorName: e.target.value })}
                       />

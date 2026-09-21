@@ -73,7 +73,7 @@ export default function BlogDetailsArticle({ blogPost }) {
     const authorName = typeof author === 'string' ? author : (author?.name || 'Alexis D.')
     const authorBio = author?.bio || 'Penulis dan kontributor redaksi di Hoom Magazine.'
     const authorAvatar = author?.avatar || '/assets/img/author/author-1.webp'
-    const editorName = blogPost?.editorName || 'Redaksi Dua Narasi'
+    const editorName = blogPost?.editorName || 'By Dua Narasi'
 
     const formattedDate = createdAt
         ? new Date(createdAt).toLocaleDateString("id-ID", { month: "long", day: "numeric", year: "numeric" })

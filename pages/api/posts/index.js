@@ -236,7 +236,7 @@ export default async function handler(req, res) {
           img: img || 'blog-2-1.webp',
           category: categoryId ? { connect: { id: parseInt(categoryId) } } : undefined,
           author: effectiveAuthorId ? { connect: { id: parseInt(effectiveAuthorId) } } : undefined,
-          editorName: editorName || 'Redaksi Dua Narasi',
+          editorName: editorName || 'By Dua Narasi',
           tags: tagConnections,
           status: status || 'PUBLISHED',
           featured: Boolean(featured),

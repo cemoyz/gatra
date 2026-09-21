@@ -573,8 +573,8 @@ export default function NewPost() {
                   </label>
                   <input
                     type="text"
-                    placeholder="Contoh: Redaksi Dua Narasi"
-                    value={formData.editorName ?? 'Redaksi Dua Narasi'}
+                    placeholder="Contoh: By Dua Narasi"
+                    value={formData.editorName ?? 'By Dua Narasi'}
                     onChange={(e) => setFormData({ ...formData, editorName: e.target.value })}
                     style={{
                       width: '100%',
