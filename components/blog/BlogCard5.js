@@ -1,9 +1,11 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { getImageUrl } from "@/lib/imageUtils"
+import { useSettings } from "@/context/SettingsContext"
 
 export default function BlogCard5({ item = {} }) {
     const router = useRouter()
+    const { settings } = useSettings()
     const comments = item.commentsCount ?? item._count?.comments ?? (item.comments ? item.comments.length : 0)
     const views = item.views ?? 0
     const categoryName = typeof item.category === 'string' ? item.category : (item.category?.name || 'Technology')
@@ -49,7 +51,7 @@ export default function BlogCard5({ item = {} }) {
                             </Link>
                         </li>
                         <li>{formattedDate}</li>
-                        <li><i className="fa fa-eye" /> {views} Views</li>
+                        {settings?.show_post_views !== 'false' && <li><i className="fa fa-eye" /> {views} Views</li>}
                     </ul>
                     <h2 className="ta-blog-box__title ta-border-effect mt-10"><Link href={`/blog/${item.id}`}>{item.title}</Link></h2>
                     <div className="excerpt mt-15">
@@ -57,8 +59,8 @@ export default function BlogCard5({ item = {} }) {
                     </div>
                     <div className="ta-blog-box__share-info d-flex justify-content-center align-items-center mt-35">
                         <ul className="d-flex justify-content-center align-items-center list-unstyled ta-stroke">
-                            <li><i className="fa fa-comment" /> {comments}</li>
-                            <li><i className="fa fa-eye" /> {views}</li>
+                            {settings?.show_post_comments !== 'false' && <li><i className="fa fa-comment" /> {comments}</li>}
+                            {settings?.show_post_views !== 'false' && <li><i className="fa fa-eye" /> {views}</li>}
                         </ul>
                     </div>
                 </div>

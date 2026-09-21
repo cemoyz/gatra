@@ -2,9 +2,11 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import VideoPopup from "../elements/VideoPopup"
 import { getImageUrl } from "@/lib/imageUtils"
+import { useSettings } from "@/context/SettingsContext"
 
 export default function BlogCard6({ video, formatIcon, item = {} }) {
     const router = useRouter()
+    const { settings } = useSettings()
     const comments = item.commentsCount ?? item._count?.comments ?? (item.comments ? item.comments.length : 0)
     const views = item.views ?? 0
     const categoryName = typeof item.category === 'string' ? item.category : (item.category?.name || 'General')
@@ -77,12 +79,12 @@ export default function BlogCard6({ video, formatIcon, item = {} }) {
                                             </Link>
                                         </li>
                                         <li>{formattedDate}</li>
-                                        <li><i className="fa fa-eye" /> {views} Views</li>
+                                        {settings?.show_post_views !== 'false' && <li><i className="fa fa-eye" /> {views} Views</li>}
                                     </ul>
                                     <div className="ta-blog-box__share-info share-info d-flex justify-content-center align-items-center">
                                         <ul className="d-flex justify-content-center align-items-center list-unstyled">
-                                            <li><i className="fa fa-comment" /> {comments}</li>
-                                            <li><i className="fa fa-eye" /> {views}</li>
+                                            {settings?.show_post_comments !== 'false' && <li><i className="fa fa-comment" /> {comments}</li>}
+                                            {settings?.show_post_views !== 'false' && <li><i className="fa fa-eye" /> {views}</li>}
                                         </ul>
                                     </div>
                                 </div>

@@ -1,6 +1,7 @@
 import Preloader from "@/components/elements/Preloader"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
+import { SettingsProvider } from "@/context/SettingsContext"
 import 'swiper/css';
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -68,7 +69,7 @@ function MyApp({ Component, pageProps }) {
     }, [router])
 
     return (
-        <>
+        <SettingsProvider>
             {/* Top Smooth Route Loading Progress Bar */}
             <div
                 id="global-route-bar"
@@ -99,7 +100,7 @@ function MyApp({ Component, pageProps }) {
                     pointer-events: none;
                 }
             `}</style>
-        </>
+        </SettingsProvider>
     )
 }
 

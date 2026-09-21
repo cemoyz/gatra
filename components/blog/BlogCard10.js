@@ -1,9 +1,11 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { getImageUrl } from "@/lib/imageUtils"
+import { useSettings } from "@/context/SettingsContext"
 
 export default function BlogCard10({ item = {} }) {
     const router = useRouter()
+    const { settings } = useSettings()
 
     const handleCardClick = (e) => {
         const selection = window.getSelection()
@@ -47,8 +49,8 @@ export default function BlogCard10({ item = {} }) {
                     </div>
                     <div className="ta-blog-box__share-info d-flex justify-content-center align-items-center mt-35">
                         <ul className="d-flex justify-content-center align-items-center list-unstyled ta-stroke">
-                            <li><i className="fa fa-comment" /> 82</li>
-                            <li><i className="fa fa-eye" /> 12000</li>
+                            {settings?.show_post_comments !== 'false' && <li><i className="fa fa-comment" /> {item.commentsCount || 82}</li>}
+                            {settings?.show_post_views !== 'false' && <li><i className="fa fa-eye" /> {item.views || 12000}</li>}
                             <li><i className="fa fa-heart" /> 258</li>
                             <li className="like-btn"><Link href="#0"><i className="fa fa-heart" /></Link></li>
                         </ul>

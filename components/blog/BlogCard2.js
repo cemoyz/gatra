@@ -1,9 +1,11 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { getImageUrl } from "@/lib/imageUtils"
+import { useSettings } from "@/context/SettingsContext"
 
 export default function BlogCard2({ col, item = {} }) {
     const router = useRouter()
+    const { settings } = useSettings()
     const categoryName = typeof item.category === 'string' ? item.category : (item.category?.name || 'General')
     const authorName = typeof item.author === 'string' ? item.author : (item.author?.name || 'Alexis D.')
     const formattedDate = item.createdAt
@@ -57,8 +59,8 @@ export default function BlogCard2({ col, item = {} }) {
                                     </Link>
                                 </li>
                                 <li>{formattedDate}</li>
-                                <li><i className="fa fa-eye" /> {views}</li>
-                                <li><i className="fa fa-comment" /> {comments}</li>
+                                {settings?.show_post_views !== 'false' && <li><i className="fa fa-eye" /> {views}</li>}
+                                {settings?.show_post_comments !== 'false' && <li><i className="fa fa-comment" /> {comments}</li>}
                             </ul>
                             <h3 className="ta-blog-box__title ta-blog-box__title--small ta-border-effect mt-10 ta-line-2" style={{ minHeight: '44px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                                 <Link href={`/blog/${item.id}`}>{item.title}</Link>

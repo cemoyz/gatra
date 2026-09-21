@@ -172,6 +172,9 @@ export default function DashboardSettings() {
       const data = await res.json()
       if (data.success) {
         showToast('Pengaturan website berhasil disimpan!')
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new Event('settingsUpdated'))
+        }
       } else {
         showToast(data.message || 'Gagal menyimpan pengaturan', 'error')
       }
