@@ -577,7 +577,7 @@ export default function EditPost() {
                 {/* Relational Category & Author */}
                 <div className="dash-card">
                   <div className="dash-card-header">
-                    <h3 className="dash-card-title">ORM Relations</h3>
+                    <h3 className="dash-card-title">Category, Author & Tags</h3>
                   </div>
                   <div className="dash-card-body">
                     <div className="dash-form-group">

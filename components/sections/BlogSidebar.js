@@ -337,9 +337,11 @@ export default function BlogSidebar({ settings: initialSettings }) {
                                                 {post.title}
                                             </Link>
                                         </h6>
-                                        <div style={{ display: 'flex', gap: '10px', fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
-                                            <span><i className="fa fa-fire" style={{ marginRight: '3px', color: '#ef4444' }} />{post.views || 0} views</span>
-                                        </div>
+                                        {settings.show_post_views !== 'false' && (
+                                            <div style={{ display: 'flex', gap: '10px', fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
+                                                <span><i className="fa fa-fire" style={{ marginRight: '3px', color: '#ef4444' }} />{post.views || 0} views</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))
@@ -425,8 +427,12 @@ export default function BlogSidebar({ settings: initialSettings }) {
                                             </Link>
                                         </h6>
                                         <div style={{ display: 'flex', gap: '10px', fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>
-                                            <span><i className="fa fa-eye" style={{ marginRight: '3px' }} />{post.views || 0}</span>
-                                            <span><i className="fa fa-comment" style={{ marginRight: '3px' }} />{post.commentsCount || 0}</span>
+                                            {settings.show_post_views !== 'false' && (
+                                                <span><i className="fa fa-eye" style={{ marginRight: '3px' }} />{post.views || 0}</span>
+                                            )}
+                                            {settings.show_post_comments !== 'false' && (
+                                                <span><i className="fa fa-comment" style={{ marginRight: '3px' }} />{post.commentsCount || 0}</span>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

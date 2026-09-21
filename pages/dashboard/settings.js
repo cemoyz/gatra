@@ -35,6 +35,8 @@ export default function DashboardSettings() {
     logo_header_dark: '/assets/img/logo/logo-white.webp',
     logo_footer: '/assets/img/logo/logoredwhite.webp',
     logo_dashboard: '/assets/img/logo/favicon.webp',
+    show_post_views: 'true',
+    show_post_comments: 'true',
     show_featured_posts: 'true',
     title_featured_posts: 'Featured Post',
     featured_posts_mode: 'manual',
@@ -382,6 +384,73 @@ export default function DashboardSettings() {
                       checked={settings.show_marquee_cats !== 'false'}
                       onChange={(e) => setSettings({ ...settings, show_marquee_cats: String(e.target.checked) })}
                     />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Card Tampilan Tayangan & Komentar Artikel */}
+              <Card>
+                <CardHeader>
+                  <CardTitle icon="fa-eye">Pengaturan Tampilan Tayangan (Views) & Komentar Artikel</CardTitle>
+                  <CardDescription>Kontrol visibilitas jumlah pembaca (views) dan kolom komentar di seluruh artikel website.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {/* Toggle Views Count */}
+                    <div
+                      style={{
+                        background: 'var(--dash-muted-bg)',
+                        padding: '16px 20px',
+                        borderRadius: '10px',
+                        border: '1px solid var(--dash-border)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '16px'
+                      }}
+                    >
+                      <div>
+                        <div style={{ color: 'var(--dash-text-main)', fontWeight: 600, fontSize: '13.5px', marginBottom: '2px' }}>
+                          <i className="fa fa-eye" style={{ color: '#3b82f6', marginRight: '6px' }}></i>
+                          Tampilkan Jumlah Pembaca / Tayangan (Views Count)
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)' }}>
+                          Menampilkan atau menyembunyikan ikon & jumlah pembaca (views) artikel di halaman detail berita, sidebar, dan kartu berita.
+                        </div>
+                      </div>
+                      <Switch
+                        checked={settings.show_post_views !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_post_views: String(e.target.checked) })}
+                      />
+                    </div>
+
+                    {/* Toggle Comments Section & Count */}
+                    <div
+                      style={{
+                        background: 'var(--dash-muted-bg)',
+                        padding: '16px 20px',
+                        borderRadius: '10px',
+                        border: '1px solid var(--dash-border)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '16px'
+                      }}
+                    >
+                      <div>
+                        <div style={{ color: 'var(--dash-text-main)', fontWeight: 600, fontSize: '13.5px', marginBottom: '2px' }}>
+                          <i className="fa fa-comments" style={{ color: '#10b981', marginRight: '6px' }}></i>
+                          Tampilkan Kolom & Jumlah Komentar Pembaca (Comments Section)
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)' }}>
+                          Menampilkan atau menyembunyikan kolom diskusi komentar, formulir kirim komentar, dan jumlah komentar di artikel.
+                        </div>
+                      </div>
+                      <Switch
+                        checked={settings.show_post_comments !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_post_comments: String(e.target.checked) })}
+                      />
+                    </div>
                   </div>
                 </CardContent>
               </Card>

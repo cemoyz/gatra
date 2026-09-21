@@ -24,6 +24,8 @@ const defaultSettings = {
   show_author_bio: 'true',
   show_related_posts: 'true',
   show_newsletter: 'true',
+  show_post_views: 'true',
+  show_post_comments: 'true',
   // Homepage Sections Management & Article Filtering
   show_featured_posts: 'true',
   title_featured_posts: 'Featured Post',

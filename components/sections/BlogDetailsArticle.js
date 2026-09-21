@@ -29,7 +29,9 @@ export default function BlogDetailsArticle({ blogPost }) {
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [settings, setSettings] = useState({
         show_author_bio: 'true',
-        show_related_posts: 'true'
+        show_related_posts: 'true',
+        show_post_views: 'true',
+        show_post_comments: 'true'
     })
     const [relatedPosts, setRelatedPosts] = useState([])
 
@@ -134,14 +136,18 @@ export default function BlogDetailsArticle({ blogPost }) {
                         <i className="fa fa-calendar-o" style={{ marginRight: '5px' }} />
                         {formattedDate}
                     </li>
-                    <li style={{ color: '#64748b', fontSize: '13px' }}>
-                        <i className="fa fa-eye" style={{ marginRight: '5px' }} />
-                        {views} Views
-                    </li>
-                    <li style={{ color: '#64748b', fontSize: '13px' }}>
-                        <i className="fa fa-comment-o" style={{ marginRight: '5px' }} />
-                        {blogPost.commentsCount ?? (blogPost.comments ? blogPost.comments.length : 0)} Komentar
-                    </li>
+                    {settings.show_post_views !== 'false' && (
+                        <li style={{ color: '#64748b', fontSize: '13px' }}>
+                            <i className="fa fa-eye" style={{ marginRight: '5px' }} />
+                            {views} Views
+                        </li>
+                    )}
+                    {settings.show_post_comments !== 'false' && (
+                        <li style={{ color: '#64748b', fontSize: '13px' }}>
+                            <i className="fa fa-comment-o" style={{ marginRight: '5px' }} />
+                            {blogPost.commentsCount ?? (blogPost.comments ? blogPost.comments.length : 0)} Komentar
+                        </li>
+                    )}
                 </ul>
 
                 {/* 1. Format-specific Header Media */}

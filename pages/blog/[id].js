@@ -10,8 +10,20 @@ export default function BlogDetails() {
     const router = useRouter()
     const [blogPost, setBlogPost] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [settings, setSettings] = useState({ show_post_comments: 'true', show_post_views: 'true' })
     const { id } = router.query
     const fetchedRef = useRef(false)
+
+    useEffect(() => {
+        fetch('/api/settings')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && data.settings) {
+                    setSettings(prev => ({ ...prev, ...data.settings }))
+                }
+            })
+            .catch(console.error)
+    }, [])
 
     useEffect(() => {
         if (!id) return
@@ -58,7 +70,7 @@ export default function BlogDetails() {
                             <div className="col-xl-10 col-lg-12">
                                 <div className="ta-blog-details-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
                                     <BlogDetailsArticle blogPost={blogPost} />
-                                    <Comments postId={blogPost.id} />
+                                    {settings.show_post_comments !== 'false' && <Comments postId={blogPost.id} />}
                                 </div>
                             </div>
                         </div>
@@ -74,7 +86,7 @@ export default function BlogDetails() {
                             <div className={`col-xl-8 col-lg-8 ${isLeftSidebar ? 'order-1 order-xl-2' : ''}`}>
                                 <div className="ta-blog-details-wrapper" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
                                     <BlogDetailsArticle blogPost={blogPost} />
-                                    <Comments postId={blogPost.id} />
+                                    {settings.show_post_comments !== 'false' && <Comments postId={blogPost.id} />}
                                 </div>
                             </div>
 
