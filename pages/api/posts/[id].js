@@ -146,12 +146,22 @@ export default async function handler(req, res) {
       if (excerpt !== undefined) updateData.excerpt = excerpt
       if (content !== undefined) updateData.content = content
       if (img !== undefined) updateData.img = img
-      if (categoryId !== undefined) updateData.categoryId = categoryId ? parseInt(categoryId) : null
+      if (categoryId !== undefined) {
+        if (categoryId) {
+          updateData.category = { connect: { id: parseInt(categoryId) } }
+        } else {
+          updateData.category = { disconnect: true }
+        }
+      }
       if (editorName !== undefined) updateData.editorName = editorName
       
       // Only ADMIN and EDITOR can change the author of a post
       if (authorId !== undefined && authUser.role !== ROLES.AUTHOR) {
-        updateData.authorId = authorId ? parseInt(authorId) : null
+        if (authorId) {
+          updateData.author = { connect: { id: parseInt(authorId) } }
+        } else {
+          updateData.author = { disconnect: true }
+        }
       }
 
       if (status !== undefined) updateData.status = status
