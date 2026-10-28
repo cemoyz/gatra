@@ -1,12 +1,13 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import SocialLinks from "@/components/elements/SocialLinks"
+import { getImageUrl } from "@/lib/imageUtils"
 
 export default function Footer1({ settings = {} }) {
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState(["Design", "Technology", "UI/UX", "Marketing", "Travel", "Podcast", "Lifestyle"])
 
-    const footerLogo = settings.logo_footer || "/assets/img/logo/logoredwhite.webp"
+    const footerLogo = getImageUrl(settings.logo_footer, "/assets/img/logo/logoredwhite.webp")
 
     useEffect(() => {
         fetch('/api/categories')

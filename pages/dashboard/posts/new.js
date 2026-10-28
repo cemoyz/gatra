@@ -60,17 +60,18 @@ export default function NewPost() {
     { id: 'compact', label: 'Tampilan Ringkas' }
   ]
 
-  const presetImages = [
+  const [presetImages, setPresetImages] = useState([
     'blog-2-1.webp', 'blog-2-2.webp', 'blog-2-3.webp', 'blog-2-4.webp',
     'blog-2-5.webp', 'blog-2-6.webp', 'blog-2-7.webp', 'blog-2-8.webp'
-  ]
+  ])
 
   useEffect(() => {
     Promise.all([
       fetch('/api/categories').then(r => r.json()),
-      fetch('/api/authors').then(r => r.json())
+      fetch('/api/authors').then(r => r.json()),
+      fetch('/api/settings').then(r => r.json())
     ])
-      .then(([catData, authorData]) => {
+      .then(([catData, authorData, settingsData]) => {
         if (catData.success && catData.categories?.length > 0) {
           setCategories(catData.categories)
           setFormData(prev => ({ ...prev, categoryId: catData.categories[0].id }))
@@ -78,6 +79,17 @@ export default function NewPost() {
         if (authorData.success && authorData.authors?.length > 0) {
           setAuthors(authorData.authors)
           setFormData(prev => ({ ...prev, authorId: authorData.authors[0].id }))
+        }
+        if (settingsData?.success && settingsData.settings?.post_preset_images) {
+          try {
+            const parsed = JSON.parse(settingsData.settings.post_preset_images)
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setPresetImages(parsed)
+            }
+          } catch (e) {
+            const list = settingsData.settings.post_preset_images.split(',').map(s => s.trim()).filter(Boolean)
+            if (list.length > 0) setPresetImages(list)
+          }
         }
       })
       .catch(console.error)

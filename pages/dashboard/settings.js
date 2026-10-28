@@ -19,13 +19,21 @@ import {
   Badge,
   Toast
 } from '@/components/dashboard/ui'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { getImageUrl } from '@/lib/imageUtils'
+
+const defaultThemePresets = [
+  'blog-2-1.webp', 'blog-2-2.webp', 'blog-2-3.webp', 'blog-2-4.webp',
+  'blog-2-5.webp', 'blog-2-6.webp', 'blog-2-7.webp', 'blog-2-8.webp'
+]
 
 export default function DashboardSettings() {
   const [saving, setSaving] = useState(false)
   const [toast, setToast] = useState(null)
   const [categories, setCategories] = useState([])
   const [allPosts, setAllPosts] = useState([])
+  const [newPresetUrl, setNewPresetUrl] = useState('')
+  const presetFileInputRef = useRef(null)
 
   const [settings, setSettings] = useState({
     site_title: 'Dua Narasi',
@@ -35,6 +43,7 @@ export default function DashboardSettings() {
     logo_header_dark: '/assets/img/logo/logo-white.webp',
     logo_footer: '/assets/img/logo/logoredwhite.webp',
     logo_dashboard: '/assets/img/logo/favicon.webp',
+    post_preset_images: JSON.stringify(defaultThemePresets),
     show_post_views: 'true',
     show_post_comments: 'true',
     show_post_editor: 'true',
@@ -183,6 +192,75 @@ export default function DashboardSettings() {
       showToast('Error koneksi saat menyimpan pengaturan', 'error')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const getCurrentPresets = () => {
+    if (!settings.post_preset_images) return defaultThemePresets
+    try {
+      const parsed = typeof settings.post_preset_images === 'string'
+        ? JSON.parse(settings.post_preset_images)
+        : settings.post_preset_images
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed
+    } catch (e) {
+      const list = String(settings.post_preset_images).split(',').map(s => s.trim()).filter(Boolean)
+      if (list.length > 0) return list
+    }
+    return defaultThemePresets
+  }
+
+  const handleAddPreset = () => {
+    const val = newPresetUrl.trim()
+    if (!val) return
+    const current = getCurrentPresets()
+    if (current.includes(val)) {
+      showToast('Gambar ini sudah ada di dalam daftar preset', 'error')
+      return
+    }
+    const updated = [...current, val]
+    setSettings({ ...settings, post_preset_images: JSON.stringify(updated) })
+    setNewPresetUrl('')
+    showToast('Preset baru ditambahkan! Jangan lupa klik Simpan Pengaturan.')
+  }
+
+  const handleRemovePreset = (indexToRemove) => {
+    const current = getCurrentPresets()
+    const updated = current.filter((_, idx) => idx !== indexToRemove)
+    setSettings({ ...settings, post_preset_images: JSON.stringify(updated) })
+    showToast('Preset dihapus! Jangan lupa klik Simpan Pengaturan.')
+  }
+
+  const handleResetPresets = () => {
+    setSettings({ ...settings, post_preset_images: JSON.stringify(defaultThemePresets) })
+    showToast('Preset berhasil dikembalikan ke default tema!')
+  }
+
+  const handleUploadPreset = async (file) => {
+    if (!file) return
+    try {
+      showToast('Mengunggah gambar ke ImgBB...')
+      const base64Data = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = reject
+      })
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: base64Data, name: file.name.replace(/\.[^/.]+$/, '') })
+      })
+      const data = await res.json()
+      if (data.success && data.url) {
+        const current = getCurrentPresets()
+        const updated = [...current, data.url]
+        setSettings(prev => ({ ...prev, post_preset_images: JSON.stringify(updated) }))
+        showToast('Gambar berhasil diupload ke ImgBB & ditambahkan ke preset!')
+      } else {
+        showToast(data.message || 'Gagal upload preset', 'error')
+      }
+    } catch (err) {
+      showToast('Error saat upload preset', 'error')
     }
   }
 
@@ -353,6 +431,166 @@ export default function DashboardSettings() {
                         maxPreviewHeight={60}
                       />
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Card Preset Gambar Sampul Artikel */}
+              <Card>
+                <CardHeader>
+                  <CardTitle icon="fa-picture-o">Preset Gambar Sampul Artikel (Theme Presets)</CardTitle>
+                  <CardDescription>
+                    Kelola pilihan gambar cepat yang tampil di form pembuatan & pengeditan artikel. Anda bisa mengunggah gambar ke ImgBB, mengetik URL, menghapus preset, atau mereset ke preset bawaan tema.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {/* Grid of current presets */}
+                  <div style={{ marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--dash-text-main)' }}>
+                        Daftar Preset Aktif ({getCurrentPresets().length} Gambar):
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleResetPresets}
+                        className="dash-btn dash-btn-outline"
+                        style={{ padding: '4px 10px', fontSize: '11.5px', height: 'auto' }}
+                        title="Kembalikan ke 8 preset bawaan tema"
+                      >
+                        <i className="fa fa-refresh" style={{ marginRight: '5px' }}></i> Reset Default
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '10px' }}>
+                      {getCurrentPresets().map((img, idx) => {
+                        const fullSrc = (img.startsWith('/') || img.startsWith('http://') || img.startsWith('https://'))
+                          ? img
+                          : `/assets/img/blog/${img}`
+                        const displaySrc = getImageUrl(fullSrc)
+                        return (
+                          <div
+                            key={`${img}-${idx}`}
+                            style={{
+                              position: 'relative',
+                              borderRadius: '8px',
+                              overflow: 'hidden',
+                              border: '1px solid var(--dash-border)',
+                              background: 'var(--dash-muted-bg)',
+                              height: '70px',
+                              boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+                            }}
+                          >
+                            <img
+                              src={displaySrc}
+                              alt={`Preset ${idx + 1}`}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                              onError={(e) => { e.currentTarget.style.display = 'none' }}
+                            />
+                            {/* Delete Button */}
+                            <button
+                              type="button"
+                              onClick={() => handleRemovePreset(idx)}
+                              title="Hapus preset ini"
+                              style={{
+                                position: 'absolute',
+                                top: '4px',
+                                right: '4px',
+                                width: '22px',
+                                height: '22px',
+                                borderRadius: '50%',
+                                background: 'rgba(239, 68, 68, 0.9)',
+                                color: '#fff',
+                                border: 'none',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '11px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s ease',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                                zIndex: 3
+                              }}
+                            >
+                              <i className="fa fa-times"></i>
+                            </button>
+                            <div style={{
+                              position: 'absolute',
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              background: 'rgba(15, 23, 42, 0.75)',
+                              color: '#fff',
+                              fontSize: '9.5px',
+                              padding: '2px 4px',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              textAlign: 'center'
+                            }}>
+                              #{idx + 1}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Add New Preset Controls */}
+                  <div style={{
+                    background: 'var(--dash-muted-bg)',
+                    padding: '16px',
+                    borderRadius: '10px',
+                    border: '1px solid var(--dash-border)',
+                    marginTop: '16px'
+                  }}>
+                    <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--dash-text-main)', marginBottom: '8px' }}>
+                      <i className="fa fa-plus-circle" style={{ color: '#3b82f6', marginRight: '6px' }}></i> Tambah Gambar Preset Baru
+                    </div>
+                    
+                    {/* Hidden file input for uploading directly to ImgBB */}
+                    <input
+                      type="file"
+                      ref={presetFileInputRef}
+                      style={{ display: 'none' }}
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files?.[0]) {
+                          handleUploadPreset(e.target.files[0])
+                          e.target.value = ''
+                        }
+                      }}
+                    />
+
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <input
+                        type="text"
+                        className="dash-input"
+                        placeholder="Ketik/Paste URL ImgBB (https://i.ibb.co/...) atau nama file lokal (blog-2-9.webp)"
+                        value={newPresetUrl}
+                        onChange={(e) => setNewPresetUrl(e.target.value)}
+                        style={{ flex: '1', minWidth: '240px', fontSize: '13px' }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddPreset}
+                        className="dash-btn dash-btn-primary"
+                        style={{ padding: '0 16px', fontSize: '13px' }}
+                      >
+                        <i className="fa fa-plus" style={{ marginRight: '6px' }}></i> Tambah
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => presetFileInputRef.current?.click()}
+                        className="dash-btn dash-btn-outline"
+                        style={{ padding: '0 14px', fontSize: '12px' }}
+                        title="Upload file gambar langsung ke ImgBB & otomatis tambahkan ke preset"
+                      >
+                        <i className="fa fa-cloud-upload" style={{ marginRight: '6px' }}></i> Upload ke ImgBB
+                      </button>
+                    </div>
+                    <small style={{ color: 'var(--dash-text-muted)', fontSize: '11.5px', marginTop: '8px', display: 'block' }}>
+                      💡 Preset ini akan langsung muncul sebagai pilihan cepat di halaman <strong>Tambah Artikel</strong> dan <strong>Edit Artikel</strong>.
+                    </small>
                   </div>
                 </CardContent>
               </Card>

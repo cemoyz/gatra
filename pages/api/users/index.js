@@ -5,7 +5,8 @@ import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 export default async function handler(req, res) {
   const authUser = await requireApiAuth(req, res, [ROLES.ADMIN])
   if (!authUser) return
-  // GET all users with author details
+
+  // GET all users with direct posts count and editorial designation
   if (req.method === 'GET') {
     try {
       const users = await prisma.user.findMany({
@@ -14,19 +15,12 @@ export default async function handler(req, res) {
           name: true,
           email: true,
           role: true,
+          designation: true,
           avatar: true,
           bio: true,
           createdAt: true,
-          author: {
-            select: {
-              id: true,
-              name: true,
-              role: true,
-              bio: true,
-              _count: {
-                select: { posts: true }
-              }
-            }
+          _count: {
+            select: { posts: true }
           }
         },
         orderBy: { createdAt: 'desc' }
@@ -34,7 +28,8 @@ export default async function handler(req, res) {
 
       const formatted = users.map(u => ({
         ...u,
-        postsCount: u.author?._count?.posts || 0
+        authorTitle: u.designation,
+        postsCount: u._count?.posts || 0
       }))
 
       return res.status(200).json({ success: true, users: formatted })
@@ -44,10 +39,10 @@ export default async function handler(req, res) {
     }
   }
 
-  // POST create user (Admin creates user + auto-creates author profile if editorial role)
+  // POST create user with role & designation
   if (req.method === 'POST') {
     try {
-      const { name, email, password, role = 'EDITOR', bio, authorTitle } = req.body
+      const { name, email, password, role = 'EDITOR', bio, authorTitle, designation, avatar } = req.body
 
       if (!name || !email || !password) {
         return res.status(400).json({ success: false, message: 'Name, email, and password are required' })
@@ -66,39 +61,23 @@ export default async function handler(req, res) {
           email: cleanEmail,
           password: hashedPassword,
           role: role || 'EDITOR',
+          designation: designation || authorTitle || (role === 'ADMIN' ? 'Editor in Chief' : role === 'EDITOR' ? 'Senior Editor' : 'Penulis'),
           bio: bio || '',
-          avatar: '/assets/img/author/author-1.webp',
-          // Automatically create linked author profile for editorial roles
-          author: role !== 'SUBSCRIBER' ? {
-            create: {
-              name: name.trim(),
-              email: cleanEmail,
-              avatar: '/assets/img/author/author-1.webp',
-              bio: bio || '',
-              role: authorTitle || (role === 'ADMIN' ? 'Editor in Chief' : role === 'EDITOR' ? 'Senior Editor' : 'Jurnalis / Penulis')
-            }
-          } : undefined
+          avatar: avatar || '/assets/img/author/author-1.webp'
         },
         select: {
           id: true,
           name: true,
           email: true,
           role: true,
+          designation: true,
           avatar: true,
           bio: true,
-          createdAt: true,
-          author: {
-            select: {
-              id: true,
-              name: true,
-              role: true,
-              bio: true
-            }
-          }
+          createdAt: true
         }
       })
 
-      return res.status(201).json({ success: true, user })
+      return res.status(201).json({ success: true, user: { ...user, authorTitle: user.designation, postsCount: 0 } })
     } catch (error) {
       console.error('Error creating user:', error)
       return res.status(500).json({ success: false, message: error.message || 'Failed to create user' })

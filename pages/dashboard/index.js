@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
 import AnimatedCounter from '@/components/dashboard/AnimatedCounter'
+import { getImageUrl } from '@/lib/imageUtils'
 
 // Dynamically import Recharts components with SSR disabled for optimal responsive rendering
 const RevenueChart = dynamic(() => import('@/components/dashboard/DashboardCharts').then(m => m.RevenueChart), { ssr: false })
@@ -424,9 +425,9 @@ export default function DashboardOverview() {
                       <td style={{ padding: '12px 18px', maxWidth: '300px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                           <img
-                            src={post.img?.startsWith('http') ? post.img : `/assets/img/blog/${post.img || 'blog-2-1.webp'}`}
+                            src={getImageUrl(post.img)}
                             alt=""
-                            style={{ width: '38px', height: '38px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
+                            style={{ width: '48px', height: '36px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
                             onError={(e) => { e.currentTarget.src = '/assets/img/blog/blog-2-1.webp' }}
                           />
                           <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600, fontSize: '13.5px', color: 'var(--dash-text-main)' }}>
@@ -496,9 +497,9 @@ export default function DashboardOverview() {
                 <div key={post.id} className="dash-mobile-card-item">
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                     <img
-                      src={post.img?.startsWith('http') ? post.img : `/assets/img/blog/${post.img || 'blog-2-1.webp'}`}
+                      src={getImageUrl(post.img)}
                       alt=""
-                      style={{ width: '52px', height: '52px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
+                      style={{ width: '56px', height: '42px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
                       onError={(e) => { e.currentTarget.src = '/assets/img/blog/blog-2-1.webp' }}
                     />
                     <div style={{ flex: 1, minWidth: 0 }}>

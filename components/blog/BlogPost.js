@@ -32,17 +32,17 @@ export default function BlogPost({
     sortBy,
     featured,
     tag,
-    ids
+    ids,
+    showEmptyState = false
 }) {
-    // Initial fallback data
-    const initialFallback = allData.slice(showStart, showEnd)
-    const [data, setData] = useState(postsData || initialFallback)
+    // Initial data: empty array if no postsData passed
+    const [data, setData] = useState(postsData || [])
     const [loading, setLoading] = useState(!postsData)
     const [currentPage, setCurrentPage] = useState(1)
     const [pagination, setPagination] = useState([])
     const limit = showItem || 6
     const paginationItem = 4
-    const [pages, setPages] = useState(Math.ceil(data.length / limit) || 1)
+    const [pages, setPages] = useState(Math.ceil((data.length || 1) / limit) || 1)
 
     // Fetch dynamic posts from API if no explicit postsData passed
     useEffect(() => {
@@ -81,11 +81,12 @@ export default function BlogPost({
                         }
                     }
                     setData(posts)
+                } else {
+                    setData([])
                 }
             })
             .catch(() => {
-                // Fallback to static json data on error
-                setData(initialFallback)
+                setData([])
             })
             .finally(() => {
                 setLoading(false)
@@ -151,10 +152,10 @@ export default function BlogPost({
                 </>
             )}
 
-            {!loading && getPaginatedProducts.length === 0 && (
+            {!loading && getPaginatedProducts.length === 0 && showEmptyState && (
                 <div style={{ padding: '40px 0', textAlign: 'center', color: '#64748b', width: '100%' }}>
-                    <h4>No Articles Found</h4>
-                    <p>No posts match the current filter criteria.</p>
+                    <h4>Belum Ada Artikel</h4>
+                    <p>Belum ada artikel yang sesuai dengan kriteria ini.</p>
                 </div>
             )}
 

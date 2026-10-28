@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 
 export default function DashboardAuthors() {
   const [authors, setAuthors] = useState([])
-  const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
   const [editingAuthor, setEditingAuthor] = useState(null)
@@ -16,10 +15,9 @@ export default function DashboardAuthors() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    role: 'Editor',
+    role: 'Penulis',
     avatar: '/assets/img/author/author-1.webp',
-    bio: '',
-    userId: ''
+    bio: ''
   })
 
   const avatarOptions = [
@@ -41,20 +39,14 @@ export default function DashboardAuthors() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const [resAuthors, resUsers] = await Promise.all([
-        fetch('/api/authors').then(r => r.json()),
-        fetch('/api/users').then(r => r.json())
-      ])
-
-      if (resAuthors.success) {
-        setAuthors(resAuthors.authors || [])
-      }
-      if (resUsers.success) {
-        setUsers(resUsers.users || [])
+      const res = await fetch('/api/authors')
+      const data = await res.json()
+      if (data.success) {
+        setAuthors(data.authors || [])
       }
     } catch (err) {
       console.error(err)
-      showToast('Gagal memuat data author & user', 'error')
+      showToast('Gagal memuat data penulis redaksi', 'error')
     } finally {
       setLoading(false)
     }
@@ -70,39 +62,21 @@ export default function DashboardAuthors() {
       setFormData({
         name: author.name || '',
         email: author.email || '',
-        role: author.role || 'Editor',
+        role: author.designation || author.role || 'Penulis',
         avatar: author.avatar || '/assets/img/author/author-1.webp',
-        bio: author.bio || '',
-        userId: author.userId ? String(author.userId) : ''
+        bio: author.bio || ''
       })
     } else {
       setEditingAuthor(null)
       setFormData({
         name: '',
         email: '',
-        role: 'Editor',
+        role: 'Penulis',
         avatar: '/assets/img/author/author-1.webp',
-        bio: '',
-        userId: ''
+        bio: ''
       })
     }
     setModalOpen(true)
-  }
-
-  const handleUserSelectChange = (selectedUserId) => {
-    setFormData(prev => {
-      const updated = { ...prev, userId: selectedUserId }
-      if (selectedUserId) {
-        const foundUser = users.find(u => String(u.id) === String(selectedUserId))
-        if (foundUser) {
-          if (!prev.name) updated.name = foundUser.name
-          if (!prev.email) updated.email = foundUser.email
-          if (foundUser.avatar && prev.avatar === '/assets/img/author/author-1.webp') updated.avatar = foundUser.avatar
-          if (foundUser.bio && !prev.bio) updated.bio = foundUser.bio
-        }
-      }
-      return updated
-    })
   }
 
   const handleSubmit = async (e) => {
@@ -120,10 +94,7 @@ export default function DashboardAuthors() {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          userId: formData.userId ? parseInt(formData.userId) : null
-        })
+        body: JSON.stringify(formData)
       })
 
       const data = await res.json()
@@ -238,7 +209,7 @@ export default function DashboardAuthors() {
                 <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Penulis / Avatar</th>
                 <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Peran / Jabatan</th>
                 <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Email</th>
-                <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Relasi Akun User</th>
+                <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Peran Sistem</th>
                 <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Total Artikel</th>
                 <th style={{ padding: '14px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700, textAlign: 'right' }}>Aksi</th>
               </tr>
@@ -292,21 +263,15 @@ export default function DashboardAuthors() {
                       </div>
                     </td>
                     <td style={{ padding: '14px 18px' }}>
-                      <Badge variant="default">{author.role || 'Editor'}</Badge>
+                      <Badge variant="default">{author.role || 'Penulis'}</Badge>
                     </td>
                     <td style={{ padding: '14px 18px', color: 'var(--dash-text-main)', fontSize: '13px' }}>
                       {author.email || <span style={{ color: 'var(--dash-text-muted)' }}>—</span>}
                     </td>
                     <td style={{ padding: '14px 18px' }}>
-                      {author.linkedUser ? (
-                        <Badge variant="success" dot>
-                          {author.linkedUser.name} ({author.linkedUser.role})
-                        </Badge>
-                      ) : (
-                        <span style={{ fontSize: '12px', color: 'var(--dash-text-muted)' }}>
-                          <i className="fa fa-unlink" style={{ marginRight: '4px' }}></i> Profil Mandiri
-                        </span>
-                      )}
+                      <Badge variant={author.userRole === 'ADMIN' ? 'primary' : author.userRole === 'EDITOR' ? 'info' : 'warning'}>
+                        {author.userRole || 'AUTHOR'}
+                      </Badge>
                     </td>
                     <td style={{ padding: '14px 18px' }}>
                       <span style={{ fontWeight: 700, color: 'var(--dash-text-main)', fontSize: '13px' }}>
@@ -324,7 +289,7 @@ export default function DashboardAuthors() {
                           <i className="fa fa-pencil"></i>
                         </button>
                         <Link
-                          href="/author"
+                          href={`/author?id=${author.id}`}
                           target="_blank"
                           className="dash-icon-btn"
                           style={{ width: '30px', height: '30px', fontSize: '12px', borderRadius: '8px', textDecoration: 'none' }}
@@ -422,28 +387,6 @@ export default function DashboardAuthors() {
         maxWidth="560px"
       >
         <form onSubmit={handleSubmit}>
-          {/* Relasi Akun User */}
-          <div className="dash-form-group" style={{ background: 'var(--dash-muted-bg)', padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--dash-border)', marginBottom: '18px' }}>
-            <label className="dash-form-label" style={{ color: 'var(--dash-text-main)', marginBottom: '6px' }}>
-              <i className="fa fa-link" style={{ marginRight: '6px', color: 'var(--dash-primary)' }}></i> Hubungkan dengan Akun Pengguna (*User Account*)
-            </label>
-            <select
-              className="dash-select"
-              value={formData.userId}
-              onChange={(e) => handleUserSelectChange(e.target.value)}
-            >
-              <option value="">-- Tanpa Akun User (Profil Mandiri) --</option>
-              {users.map(u => (
-                <option key={u.id} value={u.id}>
-                  {u.name} &bull; {u.email} ({u.role})
-                </option>
-              ))}
-            </select>
-            <div style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)', marginTop: '6px' }}>
-              Jika dihubungkan, artikel yang dibuat oleh user ini akan otomatis dikaitkan ke profil author ini.
-            </div>
-          </div>
-
           {/* Name */}
           <div className="dash-form-group">
             <label className="dash-form-label">Nama Penulis *</label>

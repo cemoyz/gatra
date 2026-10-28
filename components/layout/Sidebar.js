@@ -2,6 +2,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import SocialLinks from "@/components/elements/SocialLinks"
+import { getImageUrl } from "@/lib/imageUtils"
 
 export default function Sidebar({ isMobileMenu, handleMobileMenu, settings: initialSettings }) {
     const router = useRouter()
@@ -40,7 +41,7 @@ export default function Sidebar({ isMobileMenu, handleMobileMenu, settings: init
         }
     }
 
-    const logoUrl = settings.logo_header || settings.site_logo || "/assets/img/logo/logo.webp"
+    const logoUrl = getImageUrl(settings.logo_header || settings.site_logo, "/assets/img/logo/logo.webp")
 
     return (
         <>

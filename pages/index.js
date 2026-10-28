@@ -3,6 +3,7 @@ import Layout from "@/components/layout/Layout"
 import BlogSidebar from "@/components/sections/BlogSidebar"
 import MargueePost from "@/components/sections/MargueePost"
 import Newsletter1 from "@/components/sections/Newsletter1"
+import EditorialWelcome from "@/components/sections/EditorialWelcome"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
@@ -20,6 +21,23 @@ const Home11 = dynamic(() => import('./index-11'), { ssr: false })
 const HomeRtl = dynamic(() => import('./index-rtl'), { ssr: false })
 
 function Home1({ settings = {} }) {
+    const [hasPosts, setHasPosts] = useState(null)
+
+    useEffect(() => {
+        fetch('/api/posts?limit=1&status=PUBLISHED')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && Array.isArray(data.posts) && data.posts.length > 0) {
+                    setHasPosts(true)
+                } else {
+                    setHasPosts(false)
+                }
+            })
+            .catch(() => {
+                setHasPosts(false)
+            })
+    }, [])
+
     const showFeatured = settings.show_featured_posts !== 'false'
     const titleFeatured = settings.title_featured_posts || 'Featured Post'
     const showTrending = settings.show_trending_posts !== 'false'
@@ -30,8 +48,17 @@ function Home1({ settings = {} }) {
     const showHandpick = settings.show_handpick_posts !== 'false'
     const titleHandpick = settings.title_handpick_posts || 'Hand-Picked News'
 
+    // If database has 0 published articles, show the elegant Editorial Welcome State
+    if (hasPosts === false) {
+        return (
+            <Layout headerStyle={1} footerStyle={1} settings={settings}>
+                <EditorialWelcome settings={settings} />
+            </Layout>
+        )
+    }
+
     return (
-        <Layout headerStyle={1} footerStyle={1}>
+        <Layout headerStyle={1} footerStyle={1} settings={settings}>
             <div>
                 {/* 1. featured post area start */}
                 {showFeatured && (

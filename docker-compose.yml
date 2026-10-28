@@ -14,8 +14,8 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-duanarasi}?schema=public
       - JWT_SECRET=${JWT_SECRET:-hoom-magazine-super-secret-jwt-key-2026}
       - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3005}
-      - IMGBB_API_KEY=${IMGBB_API_KEY:-fbe192c84a6e4a523741fb4297724951}
-      - NEXT_PUBLIC_IMGBB_API_KEY=${NEXT_PUBLIC_IMGBB_API_KEY:-fbe192c84a6e4a523741fb4297724951}
+      - IMGBB_API_KEY=${IMGBB_API_KEY:-6f594898aecb2c268834c7aaf299548f}
+      - NEXT_PUBLIC_IMGBB_API_KEY=${NEXT_PUBLIC_IMGBB_API_KEY:-6f594898aecb2c268834c7aaf299548f}
     depends_on:
       db:
         condition: service_healthy

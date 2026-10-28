@@ -93,23 +93,15 @@ async function main() {
   }
   console.log('✅ Categories seeded.')
 
-  // 2. Seed Authors
-  const defaultAuthors = [
-    { name: 'Alexis D.', email: 'alexis@example.com', role: 'Lead Author', bio: 'Senior UI/UX architect and technology writer.', avatar: '/assets/img/author/author-1.webp' },
-    { name: 'Sarah Connor', email: 'sarah@example.com', role: 'Editor', bio: 'Tech editor and creative storyteller.', avatar: '/assets/img/author/author-2.webp' },
-    { name: 'Admin Hoom', email: 'admin@hoom.com', role: 'Administrator', bio: 'Chief editor at Hoom Magazine.', avatar: '/assets/img/author/qa-author.webp' }
-  ]
-
+  // 2. Fetch Users for Author mapping
+  const users = await prisma.user.findMany()
   const authorMap = {}
-  for (const author of defaultAuthors) {
-    const created = await prisma.author.upsert({
-      where: { email: author.email },
-      update: {},
-      create: author,
-    })
-    authorMap[author.name] = created.id
+  for (const u of users) {
+    authorMap[u.name] = u.id
+    authorMap[u.email] = u.id
   }
-  console.log('✅ Authors seeded.')
+  const authorIds = users.filter(u => u.role !== 'SUBSCRIBER').map(u => u.id)
+  console.log('✅ Authors mapped to users.')
 
   // 3. Seed Tags
   const defaultTags = ['Design', 'Development', 'AI', 'Technology', 'UI/UX', 'Trends', 'Marketing', 'Travel', 'Lifestyle', 'Podcast']

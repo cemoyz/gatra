@@ -176,8 +176,9 @@ export default function DashboardUsers() {
       name: u.name || '',
       email: u.email || '',
       role: u.role || 'EDITOR',
-      authorTitle: u.author?.role || '',
-      bio: u.author?.bio || '',
+      authorTitle: u.designation || u.authorTitle || '',
+      bio: u.bio || '',
+      avatar: u.avatar || '/assets/img/author/author-1.webp',
       password: ''
     })
   }
@@ -192,10 +193,11 @@ export default function DashboardUsers() {
   }
 
   const filteredUsers = users.filter((u) => {
+    const title = u.designation || u.authorTitle || ''
     const matchSearch =
       u.name?.toLowerCase().includes(search.toLowerCase()) ||
       u.email?.toLowerCase().includes(search.toLowerCase()) ||
-      u.author?.role?.toLowerCase().includes(search.toLowerCase())
+      title.toLowerCase().includes(search.toLowerCase())
     const matchRole = roleFilter === 'all' || u.role === roleFilter
     return matchSearch && matchRole
   })
@@ -347,10 +349,10 @@ export default function DashboardUsers() {
                           <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {u.email}
                           </div>
-                          {u.author?.role && (
+                          {(u.designation || u.authorTitle) && (
                             <div style={{ fontSize: '11px', color: 'var(--dash-primary)', fontWeight: 600, marginTop: '2px' }}>
                               <i className="fa fa-pencil" style={{ marginRight: '4px' }}></i>
-                              {u.author.role}
+                              {u.designation || u.authorTitle}
                             </div>
                           )}
                         </div>
@@ -368,9 +370,9 @@ export default function DashboardUsers() {
                       </span>
                     </td>
                     <td style={{ padding: '14px 18px' }}>
-                      {u.author ? (
+                      {['ADMIN', 'EDITOR', 'AUTHOR'].includes(u.role) || (u.postsCount > 0) ? (
                         <Link
-                          href={`/author?id=${u.author.id}`}
+                          href={`/author?id=${u.id}`}
                           target="_blank"
                           className="dash-btn dash-btn-secondary"
                           style={{ height: '28px', padding: '0 9px', fontSize: '11.5px', borderRadius: '6px' }}
@@ -606,6 +608,24 @@ export default function DashboardUsers() {
             </div>
 
             <div className="dash-form-group" style={{ margin: 0 }}>
+              <Label>Gelar / Jabatan Redaksi (Profil Penulis)</Label>
+              <Input
+                placeholder="Contoh: Editor in Chief, Senior Tech Editor, Jurnalis"
+                value={editForm.authorTitle}
+                onChange={(e) => setEditForm({ ...editForm, authorTitle: e.target.value })}
+              />
+            </div>
+
+            <div className="dash-form-group" style={{ margin: 0 }}>
+              <Label>URL Avatar / Foto Profil</Label>
+              <Input
+                placeholder="/assets/img/author/author-1.webp atau URL gambar"
+                value={editForm.avatar}
+                onChange={(e) => setEditForm({ ...editForm, avatar: e.target.value })}
+              />
+            </div>
+
+            <div className="dash-form-group" style={{ margin: 0 }}>
               <Label>Biografi / Deskripsi Jurnalis</Label>
               <Textarea
                 rows={3}
@@ -671,7 +691,7 @@ export default function DashboardUsers() {
               </Button>
               <Button
                 type="button"
-                onClick={handleDeleteConfirm}
+                onClick={handleDeleteUser}
                 loading={submitting}
                 variant="destructive"
                 style={{ background: '#ef4444', color: '#fff' }}

@@ -65,10 +65,10 @@ export default function EditPost() {
     { id: 'compact', label: 'Compact' }
   ]
 
-  const presetImages = [
+  const [presetImages, setPresetImages] = useState([
     'blog-2-1.webp', 'blog-2-2.webp', 'blog-2-3.webp', 'blog-2-4.webp',
     'blog-2-5.webp', 'blog-2-6.webp', 'blog-2-7.webp', 'blog-2-8.webp'
-  ]
+  ])
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -80,11 +80,23 @@ export default function EditPost() {
 
     Promise.all([
       fetch('/api/categories').then(r => r.json()),
-      fetch('/api/authors').then(r => r.json())
+      fetch('/api/authors').then(r => r.json()),
+      fetch('/api/settings').then(r => r.json())
     ])
-      .then(([catData, authorData]) => {
+      .then(([catData, authorData, settingsData]) => {
         if (catData.success) setCategories(catData.categories || [])
         if (authorData.success) setAuthors(authorData.authors || [])
+        if (settingsData?.success && settingsData.settings?.post_preset_images) {
+          try {
+            const parsed = JSON.parse(settingsData.settings.post_preset_images)
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setPresetImages(parsed)
+            }
+          } catch (e) {
+            const list = settingsData.settings.post_preset_images.split(',').map(s => s.trim()).filter(Boolean)
+            if (list.length > 0) setPresetImages(list)
+          }
+        }
       })
       .catch(console.error)
   }, [])
@@ -100,8 +112,8 @@ export default function EditPost() {
 
           // If current user is an AUTHOR, verify post ownership
           if (currentUser && currentUser.role === 'AUTHOR') {
-            const authorId = p.authorId || (p.author?.id)
-            if (currentUser.author?.id && authorId !== currentUser.author.id) {
+            const postAuthorId = p.authorId || (p.author?.id)
+            if (postAuthorId && postAuthorId !== currentUser.id) {
               setForbidden(true)
               setLoading(false)
               return

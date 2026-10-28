@@ -11,19 +11,20 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      String   @default("SUBSCRIBER") // "ADMIN" | "EDITOR" | "AUTHOR" | "SUBSCRIBER"
-  avatar    String?  @default("/assets/img/author/author-1.webp")
-  bio       String?  @db.Text
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String   @unique
+  password    String
+  role        String   @default("SUBSCRIBER") // "ADMIN" | "EDITOR" | "AUTHOR" | "SUBSCRIBER"
+  designation String?  @default("Penulis") // e.g. "Pemimpin Redaksi", "Redaktur", "Jurnalis", "Penulis"
+  avatar      String?  @default("/assets/img/author/author-1.webp")
+  bio         String?  @db.Text
   
-  // Relasi balik ke Author (1-to-1)
-  author    Author?
+  // Relasi artikel yang ditulis oleh pengguna ini (One-to-Many)
+  posts       Post[]
   
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("users")
 }
@@ -40,9 +41,9 @@ model Post {
   categoryId  Int?
   category    Category?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
 
-  // Relasi Penulis / Author (Many-to-One)
+  // Relasi Penulis / Redaksi (Many-to-One, terhubung langsung ke User)
   authorId    Int?
-  author      Author?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  author      User?      @relation(fields: [authorId], references: [id], onDelete: SetNull)
 
   editorName  String?    // Nama Editor / Penyunting berita
 
@@ -84,24 +85,6 @@ model Category {
   createdAt    DateTime @default(now())
 
   @@map("categories")
-}
-
-model Author {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String?  @unique
-  avatar    String?  @default("/assets/img/author/author-1.webp")
-  bio       String?  @db.Text
-  role      String   @default("Editor") // e.g. "Senior Technology Editor", "Lead Columnist", "Author"
-  
-  // Relasi ke User (1-to-1 opsional)
-  userId    Int?     @unique
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  
-  posts     Post[]
-  createdAt DateTime @default(now())
-
-  @@map("authors")
 }
 
 model Tag {

@@ -121,8 +121,14 @@ export async function getServerSideProps({ req, res }) {
       select: { id: true, name: true, slug: true }
     })
 
-    // Fetch authors
-    const authors = await prisma.author.findMany({
+    // Fetch authors (editorial users or users with published posts)
+    const authors = await prisma.user.findMany({
+      where: {
+        OR: [
+          { role: { in: ['ADMIN', 'EDITOR', 'AUTHOR'] } },
+          { posts: { some: {} } }
+        ]
+      },
       select: { id: true, name: true }
     })
 

@@ -22,8 +22,8 @@ Sesuaikan isian variabel berikut:
 ```env
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
 JWT_SECRET="ganti-dengan-string-acak-rahasia-minimal-32-karakter"
-IMGBB_API_KEY="fbe192c84a6e4a523741fb4297724951"
-NEXT_PUBLIC_IMGBB_API_KEY="fbe192c84a6e4a523741fb4297724951"
+IMGBB_API_KEY="6f594898aecb2c268834c7aaf299548f"
+NEXT_PUBLIC_IMGBB_API_KEY="6f594898aecb2c268834c7aaf299548f"
 NEXTAUTH_URL="https://duanarasi.com"
 NODE_ENV="production"
 PORT=3000

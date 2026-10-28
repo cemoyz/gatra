@@ -45,7 +45,7 @@ export default function ImageUploader({
       const data = await res.json()
       if (data.success && data.url) {
         onChange(data.url)
-        setSuccessMsg('Gambar berhasil diunggah dan langsung aktif!')
+        setSuccessMsg('Gambar berhasil diunggah ke ImgBB dan langsung aktif!')
         setTimeout(() => setSuccessMsg(''), 4000)
       } else {
         throw new Error(data.message || 'Gagal memproses upload gambar.')
@@ -143,8 +143,8 @@ export default function ImageUploader({
           {uploading ? (
             <div className="uploading-state">
               <i className="fa fa-spinner fa-spin fa-2x text-primary mb-2"></i>
-              <p className="mb-0 text-white font-weight-bold">Mengunggah Gambar...</p>
-              <small className="text-muted">Sedang menyimpan ke server</small>
+              <p className="mb-0 text-white font-weight-bold">Mengunggah Gambar ke ImgBB...</p>
+              <small className="text-muted">Sedang memproses upload...</small>
             </div>
           ) : (
             <>
@@ -153,7 +153,7 @@ export default function ImageUploader({
               </div>
               <div className="dropzone-text">
                 <p className="main-prompt mb-1">
-                  <strong>Klik untuk upload</strong> atau tarik & lepas file gambar
+                  <strong>Klik untuk upload ke ImgBB</strong> atau tarik & lepas file gambar
                 </p>
                 <small className="sub-prompt">
                   Mendukung PNG, JPG, GIF, WEBP (Bisa paste <kbd>Ctrl + V</kbd>)
@@ -190,7 +190,7 @@ export default function ImageUploader({
               type="text"
               className="dash-input"
               style={{ fontSize: '13px' }}
-              placeholder="/uploads/... atau nama file lokal"
+              placeholder="https://i.ibb.co/... atau URL gambar"
               value={value}
               onChange={(e) => onChange(e.target.value)}
             />
@@ -210,36 +210,48 @@ export default function ImageUploader({
 
         {/* Preset Selector */}
         {presetImages && presetImages.length > 0 && (
-          <div className="preset-selector mt-2">
-            <label className="dash-form-label" style={{ fontSize: '12px', color: '#94a3b8' }}>
+          <div className="preset-selector mt-3">
+            <label className="dash-form-label" style={{ fontSize: '12px', color: 'var(--dash-text-muted, #94a3b8)' }}>
               Atau Pilih Preset Gambar Tema:
             </label>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))', gap: '8px' }}>
-              {presetImages.map((img) => {
-                const fullSrc = img.startsWith('/') ? img : `/assets/img/${presetFolder}/${img}`
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(75px, 1fr))', gap: '8px' }}>
+              {presetImages.map((img, idx) => {
+                const fullSrc = (img.startsWith('/') || img.startsWith('http://') || img.startsWith('https://'))
+                  ? img
+                  : `/assets/img/${presetFolder}/${img}`
+                const displaySrc = getImageUrl(fullSrc)
+                const isSelected = value === fullSrc || value === img
                 return (
-                  <img
-                    key={img}
-                    src={fullSrc}
-                    alt={img}
+                  <div
+                    key={`${img}-${idx}`}
                     onClick={() => onChange(fullSrc)}
                     style={{
-                      width: '100%',
-                      height: '42px',
-                      objectFit: 'contain',
+                      height: '46px',
                       borderRadius: '6px',
+                      overflow: 'hidden',
                       cursor: 'pointer',
-                      background: 'var(--dash-muted-bg, #f1f5f9)',
-                      border: value === fullSrc || value === img ? '2px solid #3b82f6' : '1px solid var(--dash-border, #e2e8f0)',
-                      opacity: value === fullSrc || value === img ? 1 : 0.75,
-                      padding: '4px',
-                      transition: 'all 0.2s ease'
+                      border: isSelected ? '2px solid #3b82f6' : '1px solid var(--dash-border, #e2e8f0)',
+                      boxShadow: isSelected ? '0 0 0 2px rgba(59, 130, 246, 0.25)' : 'none',
+                      opacity: isSelected ? 1 : 0.8,
+                      transition: 'all 0.2s ease',
+                      background: 'var(--dash-muted-bg, #f1f5f9)'
                     }}
                     title={img}
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none'
-                    }}
-                  />
+                  >
+                    <img
+                      src={displaySrc}
+                      alt={img}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        display: 'block'
+                      }}
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                      }}
+                    />
+                  </div>
                 )
               })}
             </div>
@@ -256,7 +268,8 @@ export default function ImageUploader({
           width: 100%;
           display: flex;
           align-items: center;
-          justify-content: flex-start;
+          justify-content: center;
+          text-align: center;
         }
 
         .preview-box {
@@ -266,12 +279,13 @@ export default function ImageUploader({
           justify-content: center;
           max-width: 100%;
           width: auto;
-          min-width: 120px;
-          padding: 8px 16px;
+          min-width: 160px;
+          padding: 8px;
           border-radius: 10px;
           overflow: hidden;
           border: 1px solid var(--dash-border, #e2e8f0);
           background: var(--dash-muted-bg, #f1f5f9);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .preview-img {
@@ -280,15 +294,16 @@ export default function ImageUploader({
           max-width: 100%;
           object-fit: contain;
           display: block;
+          border-radius: 6px;
         }
 
         .dropzone-box {
-          border: 2px dashed rgba(255, 255, 255, 0.2);
+          border: 2px dashed var(--dash-border, #cbd5e1);
           border-radius: 10px;
-          padding: 20px 16px;
+          padding: 22px 16px;
           text-align: center;
           cursor: pointer;
-          background: rgba(255, 255, 255, 0.02);
+          background: var(--dash-muted-bg, #f8fafc);
           transition: all 0.2s ease;
         }
 
@@ -304,25 +319,28 @@ export default function ImageUploader({
 
         .dropzone-icon {
           font-size: 28px;
-          color: #60a5fa;
+          color: #3b82f6;
           margin-bottom: 8px;
         }
 
         .main-prompt {
           font-size: 13px;
-          color: #e2e8f0;
+          color: var(--dash-text-main, #1e293b);
         }
 
         .sub-prompt {
-          font-size: 11px;
-          color: #94a3b8;
+          font-size: 11.5px;
+          color: var(--dash-text-muted, #64748b);
         }
 
         kbd {
-          background: rgba(255, 255, 255, 0.1);
+          background: var(--dash-card-bg, #ffffff);
+          color: var(--dash-text-main, #334155);
+          border: 1px solid var(--dash-border, #cbd5e1);
           border-radius: 4px;
-          padding: 2px 4px;
-          font-size: 10px;
+          padding: 2px 5px;
+          font-size: 10.5px;
+          font-family: inherit;
         }
       `}</style>
     </div>

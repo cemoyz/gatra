@@ -30,6 +30,7 @@ export default async function handler(req, res) {
           name: true,
           email: true,
           role: true,
+          designation: true,
           avatar: true,
           bio: true,
           createdAt: true
@@ -40,22 +41,25 @@ export default async function handler(req, res) {
         return res.status(404).json({ success: false, message: 'User not found' })
       }
 
-      return res.status(200).json({ success: true, user })
+      return res.status(200).json({ success: true, user: { ...user, authorTitle: user.designation } })
     } catch (error) {
       return res.status(500).json({ success: false, message: error.message })
     }
   }
 
-  // PUT update user (role, name, password)
+  // PUT update user (role, name, password, designation, avatar, bio)
   if (req.method === 'PUT') {
     try {
-      const { name, email, role, password, bio, avatar } = req.body
+      const { name, email, role, password, bio, avatar, designation, authorTitle } = req.body
       const updateData = {}
 
       if (name !== undefined) updateData.name = name.trim()
       if (email !== undefined) updateData.email = email.trim().toLowerCase()
       // Only admin can change role
       if (role !== undefined && isAdmin) updateData.role = role
+      if (designation !== undefined || authorTitle !== undefined) {
+        updateData.designation = designation || authorTitle
+      }
       if (bio !== undefined) updateData.bio = bio
       if (avatar !== undefined) updateData.avatar = avatar
       if (password) updateData.password = hashPassword(password)
@@ -68,13 +72,14 @@ export default async function handler(req, res) {
           name: true,
           email: true,
           role: true,
+          designation: true,
           avatar: true,
           bio: true,
           createdAt: true
         }
       })
 
-      return res.status(200).json({ success: true, user: updatedUser })
+      return res.status(200).json({ success: true, user: { ...updatedUser, authorTitle: updatedUser.designation } })
     } catch (error) {
       console.error('Error updating user:', error)
       return res.status(500).json({ success: false, message: error.message || 'Failed to update user' })

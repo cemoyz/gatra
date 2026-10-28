@@ -3,13 +3,14 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import Menu from "../Menu"
 import SocialLinks from "@/components/elements/SocialLinks"
+import { getImageUrl } from "@/lib/imageUtils"
 
 export default function Header1({ scroll, handleMobileMenu, settings = {} }) {
     const router = useRouter()
     const [searchQuery, setSearchQuery] = useState("")
 
-    const logoLight = settings.logo_header || settings.site_logo || "/assets/img/logo/logo.webp"
-    const logoDark = settings.logo_header_dark || "/assets/img/logo/logo-white.webp"
+    const logoLight = getImageUrl(settings.logo_header || settings.site_logo, "/assets/img/logo/logo.webp")
+    const logoDark = getImageUrl(settings.logo_header_dark, "/assets/img/logo/logo-white.webp")
 
     const handleSearch = (e) => {
         e.preventDefault()

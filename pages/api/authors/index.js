@@ -1,30 +1,44 @@
 import prisma from '@/lib/prisma'
+import { hashPassword } from '@/lib/auth'
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      const authors = await prisma.author.findMany({
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              role: true,
-              avatar: true
-            }
-          },
+      // Ambil seluruh user dengan peran redaksi (ADMIN, EDITOR, AUTHOR) atau yang memiliki postingan
+      const users = await prisma.user.findMany({
+        where: {
+          OR: [
+            { role: { in: ['ADMIN', 'EDITOR', 'AUTHOR'] } },
+            { posts: { some: {} } }
+          ]
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          designation: true,
+          avatar: true,
+          bio: true,
+          createdAt: true,
           _count: {
             select: { posts: true }
           }
         },
-        orderBy: { createdAt: 'desc' }
+        orderBy: { id: 'asc' }
       })
 
-      const formatted = authors.map(a => ({
-        ...a,
-        postsCount: a._count?.posts || 0,
-        linkedUser: a.user || null
+      const formatted = users.map(u => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.designation || (u.role === 'ADMIN' ? 'Editor in Chief' : u.role === 'EDITOR' ? 'Senior Editor' : 'Penulis'),
+        designation: u.designation || 'Penulis',
+        userRole: u.role,
+        avatar: u.avatar || '/assets/img/author/author-1.webp',
+        bio: u.bio || '',
+        postsCount: u._count?.posts || 0,
+        createdAt: u.createdAt
       }))
 
       return res.status(200).json({ success: true, authors: formatted })
@@ -36,51 +50,47 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     try {
-      const { name, email, avatar, bio, role = 'Editor', userId } = req.body
+      const { name, email, avatar, bio, role = 'Penulis', designation } = req.body
 
       if (!name) {
-        return res.status(400).json({ success: false, message: 'Author name is required' })
+        return res.status(400).json({ success: false, message: 'Nama penulis wajib diisi' })
       }
 
-      // Check if userId is already linked to another author
-      let parsedUserId = userId ? parseInt(userId) : null
-      if (parsedUserId) {
-        const existingWithUser = await prisma.author.findUnique({
-          where: { userId: parsedUserId }
-        })
-        if (existingWithUser) {
-          return res.status(400).json({
-            success: false,
-            message: `User account is already linked to author profile "${existingWithUser.name}".`
-          })
-        }
+      const cleanEmail = email ? email.trim().toLowerCase() : `penulis-${Date.now()}@duanarasi.com`
+      const existing = await prisma.user.findUnique({ where: { email: cleanEmail } })
+      if (existing) {
+        return res.status(400).json({ success: false, message: 'Email sudah terdaftar pada pengguna lain' })
       }
 
-      const author = await prisma.author.create({
+      const defaultPassword = hashPassword('penulis123')
+      const newUser = await prisma.user.create({
         data: {
-          name,
-          email: email || null,
+          name: name.trim(),
+          email: cleanEmail,
+          password: defaultPassword,
+          role: 'AUTHOR',
+          designation: designation || role || 'Penulis',
           avatar: avatar || '/assets/img/author/author-1.webp',
-          bio: bio || '',
-          role: role || 'Editor',
-          userId: parsedUserId || null
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              role: true
-            }
-          }
+          bio: bio || ''
         }
       })
 
-      return res.status(201).json({ success: true, author })
+      return res.status(201).json({
+        success: true,
+        author: {
+          id: newUser.id,
+          name: newUser.name,
+          email: newUser.email,
+          role: newUser.designation,
+          designation: newUser.designation,
+          avatar: newUser.avatar,
+          bio: newUser.bio,
+          postsCount: 0
+        }
+      })
     } catch (error) {
       console.error('Error creating author:', error)
-      return res.status(500).json({ success: false, message: error.message || 'Failed to create author' })
+      return res.status(500).json({ success: false, message: error.message || 'Gagal menambahkan penulis' })
     }
   }
 

@@ -18,6 +18,7 @@ import {
 } from '@/components/dashboard/ui'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { getImageUrl } from '@/lib/imageUtils'
 
 let cachedPosts = []
 let cachedCategories = []
@@ -85,8 +86,8 @@ export default function PostsManagement() {
         postType: selectedType
       }
 
-      if (user?.role === 'AUTHOR' && user.author?.id) {
-        params.authorId = user.author.id
+      if (user?.role === 'AUTHOR' && user.id) {
+        params.authorId = user.id
       }
 
       const query = new URLSearchParams(params)
@@ -316,11 +317,11 @@ export default function PostsManagement() {
                     <td style={{ padding: '14px 18px', maxWidth: '360px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                         <img
-                          src={post.img?.startsWith('http') ? post.img : `/assets/img/blog/${post.img || 'blog-2-1.webp'}`}
-                          alt=""
+                          src={getImageUrl(post.img)}
+                          alt={post.title || ''}
                           style={{
-                            width: '44px',
-                            height: '44px',
+                            width: '60px',
+                            height: '42px',
                             objectFit: 'cover',
                             borderRadius: '8px',
                             backgroundColor: 'var(--dash-muted-bg)',
@@ -445,9 +446,9 @@ export default function PostsManagement() {
               <div key={post.id} className="dash-mobile-card-item">
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                   <img
-                    src={post.img?.startsWith('http') ? post.img : `/assets/img/blog/${post.img || 'blog-2-1.webp'}`}
-                    alt=""
-                    style={{ width: '56px', height: '56px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
+                    src={getImageUrl(post.img)}
+                    alt={post.title || ''}
+                    style={{ width: '64px', height: '48px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
                     onError={(e) => { e.currentTarget.src = '/assets/img/blog/blog-2-1.webp' }}
                   />
                   <div style={{ flex: 1, minWidth: 0 }}>

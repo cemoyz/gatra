@@ -83,21 +83,12 @@ export default async function handler(req, res) {
       categoryMap[cat.slug] = c.id
     }
 
-    // 3. Default Authors
-    const defaultAuthors = [
-      { name: 'Alexis D.', email: 'alexis@example.com', role: 'Lead Author', bio: 'Senior UI/UX architect and technology writer.', avatar: '/assets/img/author/author-1.webp' },
-      { name: 'Sarah Connor', email: 'sarah@example.com', role: 'Editor', bio: 'Tech editor and creative storyteller.', avatar: '/assets/img/author/author-2.webp' },
-      { name: 'Admin Hoom', email: 'admin@hoom.com', role: 'Administrator', bio: 'Chief editor at Hoom Magazine.', avatar: '/assets/img/author/qa-author.webp' }
-    ]
-
+    // 3. Map Authors from Users
+    const users = await prisma.user.findMany()
     const authorMap = {}
-    for (const author of defaultAuthors) {
-      const a = await prisma.author.upsert({
-        where: { email: author.email },
-        update: {},
-        create: author,
-      })
-      authorMap[author.name] = a.id
+    for (const u of users) {
+      authorMap[u.name] = u.id
+      authorMap[u.email] = u.id
     }
 
     // 4. Seed Posts

@@ -89,6 +89,7 @@ export default async function handler(req, res) {
         category: post.category?.name || 'General',
         categorySlug: post.category?.slug || 'general',
         author: post.author?.name || 'Admin',
+        authorRole: post.author?.designation || post.author?.role || 'Penulis',
         authorAvatar: post.author?.avatar || '/assets/img/author/author-1.webp'
       }
 
@@ -111,7 +112,7 @@ export default async function handler(req, res) {
       }
 
       if (authUser.role === ROLES.AUTHOR) {
-        const isOwner = authUser.author?.id && existingPost.authorId === authUser.author.id
+        const isOwner = existingPost.authorId === authUser.id
         if (!isOwner) {
           return res.status(403).json({ success: false, message: 'Akses ditolak. Anda hanya dapat mengubah artikel milik Anda sendiri.' })
         }
@@ -220,7 +221,7 @@ export default async function handler(req, res) {
       }
 
       if (authUser.role === ROLES.AUTHOR) {
-        const isOwner = authUser.author?.id && existingPost.authorId === authUser.author.id
+        const isOwner = existingPost.authorId === authUser.id
         if (!isOwner) {
           return res.status(403).json({ success: false, message: 'Akses ditolak. Anda hanya dapat menghapus artikel milik Anda sendiri.' })
         }

@@ -27,6 +27,10 @@ const defaultSettings = {
   show_post_views: 'true',
   show_post_comments: 'true',
   show_post_editor: 'true',
+  post_preset_images: JSON.stringify([
+    'blog-2-1.webp', 'blog-2-2.webp', 'blog-2-3.webp', 'blog-2-4.webp',
+    'blog-2-5.webp', 'blog-2-6.webp', 'blog-2-7.webp', 'blog-2-8.webp'
+  ]),
   // Homepage Sections Management & Article Filtering
   show_featured_posts: 'true',
   title_featured_posts: 'Featured Post',

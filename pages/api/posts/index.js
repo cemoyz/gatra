@@ -128,6 +128,7 @@ export default async function handler(req, res) {
         category: post.category?.name || post.category?.slug || 'General',
         categorySlug: post.category?.slug || 'general',
         author: post.author?.name || 'Admin',
+        authorRole: post.author?.designation || post.author?.role || 'Penulis',
         authorAvatar: post.author?.avatar || '/assets/img/author/author-1.webp',
         commentsCount: post._count?.comments || 0
       }))
@@ -188,23 +189,10 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Title is required' })
       }
 
-      // If user is AUTHOR, automatically bind to their author profile
-      let effectiveAuthorId = authorId ? parseInt(authorId) : null
+      // If user is AUTHOR, automatically bind to their own user id
+      let effectiveAuthorId = authorId ? parseInt(authorId) : authUser.id
       if (authUser.role === ROLES.AUTHOR) {
-        if (authUser.author?.id) {
-          effectiveAuthorId = authUser.author.id
-        } else {
-          const newAuthor = await prisma.author.create({
-            data: {
-              name: authUser.name,
-              email: authUser.email,
-              avatar: authUser.avatar || '/avatar.png',
-              bio: authUser.bio || 'Penulis di Hoom Magazine',
-              userId: authUser.id
-            }
-          })
-          effectiveAuthorId = newAuthor.id
-        }
+        effectiveAuthorId = authUser.id
       }
 
       const generatedSlug = slug || title
