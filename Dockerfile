@@ -34,6 +34,9 @@ RUN npm install -g prisma@6.4.1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+# Berikan izin ke direktori prisma global agar user nextjs bisa run generate/push tanpa permission error
+RUN chown -R nextjs:nodejs /usr/local/lib/node_modules/prisma
+
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/util ./util
 
