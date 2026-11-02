@@ -13,12 +13,21 @@ export default function LoginPage({ initialSettings = {} }) {
   const [siteSettings, setSiteSettings] = useState(initialSettings)
 
   useEffect(() => {
-    // If user is already logged in, automatically redirect to dashboard
+    // If user is already logged in with valid dashboard role, redirect to dashboard
     fetch('/api/auth/me')
       .then(res => res.json())
       .then(data => {
-        if (data.success && data.user) {
+        if (data.success && data.user && ['ADMIN', 'EDITOR', 'AUTHOR'].includes(data.user.role)) {
           window.location.href = '/dashboard'
+        } else if (data.user && !['ADMIN', 'EDITOR', 'AUTHOR'].includes(data.user.role)) {
+          // If logged in as non-staff (e.g. SUBSCRIBER), clean cookie to avoid redirect loop
+          fetch('/api/auth/logout', { method: 'POST' }).catch(() => {})
+          try {
+            document.cookie = 'hoom_auth_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT;'
+            localStorage.removeItem('hoom_token')
+            sessionStorage.removeItem('hoom_token')
+            sessionStorage.removeItem('dash_user')
+          } catch (e) {}
         }
       })
       .catch(() => {})

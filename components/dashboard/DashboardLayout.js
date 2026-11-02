@@ -126,6 +126,8 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
             sessionStorage.removeItem('dash_user')
             localStorage.removeItem('hoom_token')
             sessionStorage.removeItem('hoom_token')
+            document.cookie = 'hoom_auth_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT;'
+            fetch('/api/auth/logout', { method: 'POST' }).catch(() => {})
           } catch (e) {}
           router.replace('/login')
         }
@@ -136,6 +138,8 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
           sessionStorage.removeItem('dash_user')
           localStorage.removeItem('hoom_token')
           sessionStorage.removeItem('hoom_token')
+          document.cookie = 'hoom_auth_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT;'
+          fetch('/api/auth/logout', { method: 'POST' }).catch(() => {})
         } catch (e) {}
         router.replace('/login')
       })
