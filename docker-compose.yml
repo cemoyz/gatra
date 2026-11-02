@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: duanarasi_web
+    command: sh -c "npx prisma db push && node server.js"
     restart: always
     ports:
       - "${WEB_PORT:-3005}:3000"
