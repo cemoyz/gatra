@@ -32,6 +32,7 @@ export default function NewPost() {
     content: '',
     status: 'PUBLISHED',
     featured: false,
+    isBreaking: false,
     postType: 'standard',
     layout: 'right-sidebar',
     videoUrl: '',
@@ -99,6 +100,22 @@ export default function NewPost() {
     const val = e.target.value
     const slug = val.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
     setFormData(prev => ({ ...prev, title: val, slug }))
+  }
+
+  const handleBreakingToggle = (checked) => {
+    let currentTags = formData.tagsInput ? formData.tagsInput.split(',').map(t => t.trim()).filter(Boolean) : []
+    if (checked) {
+      if (!currentTags.some(t => t.toLowerCase() === 'breaking news')) {
+        currentTags.push('Breaking News')
+      }
+    } else {
+      currentTags = currentTags.filter(t => !t.toLowerCase().includes('breaking') && !['kilas-berita', 'urgent'].includes(t.toLowerCase()))
+    }
+    setFormData(prev => ({
+      ...prev,
+      isBreaking: checked,
+      tagsInput: currentTags.join(', ')
+    }))
   }
 
   const handleSubmit = async (e) => {
@@ -526,6 +543,19 @@ export default function NewPost() {
                   />
                   <label htmlFor="featured" style={{ cursor: 'pointer', fontSize: '13px', margin: 0, color: 'var(--dash-text-main)', fontWeight: 600 }}>
                     Jadikan Berita Utama (Featured)
+                  </label>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+                  <input
+                    type="checkbox"
+                    id="isBreaking"
+                    checked={formData.isBreaking || false}
+                    onChange={(e) => handleBreakingToggle(e.target.checked)}
+                    style={{ width: '16px', height: '16px', cursor: 'pointer', accentColor: '#da0105' }}
+                  />
+                  <label htmlFor="isBreaking" style={{ cursor: 'pointer', fontSize: '13px', margin: 0, color: '#da0105', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <i className="fa fa-bolt" /> Tandai sebagai Breaking News
                   </label>
                 </div>
 

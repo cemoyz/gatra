@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator
 } from '@/components/dashboard/ui'
 import { canAccessRoute } from '@/lib/rbac'
+import { getImageUrl } from '@/lib/imageUtils'
 
 let cachedDashboardUser = null
 let cachedSiteSettings = null
@@ -20,76 +21,51 @@ let cachedUnreadCount = 0
 
 export default function DashboardLayout({ children, title = 'Dashboard' }) {
   const router = useRouter()
-  const [currentUser, setCurrentUser] = useState(() => {
-    if (cachedDashboardUser) return cachedDashboardUser
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = sessionStorage.getItem('dash_user')
-        if (stored) {
-          const u = JSON.parse(stored)
-          cachedDashboardUser = u
-          return u
-        }
-      } catch (e) {}
-    }
-    return null
-  })
-  const [authLoading, setAuthLoading] = useState(() => {
-    if (cachedDashboardUser) return false
-    if (typeof window !== 'undefined') {
-      try {
-        if (sessionStorage.getItem('dash_user')) return false
-      } catch (e) {}
-    }
-    return true
-  })
-  const [themeMode, setThemeMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        return localStorage.getItem('dash-theme') || 'light'
-      } catch (e) {
-        return 'light'
-      }
-    }
-    return 'light'
-  })
+  const [mounted, setMounted] = useState(false)
+  const [currentUser, setCurrentUser] = useState(null)
+  const [authLoading, setAuthLoading] = useState(true)
+  const [themeMode, setThemeMode] = useState('light')
   const [userDropdownOpen, setUserDropdownOpen] = useState(false)
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false)
   const [notifFilter, setNotifFilter] = useState('all') // 'all' | 'unread' | 'comments' | 'messages'
   const [messages, setMessages] = useState(cachedMessages)
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(cachedUnreadCount)
   const [recentComments, setRecentComments] = useState(cachedComments)
-  const [readCommentIds, setReadCommentIds] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('dash_read_comment_ids')
-        return saved ? JSON.parse(saved) : []
-      } catch (e) {}
-    }
-    return []
-  })
+  const [readCommentIds, setReadCommentIds] = useState([])
   const [lastSeenTime, setLastSeenTime] = useState(0)
   const [scrolled, setScrolled] = useState(false)
-  const [siteSettings, setSiteSettings] = useState(() => {
-    if (cachedSiteSettings) return cachedSiteSettings
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = sessionStorage.getItem('dash_site_settings')
-        if (stored) {
-          const s = JSON.parse(stored)
-          cachedSiteSettings = s
-          return s
-        }
-      } catch (e) {}
-    }
-    return {
-      site_title: 'Dua Narasi',
-      site_tagline: 'Editorial Control Panel',
-      site_logo: ''
-    }
+  const [siteSettings, setSiteSettings] = useState({
+    site_title: 'duanarasi.com',
+    site_tagline: 'Editorial Control Panel',
+    site_logo: ''
   })
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const notifRef = useRef(null)
+
+  useEffect(() => {
+    setMounted(true)
+    try {
+      const stored = sessionStorage.getItem('dash_user')
+      if (stored) {
+        const u = JSON.parse(stored)
+        cachedDashboardUser = u
+        setCurrentUser(u)
+        setAuthLoading(false)
+      }
+      const savedTheme = localStorage.getItem('dash-theme')
+      if (savedTheme) {
+        setThemeMode(savedTheme)
+      }
+      const savedRead = localStorage.getItem('dash_read_comment_ids')
+      if (savedRead) {
+        setReadCommentIds(JSON.parse(savedRead))
+      }
+      const storedSettings = sessionStorage.getItem('dash_site_settings')
+      if (storedSettings) {
+        setSiteSettings(JSON.parse(storedSettings))
+      }
+    } catch (e) {}
+  }, [])
 
   useEffect(() => {
     setIsMobileMenuOpen(false)
@@ -374,22 +350,21 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
 
   const allNavItems = [
     { label: 'Ringkasan / Analytics', path: '/dashboard', icon: 'fa-tachometer', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
-    { label: userRole === 'AUTHOR' ? 'Artikel Saya' : 'Semua Artikel', path: '/dashboard/posts', icon: 'fa-newspaper-o', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
-    { label: 'Tulis Artikel Baru', path: '/dashboard/posts/new', icon: 'fa-pencil-square-o', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
-    { label: 'Kategori Berita', path: '/dashboard/categories', icon: 'fa-folder-open-o', roles: ['ADMIN', 'EDITOR'] },
-    { label: 'Tim Penulis / Authors', path: '/dashboard/authors', icon: 'fa-user-circle-o', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: userRole === 'AUTHOR' ? 'Artikel Saya' : 'Semua Artikel', path: '/dashboard/posts', icon: 'fa-newspaper', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: 'Tulis Artikel Baru', path: '/dashboard/posts/new', icon: 'fa-edit', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: 'Kategori Berita', path: '/dashboard/categories', icon: 'fa-folder-open', roles: ['ADMIN', 'EDITOR'] },
+    { label: 'Tim Penulis / Authors', path: '/dashboard/authors', icon: 'fa-user-circle', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
     { label: 'Manajemen Pengguna', path: '/dashboard/users', icon: 'fa-users', roles: ['ADMIN'] },
-    { label: 'Pelanggan / Subscriber', path: '/dashboard/subscribers', icon: 'fa-paper-plane-o', roles: ['ADMIN', 'EDITOR'] },
-    { label: 'Komentar Pembaca', path: '/dashboard/comments', icon: 'fa-comments-o', badge: recentComments.length, roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
-    { label: 'Pesan Masuk (Inbox)', path: '/dashboard/messages', icon: 'fa-envelope-o', badge: unreadMessagesCount, roles: ['ADMIN', 'EDITOR'] },
+    { label: 'Pelanggan / Subscriber', path: '/dashboard/subscribers', icon: 'fa-paper-plane', roles: ['ADMIN', 'EDITOR'] },
+    { label: 'Komentar Pembaca', path: '/dashboard/comments', icon: 'fa-comments', badge: recentComments.length, roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: 'Pesan Masuk (Inbox)', path: '/dashboard/messages', icon: 'fa-envelope', badge: unreadMessagesCount, roles: ['ADMIN', 'EDITOR'] },
     { label: 'Pengaturan Website', path: '/dashboard/settings', icon: 'fa-sliders', roles: ['ADMIN'] },
   ]
 
   const navItems = allNavItems.filter(item => !item.roles || item.roles.includes(userRole))
   const isRouteForbidden = !canAccessRoute(userRole, router.pathname)
 
-  if (authLoading || !currentUser) {
-    const isDark = themeMode === 'dark'
+  if (!mounted || authLoading || !currentUser) {
     return (
       <div style={{
         minHeight: '100vh',
@@ -397,9 +372,9 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        background: isDark ? '#090d16' : '#f8fafc',
-        color: isDark ? '#f8fafc' : '#09090b',
-        fontFamily: 'Inter, system-ui, sans-serif'
+        background: '#f8fafc',
+        color: '#09090b',
+        fontFamily: "'Inter', system-ui, sans-serif"
       }}>
         <Head>
           <title>Memuat Panel Dashboard...</title>
@@ -407,12 +382,12 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
         <div style={{
           width: '36px',
           height: '36px',
-          border: `3px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)'}`,
+          border: '3px solid rgba(0,0,0,0.08)',
           borderTopColor: '#da0105',
           borderRadius: '50%',
           animation: 'dashSpin 0.7s linear infinite'
         }} />
-        <p style={{ marginTop: '16px', color: isDark ? '#94a3b8' : '#64748b', fontSize: '13.5px', fontWeight: 500 }}>
+        <p style={{ marginTop: '16px', color: '#64748b', fontSize: '13.5px', fontWeight: 500 }}>
           Memverifikasi hak akses...
         </p>
         <style jsx>{`
@@ -429,6 +404,10 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
       <Head>
         <title>{title} &bull; {siteSettings.site_title || 'Dua Narasi'} Control Panel</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon-192.png" sizes="192x192" type="image/png" />
+        <link rel="icon" href="/favicon-512.png" sizes="512x512" type="image/png" />
+        <link rel="apple-touch-icon" href="/favicon-192.png" sizes="192x192" />
+        <link rel="shortcut icon" href="/favicon-192.png" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
       </Head>
 
@@ -445,46 +424,39 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
         <aside className={`dash-sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           {/* Logo Header */}
           <div className="dash-sidebar-header">
-            <Link href="/" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', width: '100%' }}>
-              {(siteSettings.logo_dashboard || siteSettings.site_logo) ? (
-                <img
-                  src={
-                    (siteSettings.logo_dashboard || siteSettings.site_logo).startsWith('http') || (siteSettings.logo_dashboard || siteSettings.site_logo).startsWith('/')
-                      ? (siteSettings.logo_dashboard || siteSettings.site_logo)
-                      : `/assets/img/logo/${siteSettings.logo_dashboard || siteSettings.site_logo}`
-                  }
-                  alt={siteSettings.site_title || "Logo"}
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    objectFit: 'contain',
-                    flexShrink: 0
-                  }}
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none'
-                  }}
-                />
-              ) : (
-                <div
-                  className="dash-sidebar-logo-icon"
-                  style={{
-                    background: '#09090b',
-                    color: '#fff',
-                    borderRadius: '8px',
-                    flexShrink: 0
-                  }}
-                >
-                  <i className="fa fa-newspaper-o"></i>
-                </div>
-              )}
-              <div className="dash-sidebar-logo-text" style={{ minWidth: 0, flex: 1 }}>
-                <span className="dash-sidebar-logo-title" style={{ fontSize: '15px', fontWeight: 800, color: 'var(--dash-text-main)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
-                  {siteSettings.site_title || 'Dua Narasi'}
-                </span>
-                <span className="dash-sidebar-logo-subtitle" style={{ color: 'var(--dash-text-muted)', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
-                  {siteSettings.site_tagline || 'Editorial Control Panel'}
-                </span>
-              </div>
+            <Link
+              href="/"
+              target="_blank"
+              title={`${siteSettings.site_title || 'Dua Narasi'} - Kunjungi Website`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                textDecoration: 'none',
+                maxWidth: 'calc(100% - 32px)',
+                height: '100%',
+                overflow: 'hidden'
+              }}
+            >
+              <img
+                src={getImageUrl(
+                  themeMode === 'dark'
+                    ? (siteSettings.logo_header_dark || siteSettings.logo_dashboard || siteSettings.logo_header || siteSettings.site_logo)
+                    : (siteSettings.logo_dashboard || siteSettings.logo_header || siteSettings.site_logo),
+                  themeMode === 'dark' ? '/assets/img/logo/logo-white.webp' : '/assets/img/logo/logo.webp'
+                )}
+                alt={siteSettings.site_title || "Logo"}
+                style={{
+                  maxHeight: '38px',
+                  maxWidth: '180px',
+                  width: 'auto',
+                  height: 'auto',
+                  objectFit: 'contain',
+                  display: 'block'
+                }}
+                onError={(e) => {
+                  e.currentTarget.src = themeMode === 'dark' ? '/assets/img/logo/logo-white.webp' : '/assets/img/logo/logo.webp'
+                }}
+              />
             </Link>
 
             {/* Mobile Close Button inside Sidebar */}
@@ -627,7 +599,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                   </DropdownMenuItem>
                 )}
 
-                <DropdownMenuItem href="/dashboard/posts" icon="fa-newspaper-o">
+                <DropdownMenuItem href="/dashboard/posts" icon="fa-newspaper">
                   {userRole === 'AUTHOR' ? 'Artikel Saya' : 'Semua Artikel'}
                 </DropdownMenuItem>
 
@@ -691,7 +663,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                   href="/dashboard/posts/new"
                   className={`dash-topbar-link ${router.pathname === '/dashboard/posts/new' ? 'active' : ''}`}
                 >
-                  <i className="fa fa-pencil" style={{ marginRight: '6px' }}></i> Tulis Berita
+                  <i className="fa fa-edit" style={{ marginRight: '6px' }}></i> Tulis Berita
                 </Link>
               </div>
             </div>
@@ -721,7 +693,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                 title={themeMode === 'light' ? 'Ganti ke Dark Mode' : 'Ganti ke Light Mode'}
                 aria-label="Toggle Theme"
               >
-                <i className={`fa ${themeMode === 'light' ? 'fa-sun-o' : 'fa-moon-o'}`} style={{ color: themeMode === 'light' ? '#f59e0b' : '#94a3b8' }}></i>
+                <i className={`fa ${themeMode === 'light' ? 'fa-sun' : 'fa-moon'}`} style={{ fontSize: '16px', color: themeMode === 'light' ? '#f59e0b' : '#38bdf8' }}></i>
               </button>
 
               {/* Unified Notification Center (Comments + Messages) */}
@@ -732,8 +704,9 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                   className="dash-icon-btn"
                   title="Pusat Notifikasi (Komentar & Pesan Masuk)"
                   style={{ position: 'relative' }}
+                  aria-label="Pusat Notifikasi"
                 >
-                  <i className="fa fa-bell-o"></i>
+                  <i className="fa fa-bell" style={{ fontSize: '16px' }}></i>
                   {totalUnreadNotifCount > 0 && (
                     <span className="dash-badge-dot" style={{ background: '#da0105', color: '#fff', fontSize: '10px', fontWeight: 800 }}>
                       {totalUnreadNotifCount > 99 ? '99+' : totalUnreadNotifCount}
@@ -846,7 +819,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     <div style={{ maxHeight: '340px', overflowY: 'auto' }}>
                       {filteredNotifications.length === 0 ? (
                         <div style={{ padding: '32px 16px', textAlign: 'center', color: 'var(--dash-text-muted)', fontSize: '13px' }}>
-                          <i className="fa fa-bell-slash-o" style={{ fontSize: '24px', marginBottom: '8px', display: 'block', opacity: 0.5 }}></i>
+                          <i className="fa fa-bell-slash" style={{ fontSize: '24px', marginBottom: '8px', display: 'block', opacity: 0.5 }}></i>
                           Tidak ada notifikasi {notifFilter === 'unread' ? 'belum dibaca' : ''} saat ini
                         </div>
                       ) : (
@@ -1063,7 +1036,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
                     </DropdownMenuItem>
                   )}
 
-                  <DropdownMenuItem href="/dashboard/posts" icon="fa-newspaper-o">
+                  <DropdownMenuItem href="/dashboard/posts" icon="fa-newspaper">
                     {userRole === 'AUTHOR' ? 'Artikel Saya' : 'Semua Artikel'}
                   </DropdownMenuItem>
 

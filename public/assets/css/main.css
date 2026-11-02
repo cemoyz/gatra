@@ -7223,15 +7223,10 @@ body {
 
 /* Header Logo */
 .ta-header .ta-logo img {
-  height: 36px !important;
+  height: 38px !important;
   width: auto !important;
-  max-width: none !important;
+  max-width: 240px !important;
   object-fit: contain;
-}
-.ta-header .ta-logo img.hide-on-dark {
-  display: none !important;
-}
-.ta-header .ta-logo img.show-on-dark {
   display: inline-block !important;
 }
 

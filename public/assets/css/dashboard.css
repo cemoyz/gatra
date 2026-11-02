@@ -1318,3 +1318,24 @@ button.dash-btn-danger {
   }
 }
 
+/* ============================================================
+   Font Awesome 4 & 5 Icon Compatibility Mappings for Dashboard
+   ============================================================ */
+.fa-bell-o:before, .fa-bell:before { content: "\f0f3"; }
+.fa-bell-slash-o:before, .fa-bell-slash:before { content: "\f1f6"; }
+.fa-sun-o:before, .fa-sun:before { content: "\f185"; }
+.fa-moon-o:before, .fa-moon:before { content: "\f186"; }
+.fa-tachometer:before, .fa-tachometer-alt:before, .fa-dashboard:before { content: "\f0e4"; }
+.fa-newspaper-o:before, .fa-newspaper:before { content: "\f1ea"; }
+.fa-pencil-square-o:before, .fa-edit:before, .fa-pen-square:before { content: "\f044"; }
+.fa-pencil:before, .fa-pencil-alt:before { content: "\f303"; }
+.fa-folder-open-o:before, .fa-folder-open:before { content: "\f07c"; }
+.fa-user-circle-o:before, .fa-user-circle:before { content: "\f2bd"; }
+.fa-paper-plane-o:before, .fa-paper-plane:before { content: "\f1d8"; }
+.fa-comments-o:before, .fa-comments:before { content: "\f086"; }
+.fa-envelope-o:before, .fa-envelope:before { content: "\f0e0"; }
+.fa-sliders:before, .fa-sliders-h:before { content: "\f1de"; }
+.fa-external-link:before, .fa-external-link-alt:before { content: "\f08e"; }
+.fa-sign-out:before, .fa-sign-out-alt:before { content: "\f08b"; }
+
+

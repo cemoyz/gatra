@@ -36,6 +36,7 @@ export default function EditPost() {
     content: '',
     status: 'PUBLISHED',
     featured: false,
+    isBreaking: false,
     views: 0,
     postType: 'standard',
     layout: 'right-sidebar',
@@ -132,6 +133,7 @@ export default function EditPost() {
             content: p.content || '',
             status: p.status || 'PUBLISHED',
             featured: Boolean(p.featured),
+            isBreaking: Array.isArray(p.tags) && p.tags.some(t => (t.slug && t.slug.toLowerCase().includes('breaking')) || (t.name && t.name.toLowerCase().includes('breaking'))),
             views: p.views || 0,
             postType: p.postType || 'standard',
             layout: p.layout || 'right-sidebar',
@@ -149,6 +151,22 @@ export default function EditPost() {
       .catch(() => setToast({ msg: 'Failed to fetch post', type: 'error' }))
       .finally(() => setLoading(false))
   }, [id, currentUser])
+
+  const handleBreakingToggle = (checked) => {
+    let currentTags = formData.tagsInput ? formData.tagsInput.split(',').map(t => t.trim()).filter(Boolean) : []
+    if (checked) {
+      if (!currentTags.some(t => t.toLowerCase() === 'breaking news')) {
+        currentTags.push('Breaking News')
+      }
+    } else {
+      currentTags = currentTags.filter(t => !t.toLowerCase().includes('breaking') && !['kilas-berita', 'urgent'].includes(t.toLowerCase()))
+    }
+    setFormData(prev => ({
+      ...prev,
+      isBreaking: checked,
+      tagsInput: currentTags.join(', ')
+    }))
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -562,6 +580,19 @@ export default function EditPost() {
                       />
                       <label htmlFor="featured" style={{ cursor: 'pointer', fontSize: '14px', margin: 0, color: 'var(--dash-text-main)' }}>
                         Featured Article
+                      </label>
+                    </div>
+
+                    <div className="dash-form-group" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <input
+                        type="checkbox"
+                        id="isBreaking"
+                        checked={formData.isBreaking || false}
+                        onChange={(e) => handleBreakingToggle(e.target.checked)}
+                        style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#da0105' }}
+                      />
+                      <label htmlFor="isBreaking" style={{ cursor: 'pointer', fontSize: '14px', margin: 0, color: '#da0105', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <i className="fa fa-bolt" /> Tandai sebagai Breaking News
                       </label>
                     </div>
 

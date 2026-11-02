@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { requireApiAuth, ROLES } from '@/lib/rbac-server'
+import { triggerAutoIndexing } from '@/lib/indexing'
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -243,6 +244,10 @@ export default async function handler(req, res) {
           tags: true
         }
       })
+
+      if (newPost.status === 'PUBLISHED') {
+        triggerAutoIndexing(newPost, 'create')
+      }
 
       return res.status(201).json({ success: true, post: newPost })
     } catch (error) {

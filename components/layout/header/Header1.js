@@ -4,13 +4,15 @@ import { useState } from "react"
 import Menu from "../Menu"
 import SocialLinks from "@/components/elements/SocialLinks"
 import { getImageUrl } from "@/lib/imageUtils"
+import { useSettings } from "@/context/SettingsContext"
 
-export default function Header1({ scroll, handleMobileMenu, settings = {} }) {
+export default function Header1({ scroll, handleMobileMenu, settings: propSettings = {} }) {
     const router = useRouter()
     const [searchQuery, setSearchQuery] = useState("")
+    const { settings: ctxSettings } = useSettings()
 
+    const settings = { ...(ctxSettings || {}), ...(propSettings || {}) }
     const logoLight = getImageUrl(settings.logo_header || settings.site_logo, "/assets/img/logo/logo.webp")
-    const logoDark = getImageUrl(settings.logo_header_dark, "/assets/img/logo/logo-white.webp")
 
     const handleSearch = (e) => {
         e.preventDefault()
@@ -32,8 +34,20 @@ export default function Header1({ scroll, handleMobileMenu, settings = {} }) {
                                 <div className="ta-header__top__center">
                                     <div className="ta-logo">
                                         <Link href="/">
-                                            <img className="hide-on-dark" src={logoLight} alt={settings.site_title || "logo"} />
-                                            <img className="show-on-dark" src={logoDark} alt={settings.site_title || "logo"} />
+                                            <img
+                                                src={logoLight}
+                                                alt={settings.site_title || "Logo"}
+                                                style={{
+                                                    height: '38px',
+                                                    width: 'auto',
+                                                    maxWidth: '220px',
+                                                    objectFit: 'contain',
+                                                    display: 'inline-block'
+                                                }}
+                                                onError={(e) => {
+                                                    e.currentTarget.src = "/assets/img/logo/logo.webp"
+                                                }}
+                                            />
                                         </Link>
                                     </div>
                                 </div>

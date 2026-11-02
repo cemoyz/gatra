@@ -31,6 +31,10 @@ const defaultSettings = {
     'blog-2-1.webp', 'blog-2-2.webp', 'blog-2-3.webp', 'blog-2-4.webp',
     'blog-2-5.webp', 'blog-2-6.webp', 'blog-2-7.webp', 'blog-2-8.webp'
   ]),
+  // Breaking News Settings
+  breaking_ticker_enabled: 'true',
+  breaking_ticker_title: 'BREAKING NEWS',
+  breaking_ticker_custom_text: '',
   // Homepage Sections Management & Article Filtering
   show_featured_posts: 'true',
   title_featured_posts: 'Featured Post',
@@ -100,7 +104,78 @@ const defaultSettings = {
   contact_address_2: 'Jl. R.E. Martadinata No. 45, Bandung, Jawa Barat',
   contact_map_url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.28298717812!2d106.759478!3d-6.2297465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e49fe3e071%3A0x2a597a7a58e235e1!2sJakarta!5e0!3m2!1sid!2sid!4v1656749326947!5m2!1sid!2sid',
   contact_form_title: 'Kirim Pesan Langsung',
-  contact_form_subtitle: 'Isi formulir di bawah ini untuk mengirimkan pertanyaan atau kerja sama langsung ke kotak masuk tim kami.'
+  contact_form_subtitle: 'Isi formulir di bawah ini untuk mengirimkan pertanyaan atau kerja sama langsung ke kotak masuk tim kami.',
+  // Dynamic About Us Page Settings
+  about_breadcrumb: 'Tentang Kami',
+  about_badge: 'Tentang Dua Narasi',
+  about_title: 'Membangun Jurnalisme Berimbang dan Kritis',
+  about_description: 'Dua Narasi hadir sebagai platform media digital independen yang berkomitmen menyajikan fakta dari berbagai sudut pandang secara berimbang, mendalam, dan bertanggung jawab bagi masyarakat luas.',
+  about_image: '/assets/img/bg/about-1.webp',
+  about_video_url: 'https://www.youtube.com/watch?v=4xe72U7mXNg',
+  about_show_video: 'true',
+  about_tabs: JSON.stringify([
+    {
+      title: 'Visi Kami',
+      content: 'Menjadi media digital rujukan utama dalam menghadirkan informasi yang akurat, berimbang, dan mencerdaskan kehidupan masyarakat tanpa tendensi polarisasi.'
+    },
+    {
+      title: 'Misi Kami',
+      content: 'Menyajikan liputan jurnalistik berkualitas dengan etika ketat, memfasilitasi dialog publik yang konstruktif, serta memberikan ruang setara bagi beragam fakta dan gagasan berharga.'
+    },
+    {
+      title: 'Independensi & Nilai',
+      content: 'Kami memegang teguh prinsip independensi ruang redaksi, verifikasi ketat terhadap setiap sumber informasi, keterbukaan koreksi, dan kepatuhan mutlak terhadap Kode Etik Jurnalistik.'
+    }
+  ]),
+  about_tab1_title: 'Visi Kami',
+  about_tab1_content: 'Menjadi media digital rujukan utama dalam menghadirkan informasi yang akurat, berimbang, dan mencerdaskan kehidupan masyarakat tanpa tendensi polarisasi.',
+  about_tab2_title: 'Misi Kami',
+  about_tab2_content: 'Menyajikan liputan jurnalistik berkualitas dengan etika ketat, memfasilitasi dialog publik yang konstruktif, serta memberikan ruang setara bagi beragam fakta dan gagasan berharga.',
+  about_tab3_title: 'Independensi & Nilai',
+  about_tab3_content: 'Kami memegang teguh prinsip independensi ruang redaksi, verifikasi ketat terhadap setiap sumber informasi, keterbukaan koreksi, dan kepatuhan mutlak terhadap Kode Etik Jurnalistik.',
+  // Dynamic Cards / Feature Pillars Section
+  about_show_cards: 'true',
+  about_cards_badge: 'Pilar & Nilai Kami',
+  about_cards_title: 'Pilar Jurnalisme & Nilai Utama',
+  about_cards_subtitle: 'Prinsip independensi, integritas fakta, dan keberimbangan yang menjadi komitmen teguh Dua Narasi.',
+  about_cards: JSON.stringify([
+    {
+      icon: 'fa-balance-scale',
+      title: 'Dua Sudut Pandang',
+      description: 'Menyajikan fakta dari dua sudut pandang objektif untuk memberikan pemahaman utuh tanpa menggiring opini.'
+    },
+    {
+      icon: 'fa-check-circle',
+      title: 'Verifikasi Berlapis',
+      description: 'Setiap informasi dan laporan melalui proses fact-checking ketat oleh dewan editor sebelum dipublikasikan.'
+    },
+    {
+      icon: 'fa-shield',
+      title: 'Independen & Kredibel',
+      description: 'Bebas dari intervensi kelompok kepentingan, partisan politik, maupun tekanan komersial yang merusak objektivitas.'
+    },
+    {
+      icon: 'fa-users',
+      title: 'Berpihak pada Publik',
+      description: 'Berkomitmen menyuarakan aspirasi masyarakat, transparansi kebijakan publik, dan nilai-nilai demokrasi.'
+    }
+  ]),
+  about_show_team: 'true',
+  about_team_title: 'Dewan Redaksi & Tim Penulis',
+  about_team_subtitle: 'Mengenal sosok-sosok profesional berintegritas di balik investigasi dan kurasi informasi Dua Narasi.',
+  about_show_brands: 'true',
+  about_brands_title: 'Mitra & Media Partner',
+  about_brands_subtitle: 'Telah dipercaya dan berkolaborasi bersama beragam institusi dan media terkemuka.',
+  about_brands: JSON.stringify([
+    { name: 'Mitra 1', img: '/assets/img/brand/brand-1.webp', url: '' },
+    { name: 'Mitra 2', img: '/assets/img/brand/brand-2.webp', url: '' },
+    { name: 'Mitra 3', img: '/assets/img/brand/brand-3.webp', url: '' },
+    { name: 'Mitra 4', img: '/assets/img/brand/brand-4.webp', url: '' },
+    { name: 'Mitra 5', img: '/assets/img/brand/brand-5.webp', url: '' }
+  ]),
+  about_show_newsletter: 'true',
+  about_newsletter_title: 'Dapatkan Pembaruan Berita Setiap Minggu',
+  about_newsletter_subtitle: 'Berlangganan buletin kabar terbaru dan analisis eksklusif Dua Narasi langsung di email Anda.'
 }
 
 let memoryCache = null

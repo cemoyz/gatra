@@ -4,9 +4,11 @@ import BlogSidebar from "@/components/sections/BlogSidebar"
 import MargueePost from "@/components/sections/MargueePost"
 import Newsletter1 from "@/components/sections/Newsletter1"
 import EditorialWelcome from "@/components/sections/EditorialWelcome"
+import BreakingNewsTicker from "@/components/elements/BreakingNewsTicker"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
+import prisma from "@/lib/prisma"
 
 const Home2 = dynamic(() => import('./index-2'), { ssr: false })
 const Home3 = dynamic(() => import('./index-3'), { ssr: false })
@@ -160,6 +162,9 @@ function Home1({ settings = {} }) {
                 )}
                 {/* featured post area end */}
 
+                {/* Breaking News Ticker below Hero Section */}
+                <BreakingNewsTicker settings={settings} container={true} />
+
                 {/* 2. trending post start */}
                 {showTrending && (
                     <div className="rcp-area pt-100">
@@ -311,9 +316,9 @@ function Home1({ settings = {} }) {
     )
 }
 
-export default function Home() {
-    const [homeStyle, setHomeStyle] = useState('index-1')
-    const [settings, setSettings] = useState({})
+export default function Home({ initialSettings = {} }) {
+    const [homeStyle, setHomeStyle] = useState(initialSettings.home_style || 'index-1')
+    const [settings, setSettings] = useState(initialSettings)
     const [isLoaded, setIsLoaded] = useState(false)
 
     useEffect(() => {
@@ -357,5 +362,27 @@ export default function Home() {
         case 'index-1':
         default:
             return <Home1 settings={settings} />
+    }
+}
+
+export async function getServerSideProps() {
+    try {
+        const records = await prisma.setting.findMany()
+        const settings = {}
+        records.forEach(item => {
+            settings[item.key] = item.value
+        })
+        return {
+            props: {
+                initialSettings: settings
+            }
+        }
+    } catch (err) {
+        console.error('Error fetching settings in getServerSideProps:', err)
+        return {
+            props: {
+                initialSettings: {}
+            }
+        }
     }
 }

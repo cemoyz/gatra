@@ -24,7 +24,19 @@ function generateSiteMap({ domain, posts, categories, authors }) {
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>${cleanDomain}/breaking-news</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>${cleanDomain}/about-us</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>${cleanDomain}/pedoman-media-siber</loc>
     <lastmod>${currentDate}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

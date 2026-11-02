@@ -1,45 +1,76 @@
 import prisma from '@/lib/prisma'
 import { sendDashboardEvent } from '@/lib/events'
 import { requireApiAuth, ROLES } from '@/lib/rbac-server'
+import { triggerAutoIndexing } from '@/lib/indexing'
 
 // In-memory de-duplication cache with 5s cooldown per IP+Post to prevent React StrictMode double mounts
 const recentViewsCache = new Map()
 
 export default async function handler(req, res) {
   const { id } = req.query
-  const postId = parseInt(id)
-
-  if (isNaN(postId)) {
-    return res.status(400).json({ success: false, message: 'Invalid post ID' })
+  if (!id) {
+    return res.status(400).json({ success: false, message: 'Post identifier is required' })
   }
+
+  const decodedId = typeof id === 'string' ? decodeURIComponent(id).trim() : String(id)
+  const isNumeric = /^\d+$/.test(decodedId)
+  const parsedId = isNumeric ? parseInt(decodedId) : NaN
+
+  const whereCondition = isNumeric
+    ? { id: parsedId }
+    : {
+        OR: [
+          { slug: { equals: decodedId, mode: 'insensitive' } },
+          { slug: { equals: decodedId.toLowerCase().replace(/[^a-z0-9]+/g, '-'), mode: 'insensitive' } },
+          { title: { equals: decodedId, mode: 'insensitive' } }
+        ]
+      }
 
   // GET single post with relations and increment view counter
   if (req.method === 'GET') {
     try {
+      let post = await prisma.post.findFirst({
+        where: whereCondition,
+        include: {
+          category: true,
+          author: true,
+          tags: true,
+          comments: {
+            orderBy: { createdAt: 'desc' }
+          }
+        }
+      })
+
+      if (!post) {
+        return res.status(404).json({ success: false, message: 'Post not found' })
+      }
+
+      const postId = post.id
       const clientIp = req.headers['cf-connecting-ip'] || (typeof req.headers['x-forwarded-for'] === 'string' ? req.headers['x-forwarded-for'].split(',')[0].trim() : null) || req.socket?.remoteAddress || '127.0.0.1'
       const viewKey = `${clientIp}_${postId}`
       const now = Date.now()
       const lastViewTime = recentViewsCache.get(viewKey)
       const shouldIncrement = !lastViewTime || (now - lastViewTime > 5000)
 
-      let post
       if (shouldIncrement) {
         recentViewsCache.set(viewKey, now)
         if (recentViewsCache.size > 2000) recentViewsCache.clear()
 
         // 1. Increment post views atomically in PostgreSQL
-        post = await prisma.post.update({
-          where: { id: postId },
-          data: { views: { increment: 1 } },
-          include: {
-            category: true,
-            author: true,
-            tags: true,
-            comments: {
-              orderBy: { createdAt: 'desc' }
+        try {
+          post = await prisma.post.update({
+            where: { id: postId },
+            data: { views: { increment: 1 } },
+            include: {
+              category: true,
+              author: true,
+              tags: true,
+              comments: {
+                orderBy: { createdAt: 'desc' }
+              }
             }
-          }
-        }).catch(async () => null)
+          })
+        } catch (e) {}
 
         // 2. Detect device type from User-Agent and increment daily tracking
         const userAgent = req.headers['user-agent'] || ''
@@ -66,24 +97,6 @@ export default async function handler(req, res) {
         sendDashboardEvent('view_incremented', { postId, isMobile })
       }
 
-      if (!post) {
-        post = await prisma.post.findUnique({
-          where: { id: postId },
-          include: {
-            category: true,
-            author: true,
-            tags: true,
-            comments: {
-              orderBy: { createdAt: 'desc' }
-            }
-          }
-        })
-      }
-
-      if (!post) {
-        return res.status(404).json({ success: false, message: 'Post not found' })
-      }
-
       const formattedPost = {
         ...post,
         category: post.category?.name || 'General',
@@ -106,10 +119,11 @@ export default async function handler(req, res) {
     if (!authUser) return
 
     try {
-      const existingPost = await prisma.post.findUnique({ where: { id: postId } })
+      const existingPost = await prisma.post.findFirst({ where: whereCondition })
       if (!existingPost) {
         return res.status(404).json({ success: false, message: 'Post not found' })
       }
+      const postId = existingPost.id
 
       if (authUser.role === ROLES.AUTHOR) {
         const isOwner = existingPost.authorId === authUser.id
@@ -177,17 +191,51 @@ export default async function handler(req, res) {
       if (gallery !== undefined) updateData.gallery = gallery
       if (layout !== undefined) updateData.layout = layout
 
+      const breakingSlugs = ['breaking-news', 'breaking', 'kilas-berita', 'urgent']
+
       if (Array.isArray(tags)) {
+        let tagObjects = tags.map(tagName => {
+          const cleanName = typeof tagName === 'string' ? tagName.trim() : (tagName.name || '')
+          const cleanSlug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+          return { name: cleanName, slug: cleanSlug }
+        }).filter(t => t.name.length > 0)
+
+        if (req.body.isBreaking !== undefined) {
+          const isB = Boolean(req.body.isBreaking)
+          tagObjects = tagObjects.filter(t => 
+            !breakingSlugs.includes(t.slug.toLowerCase()) && 
+            !t.name.toLowerCase().includes('breaking')
+          )
+          if (isB) {
+            tagObjects.push({ name: 'Breaking News', slug: 'breaking-news' })
+          }
+        }
+
         updateData.tags = {
           set: [],
-          connectOrCreate: tags.map(tagName => {
-            const cleanName = typeof tagName === 'string' ? tagName.trim() : tagName.name
-            const cleanSlug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-            return {
-              where: { slug: cleanSlug },
-              create: { name: cleanName, slug: cleanSlug }
-            }
-          })
+          connectOrCreate: tagObjects.map(t => ({
+            where: { slug: t.slug },
+            create: { name: t.name, slug: t.slug }
+          }))
+        }
+      } else if (req.body.isBreaking !== undefined) {
+        const currentPostTags = await prisma.tag.findMany({
+          where: { posts: { some: { id: postId } } }
+        })
+        const isB = Boolean(req.body.isBreaking)
+        const filteredTags = currentPostTags.filter(t => 
+          !breakingSlugs.includes(t.slug.toLowerCase()) && 
+          !t.name.toLowerCase().includes('breaking')
+        )
+        if (isB) {
+          filteredTags.push({ name: 'Breaking News', slug: 'breaking-news' })
+        }
+        updateData.tags = {
+          set: [],
+          connectOrCreate: filteredTags.map(t => ({
+            where: { slug: t.slug },
+            create: { name: t.name, slug: t.slug }
+          }))
         }
       }
 
@@ -202,6 +250,12 @@ export default async function handler(req, res) {
         }
       })
 
+      if (updatedPost.status === 'PUBLISHED') {
+        triggerAutoIndexing(updatedPost, 'update')
+      } else if (existingPost.status === 'PUBLISHED' && updatedPost.status !== 'PUBLISHED') {
+        triggerAutoIndexing(updatedPost, 'delete')
+      }
+
       return res.status(200).json({ success: true, post: updatedPost })
     } catch (error) {
       console.error('Error updating post with relations:', error)
@@ -215,10 +269,11 @@ export default async function handler(req, res) {
     if (!authUser) return
 
     try {
-      const existingPost = await prisma.post.findUnique({ where: { id: postId } })
+      const existingPost = await prisma.post.findFirst({ where: whereCondition })
       if (!existingPost) {
         return res.status(404).json({ success: false, message: 'Post not found' })
       }
+      const postId = existingPost.id
 
       if (authUser.role === ROLES.AUTHOR) {
         const isOwner = existingPost.authorId === authUser.id

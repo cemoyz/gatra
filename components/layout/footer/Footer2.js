@@ -53,10 +53,10 @@ export default function Footer2() {
                             <div className="ta-footer-widget widget">
                                 <h4 className="widget-title">Company</h4>
                                 <ul>
-                                    <li><Link href="/about-us">About Us</Link></li>
-                                    <li><Link href="/contact">Press</Link></li>
-                                    <li><Link href="/contact">Support</Link></li>
-                                    <li><Link href="/contact">Get In Touch</Link></li>
+                                    <li><Link href="/about-us">Tentang Kami</Link></li>
+                                    <li><Link href="/pedoman-media-siber">Pedoman Media Siber</Link></li>
+                                    <li><Link href="/contact">Kontak</Link></li>
+                                    <li><Link href="/dashboard">Panel Admin</Link></li>
                                 </ul>
                             </div>
                         </div>

@@ -67,7 +67,7 @@ export default function Layout({ headerStyle, footerStyle, headTitle, breadcrumb
     }, [])
     return (
         <>
-            <PageHead headTitle={headTitle}/>
+            <PageHead headTitle={headTitle} settings={settings} />
             <div className="ta-main-wrapper" dir={rtl?"rtl":""}>
 
                 <BackToTop />

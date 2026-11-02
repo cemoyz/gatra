@@ -37,6 +37,8 @@ export default function PostsManagement() {
   const [toast, setToast] = useState(null)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [togglingId, setTogglingId] = useState(null)
+  const [filterBreakingOnly, setFilterBreakingOnly] = useState(false)
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type })
@@ -120,6 +122,59 @@ export default function PostsManagement() {
     setSelectedCat('all')
     setSelectedStatus('all')
     setSelectedType('all')
+    setFilterBreakingOnly(false)
+  }
+
+  const handleToggleBreaking = async (post) => {
+    if (!post || !post.id || togglingId === post.id) return
+
+    const isCurrentlyBreaking = Array.isArray(post.tags) && post.tags.some(
+      t => (t.slug && t.slug.toLowerCase().includes('breaking')) || (t.name && t.name.toLowerCase().includes('breaking'))
+    )
+    const targetStatus = !isCurrentlyBreaking
+
+    setTogglingId(post.id)
+
+    // Optimistic UI update
+    const previousPosts = [...posts]
+    const updatedPosts = posts.map(p => {
+      if (p.id === post.id) {
+        let newTags = Array.isArray(p.tags) ? [...p.tags] : []
+        if (targetStatus) {
+          if (!newTags.some(t => t.name.toLowerCase() === 'breaking news')) {
+            newTags.push({ id: `temp-${Date.now()}`, name: 'Breaking News', slug: 'breaking-news' })
+          }
+        } else {
+          newTags = newTags.filter(t => !['breaking-news', 'breaking'].includes(t.slug?.toLowerCase()) && t.name?.toLowerCase() !== 'breaking news')
+        }
+        return { ...p, tags: newTags }
+      }
+      return p
+    })
+    setPosts(updatedPosts)
+    cachedPosts = updatedPosts
+
+    try {
+      const res = await fetch(`/api/posts/${post.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isBreaking: targetStatus })
+      })
+      const data = await res.json()
+      if (data.success) {
+        showToast(targetStatus ? '⚡ Artikel berhasil ditandai sebagai Breaking News' : 'Status Breaking News dinonaktifkan')
+      } else {
+        setPosts(previousPosts)
+        cachedPosts = previousPosts
+        showToast(data.message || 'Gagal mengubah status Breaking News', 'error')
+      }
+    } catch (err) {
+      setPosts(previousPosts)
+      cachedPosts = previousPosts
+      showToast('Terjadi kesalahan jaringan', 'error')
+    } finally {
+      setTogglingId(null)
+    }
   }
 
   const handleDelete = async () => {
@@ -159,7 +214,11 @@ export default function PostsManagement() {
     return `/blog/${post.id}`
   }
 
-  const isFiltered = search || selectedCat !== 'all' || selectedStatus !== 'all' || selectedType !== 'all'
+  const isFiltered = search || selectedCat !== 'all' || selectedStatus !== 'all' || selectedType !== 'all' || filterBreakingOnly
+
+  const displayedPosts = filterBreakingOnly
+    ? posts.filter(p => Array.isArray(p.tags) && p.tags.some(t => (t.slug && t.slug.toLowerCase().includes('breaking')) || (t.name && t.name.toLowerCase().includes('breaking'))))
+    : posts
 
   return (
     <DashboardLayout title="Manajemen Berita & Artikel">
@@ -279,6 +338,32 @@ export default function PostsManagement() {
                 <SelectItem value="DRAFT">Draf (Draft)</SelectItem>
               </SelectContent>
             </Select>
+
+            {/* Quick Breaking News Filter Button */}
+            <button
+              type="button"
+              onClick={() => setFilterBreakingOnly(!filterBreakingOnly)}
+              className={`dash-btn ${filterBreakingOnly ? 'dash-btn-primary' : 'dash-btn-outline'}`}
+              style={{
+                height: '36px',
+                padding: '0 12px',
+                fontSize: '12px',
+                fontWeight: 700,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                color: filterBreakingOnly ? '#ffffff' : '#da0105',
+                borderColor: '#da0105',
+                backgroundColor: filterBreakingOnly ? '#da0105' : 'transparent',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap'
+              }}
+              title="Filter khusus artikel Breaking News"
+            >
+              <i className="fa fa-bolt" />
+              <span>{filterBreakingOnly ? 'Semua Berita' : 'Hanya Breaking'}</span>
+            </button>
           </div>
         </CardHeader>
 
@@ -294,13 +379,16 @@ export default function PostsManagement() {
                 <th style={{ padding: '12px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Penulis</th>
                 <th style={{ padding: '12px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Pembaca</th>
                 <th style={{ padding: '12px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700 }}>Status</th>
+                <th style={{ padding: '12px 14px', fontSize: '12px', color: '#da0105', fontWeight: 700, textAlign: 'center', width: '90px' }}>
+                  <i className="fa fa-bolt" /> Breaking
+                </th>
                 <th style={{ padding: '12px 18px', fontSize: '12px', color: 'var(--dash-text-muted)', fontWeight: 700, textAlign: 'right' }}>Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {posts.length === 0 && !loading ? (
+              {displayedPosts.length === 0 && !loading ? (
                 <tr>
-                  <td colSpan="8">
+                  <td colSpan="9">
                     <EmptyState
                       icon="fa-newspaper-o"
                       title="Tidak Ada Artikel Ditemukan"
@@ -309,90 +397,130 @@ export default function PostsManagement() {
                   </td>
                 </tr>
               ) : (
-                posts.map((post, idx) => (
-                  <tr key={post.id} style={{ borderBottom: '1px solid var(--dash-border)' }}>
-                    <td style={{ padding: '14px 18px', color: 'var(--dash-text-muted)', fontSize: '12.5px', fontWeight: 600 }}>
-                      {(pagination.page - 1) * 15 + idx + 1}
-                    </td>
-                    <td style={{ padding: '14px 18px', maxWidth: '360px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <img
-                          src={getImageUrl(post.img)}
-                          alt={post.title || ''}
-                          style={{
-                            width: '60px',
-                            height: '42px',
-                            objectFit: 'cover',
-                            borderRadius: '8px',
-                            backgroundColor: 'var(--dash-muted-bg)',
-                            flexShrink: 0,
-                            border: '1px solid var(--dash-border)'
-                          }}
-                          onError={(e) => {
-                            e.currentTarget.src = '/assets/img/blog/blog-2-1.webp'
-                          }}
-                        />
-                        <div style={{ overflow: 'hidden' }}>
-                          <Link
-                            href={`/dashboard/posts/edit/${post.id}`}
+                displayedPosts.map((post, idx) => {
+                  const isPostBreaking = Array.isArray(post.tags) && post.tags.some(
+                    t => (t.slug && t.slug.toLowerCase().includes('breaking')) || (t.name && t.name.toLowerCase().includes('breaking'))
+                  )
+                  return (
+                    <tr key={post.id} style={{ borderBottom: '1px solid var(--dash-border)' }}>
+                      <td style={{ padding: '14px 18px', color: 'var(--dash-text-muted)', fontSize: '12.5px', fontWeight: 600 }}>
+                        {(pagination.page - 1) * 15 + idx + 1}
+                      </td>
+                      <td style={{ padding: '14px 18px', maxWidth: '360px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                          <img
+                            src={getImageUrl(post.img)}
+                            alt={post.title || ''}
                             style={{
-                              fontWeight: 600,
-                              color: 'var(--dash-text-main)',
-                              fontSize: '13.5px',
-                              marginBottom: '3px',
-                              display: 'block',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              textDecoration: 'none'
+                              width: '60px',
+                              height: '42px',
+                              objectFit: 'cover',
+                              borderRadius: '8px',
+                              backgroundColor: 'var(--dash-muted-bg)',
+                              flexShrink: 0,
+                              border: '1px solid var(--dash-border)'
                             }}
-                          >
-                            {post.title}
-                          </Link>
-                          <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            /{post.slug}
+                            onError={(e) => {
+                              e.currentTarget.src = '/assets/img/blog/blog-2-1.webp'
+                            }}
+                          />
+                          <div style={{ overflow: 'hidden' }}>
+                            <Link
+                              href={`/dashboard/posts/edit/${post.id}`}
+                              style={{
+                                fontWeight: 600,
+                                color: 'var(--dash-text-main)',
+                                fontSize: '13.5px',
+                                marginBottom: '3px',
+                                display: 'block',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                textDecoration: 'none'
+                              }}
+                            >
+                              {isPostBreaking && (
+                                <span style={{ background: '#da0105', color: '#ffffff', fontSize: '9.5px', fontWeight: 800, padding: '1px 6px', borderRadius: '4px', marginRight: '6px', letterSpacing: '0.5px' }}>
+                                  <i className="fa fa-bolt" /> BREAKING
+                                </span>
+                              )}
+                              {post.title}
+                            </Link>
+                            <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              /{post.slug}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </td>
-                    <td style={{ padding: '14px 18px' }}>
-                      <span
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          fontSize: '12px',
-                          color: 'var(--dash-text-main)',
-                          background: 'var(--dash-muted-bg)',
-                          padding: '4px 10px',
-                          borderRadius: '6px',
-                          border: '1px solid var(--dash-border)',
-                          textTransform: 'capitalize',
-                          fontWeight: 500
-                        }}
-                      >
-                        <i className={`fa ${getTypeIcon(post.postType)}`} style={{ opacity: 0.7 }}></i>
-                        <span>{post.postType || 'standard'}</span>
-                      </span>
-                    </td>
-                    <td style={{ padding: '14px 18px' }}>
-                      <Badge variant="outline">{post.category || 'Berita'}</Badge>
-                    </td>
-                    <td style={{ padding: '14px 18px', color: 'var(--dash-text-main)', fontSize: '13px', fontWeight: 600 }}>
-                      {post.author || 'Redaksi'}
-                    </td>
-                    <td style={{ padding: '14px 18px', color: 'var(--dash-text-muted)', fontSize: '13px' }}>
-                      <i className="fa fa-eye" style={{ marginRight: '5px', opacity: 0.7 }}></i>
-                      {post.views?.toLocaleString() || 0}
-                    </td>
-                    <td style={{ padding: '14px 18px' }}>
-                      <Badge
-                        variant={post.status === 'PUBLISHED' ? 'success' : 'warning'}
-                        dot
-                      >
-                        {post.status === 'PUBLISHED' ? 'Terbit' : 'Draf'}
-                      </Badge>
-                    </td>
+                      </td>
+                      <td style={{ padding: '14px 18px' }}>
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            fontSize: '12px',
+                            color: 'var(--dash-text-main)',
+                            background: 'var(--dash-muted-bg)',
+                            padding: '4px 10px',
+                            borderRadius: '6px',
+                            border: '1px solid var(--dash-border)',
+                            textTransform: 'capitalize',
+                            fontWeight: 500
+                          }}
+                        >
+                          <i className={`fa ${getTypeIcon(post.postType)}`} style={{ opacity: 0.7 }}></i>
+                          <span>{post.postType || 'standard'}</span>
+                        </span>
+                      </td>
+                      <td style={{ padding: '14px 18px' }}>
+                        <Badge variant="outline">{post.category || 'Berita'}</Badge>
+                      </td>
+                      <td style={{ padding: '14px 18px', color: 'var(--dash-text-main)', fontSize: '13px', fontWeight: 600 }}>
+                        {post.author || 'Redaksi'}
+                      </td>
+                      <td style={{ padding: '14px 18px', color: 'var(--dash-text-muted)', fontSize: '13px' }}>
+                        <i className="fa fa-eye" style={{ marginRight: '5px', opacity: 0.7 }}></i>
+                        {post.views?.toLocaleString() || 0}
+                      </td>
+                      <td style={{ padding: '14px 18px' }}>
+                        <Badge
+                          variant={post.status === 'PUBLISHED' ? 'success' : 'warning'}
+                          dot
+                        >
+                          {post.status === 'PUBLISHED' ? 'Terbit' : 'Draf'}
+                        </Badge>
+                      </td>
+                      <td style={{ padding: '14px 14px', textAlign: 'center' }}>
+                        <label
+                          style={{
+                            position: 'relative',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: togglingId === post.id ? 'wait' : 'pointer',
+                            margin: 0
+                          }}
+                          title={isPostBreaking ? 'Klik untuk nonaktifkan Breaking News' : 'Klik untuk jadikan Breaking News'}
+                        >
+                          {togglingId === post.id ? (
+                            <i className="fa fa-spinner fa-spin" style={{ color: '#da0105', fontSize: '14px' }} />
+                          ) : (
+                            <input
+                              type="checkbox"
+                              checked={isPostBreaking}
+                              disabled={togglingId === post.id}
+                              onChange={() => handleToggleBreaking(post)}
+                              style={{
+                                width: '18px',
+                                height: '18px',
+                                cursor: 'pointer',
+                                accentColor: '#da0105',
+                                borderRadius: '4px'
+                              }}
+                            />
+                          )}
+                        </label>
+                      </td>
                     <td style={{ padding: '14px 18px', textAlign: 'right' }}>
                       <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
                         <Link
@@ -427,54 +555,85 @@ export default function PostsManagement() {
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
+                )
+              })
+            )}
             </tbody>
           </table>
         </div>
 
         {/* Mobile Cards List */}
         <div className="dash-mobile-cards">
-          {posts.length === 0 && !loading ? (
+          {displayedPosts.length === 0 && !loading ? (
             <EmptyState
               icon="fa-newspaper-o"
               title="Tidak Ada Artikel Ditemukan"
               description="Tidak ada artikel yang cocok dengan kata kunci atau filter Anda."
             />
           ) : (
-            posts.map((post) => (
-              <div key={post.id} className="dash-mobile-card-item">
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                  <img
-                    src={getImageUrl(post.img)}
-                    alt={post.title || ''}
-                    style={{ width: '64px', height: '48px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
-                    onError={(e) => { e.currentTarget.src = '/assets/img/blog/blog-2-1.webp' }}
-                  />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                      <span className="dash-badge" style={{ fontSize: '10.5px' }}>{post.category || 'Berita'}</span>
-                      <Badge variant={post.status === 'PUBLISHED' ? 'success' : 'warning'} dot style={{ fontSize: '10px' }}>
-                        {post.status === 'PUBLISHED' ? 'Terbit' : 'Draf'}
-                      </Badge>
-                      <span style={{ fontSize: '11px', color: 'var(--dash-text-muted)', marginLeft: 'auto' }}>
-                        <i className={`fa ${getTypeIcon(post.postType)}`}></i>
-                      </span>
-                    </div>
-                    <Link
-                      href={`/dashboard/posts/edit/${post.id}`}
-                      style={{ fontSize: '14px', fontWeight: 700, color: 'var(--dash-text-main)', lineHeight: 1.3, display: 'block', textDecoration: 'none', marginBottom: '6px' }}
-                    >
-                      {post.title}
-                    </Link>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '11.5px', color: 'var(--dash-text-muted)' }}>
-                      <span><i className="fa fa-user"></i> {post.author || 'Redaksi'}</span>
-                      <span><i className="fa fa-eye"></i> {post.views?.toLocaleString() || 0}</span>
+            displayedPosts.map((post) => {
+              const isPostBreaking = Array.isArray(post.tags) && post.tags.some(
+                t => (t.slug && t.slug.toLowerCase().includes('breaking')) || (t.name && t.name.toLowerCase().includes('breaking'))
+              )
+              return (
+                <div key={post.id} className="dash-mobile-card-item">
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <img
+                      src={getImageUrl(post.img)}
+                      alt={post.title || ''}
+                      style={{ width: '64px', height: '48px', objectFit: 'cover', borderRadius: '8px', flexShrink: 0, backgroundColor: 'var(--dash-border)' }}
+                      onError={(e) => { e.currentTarget.src = '/assets/img/blog/blog-2-1.webp' }}
+                    />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                        <span className="dash-badge" style={{ fontSize: '10.5px' }}>{post.category || 'Berita'}</span>
+                        <Badge variant={post.status === 'PUBLISHED' ? 'success' : 'warning'} dot style={{ fontSize: '10px' }}>
+                          {post.status === 'PUBLISHED' ? 'Terbit' : 'Draf'}
+                        </Badge>
+                        <span style={{ fontSize: '11px', color: 'var(--dash-text-muted)', marginLeft: 'auto' }}>
+                          <i className={`fa ${getTypeIcon(post.postType)}`}></i>
+                        </span>
+                      </div>
+                      <Link
+                        href={`/dashboard/posts/edit/${post.id}`}
+                        style={{ fontSize: '14px', fontWeight: 700, color: 'var(--dash-text-main)', lineHeight: 1.3, display: 'block', textDecoration: 'none', marginBottom: '6px' }}
+                      >
+                        {isPostBreaking && (
+                          <span style={{ background: '#da0105', color: '#ffffff', fontSize: '9.5px', fontWeight: 800, padding: '1px 6px', borderRadius: '4px', marginRight: '6px', letterSpacing: '0.5px' }}>
+                            <i className="fa fa-bolt" /> BREAKING
+                          </span>
+                        )}
+                        {post.title}
+                      </Link>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '11.5px', color: 'var(--dash-text-muted)' }}>
+                        <span><i className="fa fa-user"></i> {post.author || 'Redaksi'}</span>
+                        <span><i className="fa fa-eye"></i> {post.views?.toLocaleString() || 0}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '8px', borderTop: '1px solid var(--dash-border)' }}>
+                  {/* Quick Breaking News Toggle for Mobile */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 10px', background: isPostBreaking ? '#fef2f2' : 'var(--dash-muted-bg)', borderRadius: '8px', border: isPostBreaking ? '1px solid #fecaca' : '1px solid var(--dash-border)', marginTop: '10px' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 700, color: isPostBreaking ? '#da0105' : 'var(--dash-text-main)', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                      <i className="fa fa-bolt" style={{ color: isPostBreaking ? '#da0105' : '#94a3b8' }} />
+                      <span>{isPostBreaking ? 'Aktif sebagai Breaking News' : 'Tandai Breaking News'}</span>
+                    </span>
+                    <label style={{ display: 'inline-flex', alignItems: 'center', margin: 0, cursor: togglingId === post.id ? 'wait' : 'pointer' }}>
+                      {togglingId === post.id ? (
+                        <i className="fa fa-spinner fa-spin" style={{ color: '#da0105', fontSize: '13px' }} />
+                      ) : (
+                        <input
+                          type="checkbox"
+                          checked={isPostBreaking}
+                          disabled={togglingId === post.id}
+                          onChange={() => handleToggleBreaking(post)}
+                          style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#da0105' }}
+                        />
+                      )}
+                    </label>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', paddingTop: '10px', marginTop: '10px', borderTop: '1px solid var(--dash-border)' }}>
                   <Link
                     href={getPreviewUrl(post)}
                     target="_blank"
@@ -500,9 +659,10 @@ export default function PostsManagement() {
                   )}
                 </div>
               </div>
-            ))
-          )}
-        </div>
+            )
+          })
+        )}
+      </div>
 
         {/* Pagination Bar */}
         {pagination.totalPages > 1 && (

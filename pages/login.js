@@ -3,24 +3,26 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 
-export default function LoginPage() {
+export default function LoginPage({ initialSettings = {} }) {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState(null)
-  const [siteSettings, setSiteSettings] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = sessionStorage.getItem('dash_site_settings')
-        if (saved) return JSON.parse(saved)
-      } catch (e) {}
-    }
-    return { site_title: 'Dua Narasi', logo_header: '/assets/img/logo/logo.webp' }
-  })
+  const [siteSettings, setSiteSettings] = useState(initialSettings)
 
   useEffect(() => {
+    // If user is already logged in, automatically redirect to dashboard
+    fetch('/api/auth/me')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.user) {
+          window.location.href = '/dashboard'
+        }
+      })
+      .catch(() => {})
+
     fetch('/api/settings')
       .then(res => res.json())
       .then(data => {
@@ -64,14 +66,10 @@ export default function LoginPage() {
             document.cookie = `hoom_auth_token=${data.token}; path=/; max-age=86400; SameSite=Lax;`
           } catch (e) {}
         }
-        showToast(`Selamat datang kembali, ${data.user?.name}!`, 'success')
+        showToast(`Selamat datang kembali, ${data.user?.name}! Mengalihkan ke dashboard...`, 'success')
         setTimeout(() => {
-          if (['ADMIN', 'EDITOR', 'AUTHOR'].includes(data.user?.role)) {
-            router.push('/dashboard')
-          } else {
-            router.push('/')
-          }
-        }, 800)
+          window.location.href = '/dashboard'
+        }, 200)
       } else {
         showToast(data.message || 'Email atau kata sandi tidak valid', 'error')
       }
@@ -82,26 +80,11 @@ export default function LoginPage() {
     }
   }
 
-  const quickFill = (role) => {
-    if (role === 'admin') {
-      setEmail('admin@hoom.com')
-      setPassword('admin123')
-    } else if (role === 'editor') {
-      setEmail('editor@hoom.com')
-      setPassword('editor123')
-    } else if (role === 'author') {
-      setEmail('author@hoom.com')
-      setPassword('author123')
-    }
-  }
-
   return (
     <>
       <Head>
         <title>Login &bull; {siteSettings.site_title || 'Dua Narasi'}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="/assets/css/dashboard.css" />
       </Head>
 
       <div
@@ -191,105 +174,6 @@ export default function LoginPage() {
 
             {/* Card Content & Form */}
             <div style={{ padding: '0 24px 24px' }}>
-              
-              {/* Quick Demo Role Fillers matching social buttons layout in main-files */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '18px' }}>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.6px', textAlign: 'center', marginBottom: '2px' }}>
-                  Pilih Akun Demo Cepat
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-                  <button
-                    type="button"
-                    onClick={() => quickFill('admin')}
-                    style={{
-                      height: '34px',
-                      borderRadius: '8px',
-                      background: '#f1f5f9',
-                      border: '1px solid #e2e8f0',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      color: '#090d16',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '5px',
-                      transition: 'all 0.15s'
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#090d16' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#e2e8f0' }}
-                  >
-                    <i className="fa fa-shield" style={{ color: '#da0105', fontSize: '11px' }}></i>
-                    Admin
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => quickFill('editor')}
-                    style={{
-                      height: '34px',
-                      borderRadius: '8px',
-                      background: '#f1f5f9',
-                      border: '1px solid #e2e8f0',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      color: '#090d16',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '5px',
-                      transition: 'all 0.15s'
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#090d16' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#e2e8f0' }}
-                  >
-                    <i className="fa fa-pencil" style={{ color: '#3b82f6', fontSize: '11px' }}></i>
-                    Editor
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => quickFill('author')}
-                    style={{
-                      height: '34px',
-                      borderRadius: '8px',
-                      background: '#f1f5f9',
-                      border: '1px solid #e2e8f0',
-                      fontSize: '12px',
-                      fontWeight: 600,
-                      color: '#090d16',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '5px',
-                      transition: 'all 0.15s'
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#090d16' }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#e2e8f0' }}
-                  >
-                    <i className="fa fa-user-circle" style={{ color: '#10b981', fontSize: '11px' }}></i>
-                    Penulis
-                  </button>
-                </div>
-              </div>
-
-              {/* Divider matching main-files */}
-              <div
-                style={{
-                  position: 'relative',
-                  textAlign: 'center',
-                  margin: '18px 0',
-                  fontSize: '12px',
-                  color: '#94a3b8'
-                }}
-              >
-                <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: '1px', background: '#e2e8f0', zIndex: 0 }} />
-                <span style={{ position: 'relative', background: '#ffffff', padding: '0 10px', zIndex: 1 }}>
-                  Atau masuk dengan email
-                </span>
-              </div>
-
-              {/* Form Fields */}
               <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {/* Email Input */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -455,4 +339,27 @@ export default function LoginPage() {
       </div>
     </>
   )
+}
+
+export async function getServerSideProps() {
+  try {
+    const prisma = (await import('@/lib/prisma')).default
+    const settingsList = await prisma.setting.findMany()
+    const settings = {}
+    settingsList.forEach(s => {
+      settings[s.key] = s.value
+    })
+
+    return {
+      props: {
+        initialSettings: settings
+      }
+    }
+  } catch (error) {
+    return {
+      props: {
+        initialSettings: { site_title: 'duanarasi.com' }
+      }
+    }
+  }
 }

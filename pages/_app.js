@@ -77,11 +77,8 @@ function MyApp({ Component, pageProps }) {
                 aria-hidden="true"
             />
 
-            {!loading ? (
-                <Component {...pageProps} />
-            ) : (
-                <Preloader />
-            )}
+            <Component {...pageProps} />
+            {loading && <Preloader />}
 
             <style jsx global>{`
                 /* Smooth Global Route Loading Bar */

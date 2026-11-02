@@ -249,6 +249,9 @@ export default function ImageUploader({
                       }}
                       onError={(e) => {
                         e.currentTarget.style.display = 'none'
+                        if (e.currentTarget.parentElement) {
+                          e.currentTarget.parentElement.style.display = 'none'
+                        }
                       }}
                     />
                   </div>

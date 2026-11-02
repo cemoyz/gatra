@@ -8,14 +8,17 @@ export async function getServerSideProps({ req, res }) {
     const domain = setting?.value?.trim() || `${protocol}://${host}`
     const cleanDomain = domain.replace(/\/$/, '')
 
-    const robotsContent = `# Googlebot & Web Crawlers Rules for Hoom Magazine
+    const robotsContent = `# Googlebot & Web Crawlers Rules for Dua Narasi Portal
 User-agent: *
 Allow: /
 Allow: /blog
 Allow: /blog/*
+Allow: /breaking-news
 Allow: /about-us
+Allow: /pedoman-media-siber
 Allow: /contact
 Allow: /assets/
+Allow: /indexnow-key.txt
 
 # Disallow Internal Admin Dashboard and APIs from indexing
 Disallow: /dashboard/
@@ -29,9 +32,11 @@ Disallow: /register
 User-agent: Googlebot-News
 Allow: /
 Allow: /blog/*
+Allow: /breaking-news
 
-# XML Sitemap Location
+# XML Sitemaps
 Sitemap: ${cleanDomain}/sitemap.xml
+Sitemap: ${cleanDomain}/news-sitemap.xml
 `
 
     res.setHeader('Content-Type', 'text/plain; charset=utf-8')

@@ -47,6 +47,7 @@ export default function Footer1({ settings = {} }) {
                                 <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     <li><Link href="/" style={{ color: '#94a3b8', textDecoration: 'none' }}>Beranda</Link></li>
                                     <li><Link href="/about-us" style={{ color: '#94a3b8', textDecoration: 'none' }}>Tentang Kami</Link></li>
+                                    <li><Link href="/pedoman-media-siber" style={{ color: '#94a3b8', textDecoration: 'none' }}>Pedoman Media Siber</Link></li>
                                     <li><Link href="/author" style={{ color: '#94a3b8', textDecoration: 'none' }}>Tim Penulis</Link></li>
                                     <li><Link href="/contact" style={{ color: '#94a3b8', textDecoration: 'none' }}>Kontak Kami</Link></li>
                                     <li><Link href="/dashboard" style={{ color: '#38bdf8', textDecoration: 'none' }}>Dashboard</Link></li>
@@ -125,6 +126,7 @@ export default function Footer1({ settings = {} }) {
                             <div className="col-md-6 text-center text-md-end">
                                 <div style={{ fontSize: '13px', color: '#64748b' }}>
                                     <Link href="/about-us" style={{ color: '#94a3b8', textDecoration: 'none', marginRight: '16px' }}>Tentang</Link>
+                                    <Link href="/pedoman-media-siber" style={{ color: '#94a3b8', textDecoration: 'none', marginRight: '16px' }}>Pedoman Media Siber</Link>
                                     <Link href="/contact" style={{ color: '#94a3b8', textDecoration: 'none', marginRight: '16px' }}>Kontak</Link>
                                     <Link href="/dashboard" style={{ color: '#da0105', textDecoration: 'none', fontWeight: 600 }}>Panel Admin</Link>
                                 </div>

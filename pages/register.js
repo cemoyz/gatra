@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 
-export default function Register() {
+export default function Register({ initialSettings = {} }) {
   const router = useRouter()
   const [formData, setFormData] = useState({
     name: '',
@@ -14,15 +14,7 @@ export default function Register() {
   })
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState(null)
-  const [siteSettings, setSiteSettings] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = sessionStorage.getItem('dash_site_settings')
-        if (saved) return JSON.parse(saved)
-      } catch (e) {}
-    }
-    return { site_title: 'Dua Narasi', logo_header: '/assets/img/logo/logo.webp' }
-  })
+  const [siteSettings, setSiteSettings] = useState(initialSettings)
 
   useEffect(() => {
     fetch('/api/settings')
@@ -91,8 +83,7 @@ export default function Register() {
     <>
       <Head>
         <title>Create Account &bull; {siteSettings.site_title || 'Dua Narasi'}</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="/assets/css/dashboard.css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
       <div
@@ -319,4 +310,27 @@ export default function Register() {
       </div>
     </>
   )
+}
+
+export async function getServerSideProps() {
+  try {
+    const prisma = (await import('@/lib/prisma')).default
+    const settingsList = await prisma.setting.findMany()
+    const settings = {}
+    settingsList.forEach(s => {
+      settings[s.key] = s.value
+    })
+
+    return {
+      props: {
+        initialSettings: settings
+      }
+    }
+  } catch (error) {
+    return {
+      props: {
+        initialSettings: { site_title: 'duanarasi.com' }
+      }
+    }
+  }
 }
