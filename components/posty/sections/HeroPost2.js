@@ -1,15 +1,16 @@
 import Link from 'next/link'
 import { getImageUrl } from "@/lib/imageUtils"
 
-export default function HeroPost2({ posts = [] }) {
+export default function HeroPost2({ posts = [], settings = {} }) {
     const p1 = posts[0] || null
     const p2 = posts[1] || null
     const p3 = posts[2] || null
+    const titlePopular = settings.title_popular_posts || "Paling Banyak Dibaca"
 
     const formatDate = (dateStr) => {
         if (!dateStr) return "Recently"
         try {
-            return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+            return new Date(dateStr).toLocaleDateString("id-ID", { month: "short", day: "numeric", year: "numeric" })
         } catch {
             return "Recently"
         }
@@ -21,7 +22,7 @@ export default function HeroPost2({ posts = [] }) {
                 <div className="container">
                     <div className="top-area mb-40 title-border">
                         <div className="section-heading">
-                            <h3 className="section-title"><span className="bg-grey-2">Most Read</span></h3>
+                            <h3 className="section-title"><span className="bg-grey-2">{titlePopular}</span></h3>
                         </div>
                         <div className="right-btn">
                             <Link href="/blog" className="default-btn">Lihat Semua</Link>

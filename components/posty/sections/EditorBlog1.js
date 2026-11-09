@@ -24,7 +24,7 @@ export default function EditorBlog1({ posts = [], settings = {} }) {
                     <div className="row">
                         <div className="col-lg-8">
                             <div className="section-heading mb-40">
-                                <h3 className="section-title title-border"><span>Editor's Pick</span></h3>
+                                <h3 className="section-title title-border"><span>{settings.title_handpick_posts || "Pilihan Redaksi"}</span></h3>
                             </div>
                             {p1 ? (
                                 <div className="post-card editor-post-card">
@@ -88,32 +88,24 @@ export default function EditorBlog1({ posts = [], settings = {} }) {
                         </div>
                         <div className="col-lg-4">
                             <div className="section-heading mb-40">
-                                <h3 className="section-title title-border"><span>Follow Us</span></h3>
+                                <h3 className="section-title title-border"><span>Ikuti Kami</span></h3>
                             </div>
                             <div className="social-box-wrap">
                                 <div className="social-box facebook">
-                                    <Link href="/#"><i className="lab la-facebook-square" /></Link>
-                                    <h4 className="title"><Link href="/#">Facebook</Link> <span>23k Likes</span></h4>
+                                    <a href={settings.social_facebook || "#"} target="_blank" rel="noopener noreferrer"><i className="lab la-facebook-square" /></a>
+                                    <h4 className="title"><a href={settings.social_facebook || "#"} target="_blank" rel="noopener noreferrer">Facebook</a> <span>Ikuti Kami</span></h4>
                                 </div>
                                 <div className="social-box twitter">
-                                    <Link href="/#" className="icon"><i className="lab la-twitter" /></Link>
-                                    <h4 className="title"><Link href="/#">Twitter</Link> <span>56k Followers</span></h4>
+                                    <a href={settings.social_twitter || "#"} target="_blank" rel="noopener noreferrer" className="icon"><i className="lab la-twitter" /></a>
+                                    <h4 className="title"><a href={settings.social_twitter || "#"} target="_blank" rel="noopener noreferrer">Twitter / X</a> <span>Follow</span></h4>
                                 </div>
                                 <div className="social-box youtube">
-                                    <Link href="/#" className="icon"><i className="lab la-youtube" /></Link>
-                                    <h4 className="title"><Link href="/#">Youtube</Link> <span>56k Subscribe</span></h4>
-                                </div>
-                                <div className="social-box spotify">
-                                    <Link href="/#" className="icon"><i className="lab la-spotify" /></Link>
-                                    <h4 className="title"><Link href="/#">Spotify</Link> <span>14k Followers</span></h4>
+                                    <a href={settings.social_youtube || "#"} target="_blank" rel="noopener noreferrer" className="icon"><i className="lab la-youtube" /></a>
+                                    <h4 className="title"><a href={settings.social_youtube || "#"} target="_blank" rel="noopener noreferrer">YouTube</a> <span>Subscribe</span></h4>
                                 </div>
                                 <div className="social-box insta">
-                                    <Link href="/#" className="icon"><i className="lab la-instagram" /></Link>
-                                    <h4 className="title"><Link href="/#">Instagram</Link> <span>5m Followers</span></h4>
-                                </div>
-                                <div className="social-box pinterest">
-                                    <Link href="/#" className="icon"><i className="lab la-pinterest-p" /></Link>
-                                    <h4 className="title"><Link href="/#">Pinterest</Link> <span>59k Followers</span></h4>
+                                    <a href={settings.social_instagram || "#"} target="_blank" rel="noopener noreferrer" className="icon"><i className="lab la-instagram" /></a>
+                                    <h4 className="title"><a href={settings.social_instagram || "#"} target="_blank" rel="noopener noreferrer">Instagram</a> <span>Follow</span></h4>
                                 </div>
                             </div>
                             <div className="post-author-box text-center">

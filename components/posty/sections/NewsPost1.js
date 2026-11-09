@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { getImageUrl } from "@/lib/imageUtils"
 
-export default function NewsPost1({ posts = [], popularPosts = [], categories = [] }) {
+export default function NewsPost1({ posts = [], popularPosts = [], categories = [], settings = {} }) {
     const displayPosts = posts && posts.length > 0 ? posts.slice(0, 5) : null
     const displayPopular = popularPosts && popularPosts.length > 0 ? popularPosts.slice(0, 4) : posts.slice(0, 4)
     const displayCats = categories && categories.length > 0 ? categories.slice(0, 5) : [
@@ -11,6 +11,12 @@ export default function NewsPost1({ posts = [], popularPosts = [], categories = 
         { id: 4, name: "Marketing", slug: "marketing", count: 9 },
         { id: 5, name: "News", slug: "news", count: 18 }
     ]
+    const adTitle = settings.sidebar_ad_title || settings.site_title || "News & Magazine Portal"
+    const adSubtitle = settings.sidebar_ad_subtitle || ""
+    const adUrl = settings.sidebar_ad_url || "/blog"
+    const adNewTab = settings.sidebar_ad_open_new_tab === "true"
+    const showAd = settings.show_sidebar_ad !== "false"
+    const trendingTitle = settings.title_trending_posts || "Trending Posts"
 
     const formatDate = (dateStr) => {
         if (!dateStr) return "Recently"
@@ -102,18 +108,40 @@ export default function NewsPost1({ posts = [], popularPosts = [], categories = 
                             </div>
                         </div>
                         <div className="col-lg-4">
-                            <div className="poster mb-40">
-                                <div className="bg-shape" />
-                                <div className="poster-men" />
-                                <div className="poster-content">
-                                    <Link href="/"><img src="/assets/img/logo/logo-light.png" alt="logo" /></Link>
-                                    <h4 className="title">News &amp; Magazine Portal Gatra</h4>
-                                    <Link href="/blog" className="default-btn poster-btn">Baca Sekarang</Link>
+                            {showAd && (
+                                <div className="poster mb-40">
+                                    <div className="bg-shape" />
+                                    <div
+                                        className="poster-men"
+                                        style={settings.sidebar_ad_image ? {
+                                            backgroundImage: `url(${getImageUrl(settings.sidebar_ad_image)})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center'
+                                        } : {}}
+                                    />
+                                    <div className="poster-content">
+                                        <Link href="/">
+                                            <img
+                                                src={getImageUrl(settings.logo_footer || settings.logo_header, "/assets/img/logo/logo-light.png")}
+                                                alt={adTitle}
+                                                style={{ maxHeight: '35px', width: 'auto' }}
+                                            />
+                                        </Link>
+                                        <h4 className="title">{adTitle}</h4>
+                                        {adSubtitle && <p style={{ color: '#fff', fontSize: '13px', opacity: 0.9 }}>{adSubtitle}</p>}
+                                        <Link
+                                            href={adUrl}
+                                            className="default-btn poster-btn"
+                                            target={adNewTab ? "_blank" : "_self"}
+                                        >
+                                            Baca Sekarang
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                             <div className="trending-post-wrap">
                                 <div className="section-heading mb-30">
-                                    <h3 className="section-title title-border"><span>Trending Posts</span></h3>
+                                    <h3 className="section-title title-border"><span>{trendingTitle}</span></h3>
                                 </div>
                                 <div className="list-post-area list-2">
                                     {displayPopular && displayPopular.length > 0 ? (

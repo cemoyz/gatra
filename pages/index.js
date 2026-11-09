@@ -318,7 +318,7 @@ function Home1({ settings = {} }) {
     )
 }
 
-export default function Home({ initialSettings = {}, initialPosts = [], initialPopularPosts = [] }) {
+export default function Home({ initialSettings = {}, initialPosts = [], initialPopularPosts = [], initialCategories = [] }) {
     const [homeStyle, setHomeStyle] = useState(initialSettings.home_style || 'posty')
     const [settings, setSettings] = useState(initialSettings)
     const [isLoaded, setIsLoaded] = useState(false)
@@ -368,7 +368,7 @@ export default function Home({ initialSettings = {}, initialPosts = [], initialP
         case 'posty':
         case 'index-1':
         default:
-            return <PostyHome settings={settings} initialPosts={initialPosts} initialPopularPosts={initialPopularPosts} />
+            return <PostyHome settings={settings} initialPosts={initialPosts} initialPopularPosts={initialPopularPosts} initialCategories={initialCategories} />
     }
 }
 
@@ -380,7 +380,7 @@ export async function getServerSideProps() {
             settings[item.key] = item.value
         })
 
-        const [posts, popularPosts] = await Promise.all([
+        const [posts, popularPosts, categories] = await Promise.all([
             prisma.post.findMany({
                 where: { status: 'PUBLISHED' },
                 orderBy: { createdAt: 'desc' },
@@ -398,14 +398,28 @@ export async function getServerSideProps() {
                     category: { select: { id: true, name: true, slug: true } },
                     author: { select: { id: true, name: true, avatar: true } }
                 }
+            }),
+            prisma.category.findMany({
+                include: {
+                    _count: { select: { posts: { where: { status: 'PUBLISHED' } } } }
+                },
+                orderBy: { name: 'asc' }
             })
         ])
+
+        const formattedCategories = categories.map(c => ({
+            id: c.id,
+            name: c.name,
+            slug: c.slug,
+            postsCount: c._count?.posts || 0
+        }))
 
         return {
             props: {
                 initialSettings: settings,
                 initialPosts: JSON.parse(JSON.stringify(posts)),
-                initialPopularPosts: JSON.parse(JSON.stringify(popularPosts))
+                initialPopularPosts: JSON.parse(JSON.stringify(popularPosts)),
+                initialCategories: JSON.parse(JSON.stringify(formattedCategories))
             }
         }
     } catch (err) {
@@ -414,7 +428,8 @@ export async function getServerSideProps() {
             props: {
                 initialSettings: {},
                 initialPosts: [],
-                initialPopularPosts: []
+                initialPopularPosts: [],
+                initialCategories: []
             }
         }
     }

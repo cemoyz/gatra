@@ -36,21 +36,29 @@ export default function Header1({ scroll, isMobileMenu, handleMobileMenu, isSide
 						<div className="mid-header-wrap">
 							<div className="mid-header-left">
 								<ul className="header-social">
-									<li>
-										<Link href="/#" className="facebook"><i className="lab la-facebook-f" /></Link>
-									</li>
-									<li>
-										<Link href="/#" className="twitter"><i className="lab la-twitter" /></Link>
-									</li>
-									<li>
-										<Link href="/#" className="instagram"><i className="lab la-instagram" /></Link>
-									</li>
-									<li>
-										<Link href="/#" className="linkedin"><i className="lab la-linkedin-in" /></Link>
-									</li>
-									<li>
-										<Link href="/#" className="pinterest"><i className="lab la-pinterest-p" /></Link>
-									</li>
+									{settings.social_facebook && (
+										<li><a href={settings.social_facebook} target="_blank" rel="noopener noreferrer" className="facebook" aria-label="Facebook"><i className="lab la-facebook-f" /></a></li>
+									)}
+									{settings.social_twitter && (
+										<li><a href={settings.social_twitter} target="_blank" rel="noopener noreferrer" className="twitter" aria-label="Twitter"><i className="lab la-twitter" /></a></li>
+									)}
+									{settings.social_instagram && (
+										<li><a href={settings.social_instagram} target="_blank" rel="noopener noreferrer" className="instagram" aria-label="Instagram"><i className="lab la-instagram" /></a></li>
+									)}
+									{settings.social_youtube && (
+										<li><a href={settings.social_youtube} target="_blank" rel="noopener noreferrer" className="youtube" aria-label="YouTube"><i className="lab la-youtube" /></a></li>
+									)}
+									{settings.social_whatsapp && (
+										<li><a href={`https://wa.me/${settings.social_whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="whatsapp" aria-label="WhatsApp"><i className="lab la-whatsapp" /></a></li>
+									)}
+									{/* Default fallback icons if none configured */}
+									{!settings.social_facebook && !settings.social_twitter && !settings.social_instagram && (
+										<>
+											<li><Link href="/#" className="facebook"><i className="lab la-facebook-f" /></Link></li>
+											<li><Link href="/#" className="twitter"><i className="lab la-twitter" /></Link></li>
+											<li><Link href="/#" className="instagram"><i className="lab la-instagram" /></Link></li>
+										</>
+									)}
 								</ul>
 							</div>
 							<div className="site-logo">

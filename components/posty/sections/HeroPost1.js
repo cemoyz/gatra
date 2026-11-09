@@ -33,17 +33,31 @@ const swiperOptions = {
 	},
 }
 
-export default function HeroPost1({ posts = [], popularPosts = [] }) {
+export default function HeroPost1({ posts = [], popularPosts = [], settings = {} }) {
 	const [isTab, setIsTab] = useState(1)
 	const handleTab = (i) => {
 		setIsTab(i)
 	}
 
-	const post1 = posts[0] || null
-	const post2 = posts[1] || null
-	const sliderPosts = posts.length > 2 ? posts.slice(2, 6) : null
+	// Slot mapping from settings if in manual mode
+	const isManual = settings.featured_posts_mode === 'manual'
+	const slot1 = isManual && settings.featured_post_slot_1 ? posts.find(p => String(p.id) === String(settings.featured_post_slot_1)) : null
+	const slot2 = isManual && settings.featured_post_slot_2 ? posts.find(p => String(p.id) === String(settings.featured_post_slot_2)) : null
+	const slot3 = isManual && settings.featured_post_slot_3 ? posts.find(p => String(p.id) === String(settings.featured_post_slot_3)) : null
+
+	const post1 = slot1 || posts[0] || null
+	const post2 = slot2 || posts[1] || null
+	
+	let sliderPosts = posts.length > 2 ? posts.slice(2, 6) : null
+	if (slot3) {
+		const filtered = (sliderPosts || []).filter(p => p.id !== slot3.id)
+		sliderPosts = [slot3, ...filtered].slice(0, 4)
+	}
+
 	const trendingList = popularPosts.length > 0 ? popularPosts.slice(0, 5) : posts.slice(0, 5)
 	const latestList = posts.length > 6 ? posts.slice(6, 11) : posts.slice(0, 5)
+
+	const titleTrending = settings.title_trending_posts || "Trending News"
 
 	const formatDate = (dateStr) => {
 		if (!dateStr) return "Recently"
@@ -206,10 +220,10 @@ export default function HeroPost1({ posts = [], popularPosts = [] }) {
 						<div className="post-area-right-2 tab-wrap">
 							<ul className="nav nav-tabs" id="myTab" role="tablist">
 								<li className="nav-item" onClick={() => handleTab(1)}>
-									<button className={isTab == 1 ? "nav-link active" : "nav-link"}>Trending News</button>
+									<button className={isTab == 1 ? "nav-link active" : "nav-link"}>{titleTrending}</button>
 								</li>
 								<li className="nav-item" onClick={() => handleTab(2)}>
-									<button className={isTab == 2 ? "nav-link active" : "nav-link"}>LATEST NEWS</button>
+									<button className={isTab == 2 ? "nav-link active" : "nav-link"}>Berita Terbaru</button>
 								</li>
 							</ul>
 							<div className="tab-content" id="myTabContent">

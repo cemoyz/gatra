@@ -25,11 +25,12 @@ const swiperOptions = {
     effect: 'slide',
 }
 
-export default function News({ posts = [] }) {
+export default function News({ posts = [], settings = {} }) {
     const displayPosts = posts && posts.length > 0 ? posts.slice(0, 5) : [
         { id: 'sample-1', title: "The Improbable Rise and Savage Fall of Siegfried. How My Phone’s Most Annoying Feature Saved My Life", slug: "" },
         { id: 'sample-2', title: "Artificial Intelligence and the Modern Horizon of Digital News Media in 2026", slug: "" }
     ]
+    const tickerTitle = settings.breaking_ticker_title || "Top News"
 
     return (
         <>
@@ -40,7 +41,7 @@ export default function News({ posts = [] }) {
                             {displayPosts.map((post) => (
                                 <SwiperSlide key={post.id}>
                                     <div className="hero-text">
-                                        <span className="news"><img src="/assets/img/images/news-icon.png" alt="icon" />Top News</span>
+                                        <span className="news"><img src="/assets/img/images/news-icon.png" alt="icon" />{tickerTitle}</span>
                                         <span>
                                             {post.slug ? (
                                                 <Link href={`/blog/${post.slug || post.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
