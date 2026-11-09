@@ -122,6 +122,7 @@ export default function Layout({ headerStyle, footerStyle, breadcrumbTitle, chil
 			<Sidebar
 				isSidebar={isSidebar}
 				handleSidebar={handleSidebar}
+				settings={settings}
 			/>
 
 			<MobileMenu
