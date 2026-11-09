@@ -32,6 +32,8 @@ export default function EditPost() {
     authorId: '',
     tagsInput: '',
     img: 'blog-2-1.webp',
+    imageCaption: '',
+    imageTags: '',
     excerpt: '',
     content: '',
     status: 'PUBLISHED',
@@ -129,6 +131,8 @@ export default function EditPost() {
             editorName: p.editorName || 'By Dua Narasi',
             tagsInput: Array.isArray(p.tags) ? p.tags.map(t => t.name).join(', ') : '',
             img: p.img || 'blog-2-1.webp',
+            imageCaption: p.imageCaption || '',
+            imageTags: p.imageTags || '',
             excerpt: p.excerpt || '',
             content: p.content || '',
             status: p.status || 'PUBLISHED',
@@ -687,6 +691,26 @@ export default function EditPost() {
                       onChange={(imgUrl) => setFormData({ ...formData, img: imgUrl })}
                       presetImages={presetImages}
                     />
+                    <div className="dash-form-group" style={{ marginTop: '16px' }}>
+                      <label className="dash-form-label">Caption Gambar</label>
+                      <input
+                        type="text"
+                        className="dash-input"
+                        placeholder="Keterangan foto yang tampil di artikel"
+                        value={formData.imageCaption}
+                        onChange={(e) => setFormData({ ...formData, imageCaption: e.target.value })}
+                      />
+                    </div>
+                    <div className="dash-form-group" style={{ marginBottom: 0 }}>
+                      <label className="dash-form-label">Tag Gambar</label>
+                      <input
+                        type="text"
+                        className="dash-input"
+                        placeholder="Nama fotografer, lokasi, topik (pisahkan dengan koma)"
+                        value={formData.imageTags}
+                        onChange={(e) => setFormData({ ...formData, imageTags: e.target.value })}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

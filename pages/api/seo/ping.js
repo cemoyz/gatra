@@ -1,17 +1,20 @@
 import prisma from '@/lib/prisma'
-import { sendGoogleIndexingNotification, sendIndexNowNotification } from '@/lib/indexing'
+import { sendGoogleIndexingNotification, sendIndexNowNotification, submitGoogleSitemaps } from '@/lib/indexing'
 import crypto from 'crypto'
+import { requireApiAuth, ROLES } from '@/lib/rbac-server'
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, message: 'Method not allowed' })
   }
+  const authUser = await requireApiAuth(req, res, [ROLES.ADMIN])
+  if (!authUser) return
 
   try {
     const settingsList = await prisma.setting.findMany({
       where: {
         key: {
-          in: ['site_url', 'google_service_account_json', 'indexnow_key']
+          in: ['site_url', 'google_search_console_property', 'google_service_account_json', 'indexnow_key']
         }
       }
     })
@@ -23,6 +26,7 @@ export default async function handler(req, res) {
     const domain = (settings.site_url?.trim() || `${protocol}://${host}`).replace(/\/$/, '')
     const sitemapUrl = `${domain}/sitemap.xml`
     const newsSitemapUrl = `${domain}/news-sitemap.xml`
+    const siteProperty = settings.google_search_console_property?.trim() || `${domain}/`
 
     // Fetch latest published articles
     const posts = await prisma.post.findMany({
@@ -49,19 +53,36 @@ export default async function handler(req, res) {
           }
           results.push({
             service: 'Google Indexing API',
-            ok: true,
-            status: 200,
-            message: `${gCount} artikel terbaru berhasil dikirim langsung ke Googlebot`
+            ok: gCount > 0,
+            status: gCount > 0 ? 200 : null,
+            message: `${gCount} artikel berhasil dikirim ke Google Indexing API`
           })
+
+          const sitemapResults = await submitGoogleSitemaps(
+            [sitemapUrl, newsSitemapUrl],
+            siteProperty,
+            creds.client_email,
+            creds.private_key
+          )
+          results.push({
+            service: 'Google Search Console Sitemaps',
+            ok: sitemapResults.every(result => result.ok),
+            status: sitemapResults.every(result => result.ok) ? 200 : null,
+            message: sitemapResults.map(result =>
+              `${result.sitemapUrl}: ${result.ok ? 'submitted' : result.error || `HTTP ${result.status}`}`
+            ).join('; ')
+          })
+        } else {
+          results.push({ service: 'Google Search Console Sitemaps', ok: false, error: 'Service Account JSON tidak memiliki client_email/private_key yang valid' })
         }
       } catch (e) {
-        results.push({ service: 'Google Indexing API', ok: false, error: e.message })
+        results.push({ service: 'Google Indexing API & Search Console', ok: false, error: e.message })
       }
     } else {
       results.push({
-        service: 'Google Indexing API',
+        service: 'Google Indexing API & Search Console Sitemaps',
         ok: null,
-        message: 'Google Service Account belum diisi (opsional, paste file JSON di tab SEO)'
+        message: 'Google Service Account belum diisi (paste file JSON di tab SEO untuk mengirim sitemap ke Search Console)'
       })
     }
 

@@ -129,8 +129,10 @@ export default function DashboardSettings() {
     social_whatsapp: '',
     social_telegram: '',
     site_url: 'http://localhost:3000',
+    google_search_console_property: '',
     google_site_verification: '',
-    google_analytics_id: '',
+    google_analytics_id: 'G-QTZJ9S6JP7',
+    google_tag_manager_id: 'GTM-NL94HN56',
     google_news_name: 'Hoom Magazine',
     // Contact Page Settings
     contact_title: 'Hubungi Redaksi Dua Narasi',
@@ -190,7 +192,14 @@ export default function DashboardSettings() {
       const res = await fetch('/api/seo/ping', { method: 'POST' })
       const data = await res.json()
       if (data.success) {
-        showToast(data.message || 'Sinyal indexing berhasil dikirim ke Google & Search Engine!')
+        const searchConsoleResult = data.results?.find(result => result.service === 'Google Search Console Sitemaps')
+        if (searchConsoleResult && !searchConsoleResult.ok) {
+          showToast(searchConsoleResult.message || searchConsoleResult.error || 'Submit sitemap ke Search Console gagal', 'error')
+        } else if (searchConsoleResult?.ok) {
+          showToast('Sitemap berhasil dikirim ke Google Search Console.')
+        } else {
+          showToast(data.message || 'Sinyal indexing berhasil dikirim ke Google & Search Engine!')
+        }
         fetchSettings()
       } else {
         showToast(data.message || 'Gagal mengirim sinyal indexing', 'error')
@@ -1501,14 +1510,41 @@ export default function DashboardSettings() {
                       </div>
                     </div>
 
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Properti Google Search Console</Label>
+                      <Input
+                        placeholder="https://duanarasi.com/ atau sc-domain:duanarasi.com"
+                        value={settings.google_search_console_property || ''}
+                        onChange={(e) => setSettings({ ...settings, google_search_console_property: e.target.value })}
+                      />
+                      <div style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)', marginTop: '2px' }}>
+                        Harus sama persis dengan properti Search Console. Kosongkan untuk memakai URL situs sebagai properti URL-prefix.
+                      </div>
+                    </div>
+
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
                       <div className="dash-form-group" style={{ margin: 0 }}>
-                        <Label>Google Analytics 4 ID / GTM ID</Label>
+                        <Label>Google Analytics 4 Measurement ID</Label>
                         <Input
-                          placeholder="Contoh: G-XXXXXXXXXX"
+                          placeholder="G-XXXXXXXXXX"
                           value={settings.google_analytics_id || ''}
                           onChange={(e) => setSettings({ ...settings, google_analytics_id: e.target.value })}
                         />
+                        <div style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)', marginTop: '2px' }}>
+                          Measurement ID stream GA4 duanarasi.
+                        </div>
+                      </div>
+
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label>Google Tag Manager Container ID</Label>
+                        <Input
+                          placeholder="GTM-XXXXXXXX"
+                          value={settings.google_tag_manager_id || ''}
+                          onChange={(e) => setSettings({ ...settings, google_tag_manager_id: e.target.value })}
+                        />
+                        <div style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)', marginTop: '2px' }}>
+                          Jika Container ID diisi, situs memuat GTM saja. Konfigurasikan tag GA4 dengan Measurement ID di atas pada Google Tag Manager agar tidak terjadi hitungan ganda.
+                        </div>
                       </div>
 
                       <div className="dash-form-group" style={{ margin: 0 }}>
@@ -1557,7 +1593,7 @@ export default function DashboardSettings() {
                     <div className="dash-form-group" style={{ margin: 0 }}>
                       <Label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <i className="fa fa-key" style={{ color: '#ea4335' }} />
-                        Google Indexing API (Service Account JSON Key) - Opsional
+                        Google Search Console / Indexing API (Service Account JSON Key)
                       </Label>
                       <textarea
                         className="dash-input"
@@ -1568,10 +1604,10 @@ export default function DashboardSettings() {
                         style={{ width: '100%', fontFamily: 'monospace', fontSize: '12px', resize: 'vertical' }}
                       />
                       <div style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)', marginTop: '4px', lineHeight: 1.5 }}>
-                        <strong>Cara Mendapatkan Kunci Resmi Google Indexing API:</strong>
-                        <br />1. Buat Service Account di Google Cloud Console & aktifkan <em>Web Search Indexing API</em>.
-                        <br />2. Tambahkan email Service Account sebagai <strong>Owner</strong> di Google Search Console properti domain Anda.
-                        <br />3. Unduh file kunci JSON dan paste seluruh isinya ke kotak di atas. Artikel baru Anda akan langsung dilaporkan ke Googlebot dalam hitungan detik!
+                        <strong>Konfigurasi Search Console:</strong>
+                        <br />1. Aktifkan <em>Google Search Console API</em> pada project Google Cloud.
+                        <br />2. Tambahkan email Service Account sebagai <strong>Owner</strong> pada properti Search Console yang sama.
+                        <br />3. Tempel file JSON Service Account di sini. Sitemap dikirim otomatis saat artikel dipublikasikan dan tersedia juga melalui tombol submit manual.
                       </div>
                     </div>
 
@@ -1653,7 +1689,7 @@ export default function DashboardSettings() {
                           <i className="fa fa-refresh text-success"></i> Kirim Sinyal Indexing ke Semua Mesin Pencari
                         </div>
                         <div style={{ fontSize: '12px', color: 'var(--dash-text-muted)' }}>
-                          Memanggil API pengindeksan instan untuk mendaftarkan 20 artikel terbaru ke Googlebot & IndexNow network.
+                          Mengirim sitemap.xml dan news-sitemap.xml ke properti Search Console, serta menjalankan notifikasi indexing yang dikonfigurasi.
                         </div>
                       </div>
 
@@ -1665,7 +1701,7 @@ export default function DashboardSettings() {
                         variant="default"
                         style={{ height: '38px', padding: '0 20px', fontWeight: 700 }}
                       >
-                        <span>{pinging ? 'Mengirim Sinyal...' : 'Kirim Indexing Sekarang'}</span>
+                        <span>{pinging ? 'Mengirim...' : 'Submit Sitemap & Indexing'}</span>
                       </Button>
                     </div>
 

@@ -138,6 +138,8 @@ export default async function handler(req, res) {
         excerpt,
         content,
         img,
+        imageCaption,
+        imageTags,
         categoryId,
         authorId,
         editorName,
@@ -161,6 +163,8 @@ export default async function handler(req, res) {
       if (excerpt !== undefined) updateData.excerpt = excerpt
       if (content !== undefined) updateData.content = content
       if (img !== undefined) updateData.img = img
+      if (imageCaption !== undefined) updateData.imageCaption = imageCaption || null
+      if (imageTags !== undefined) updateData.imageTags = imageTags || null
       if (categoryId !== undefined) {
         if (categoryId) {
           updateData.category = { connect: { id: parseInt(categoryId) } }

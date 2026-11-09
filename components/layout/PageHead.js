@@ -24,7 +24,6 @@ const PageHead = ({ headTitle, settings: propSettings }) => {
   const description = settings.site_description || "Portal berita independen terkini, tajam, faktual, dan terpercaya menyajikan informasi politik, ekonomi, hukum, dan peristiwa terhangat.";
   const keywords = settings.site_keywords || "berita terkini, berita hari ini, berita indonesia, portal berita, kilas peristiwa, dua narasi";
   const verification = settings.google_site_verification || "";
-  const gaId = settings.google_analytics_id || "";
 
   return (
     <Head>
@@ -49,22 +48,6 @@ const PageHead = ({ headTitle, settings: propSettings }) => {
         />
       )}
 
-      {/* Google Analytics 4 (GA4) / GTM */}
-      {gaId && (
-        <>
-          <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${gaId}');
-              `
-            }}
-          />
-        </>
-      )}
     </Head>
   );
 };

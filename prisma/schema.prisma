@@ -36,6 +36,8 @@ model Post {
   excerpt     String?    @db.Text
   content     String?    @db.Text
   img         String?
+  imageCaption String?   @db.Text
+  imageTags    String?   @db.Text
   
   // Relasi Kategori (Many-to-One)
   categoryId  Int?

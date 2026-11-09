@@ -38,7 +38,14 @@ export default function BlogDetails({ initialPost, settings = {}, domain = 'http
         },
         "headline": blogPost.title,
         "description": excerpt,
-        "image": [postImgUrl],
+        "image": [{
+            "@type": "ImageObject",
+            "url": postImgUrl,
+            ...(blogPost.imageCaption ? { "caption": blogPost.imageCaption } : {}),
+            ...(blogPost.imageTags ? {
+                "keywords": blogPost.imageTags.split(',').map(tag => tag.trim()).filter(Boolean)
+            } : {})
+        }],
         "datePublished": datePublished,
         "dateModified": dateModified,
         "author": {
@@ -85,7 +92,7 @@ export default function BlogDetails({ initialPost, settings = {}, domain = 'http
                         <meta property="og:url" content={canonicalUrl} />
                         <meta property="og:site_name" content={siteTitle} />
                         <meta property="og:image" content={postImgUrl} />
-                        <meta property="og:image:alt" content={blogPost.title} />
+                        <meta property="og:image:alt" content={blogPost.imageCaption || blogPost.title} />
                         <meta property="article:published_time" content={datePublished} />
                         <meta property="article:modified_time" content={dateModified} />
                         <meta property="article:section" content={blogPost.category?.name || "Berita"} />
@@ -100,7 +107,7 @@ export default function BlogDetails({ initialPost, settings = {}, domain = 'http
                         {/* Schema.org NewsArticle JSON-LD for Instant Google Indexing */}
                         <script
                             type="application/ld+json"
-                            dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleSchema) }}
+                            dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleSchema).replace(/</g, '\\u003c') }}
                         />
                     </>
                 )}

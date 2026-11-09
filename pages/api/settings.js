@@ -1,5 +1,6 @@
 import prisma from '@/lib/prisma'
 import { requireApiAuth, ROLES } from '@/lib/rbac-server'
+import { getUserFromRequest } from '@/lib/auth'
 
 const defaultSettings = {
   layout_grid: 'three-column',
@@ -15,6 +16,9 @@ const defaultSettings = {
   footer_style: '1',
   site_title: 'Dua Narasi',
   site_tagline: 'Portal Berita & Opini Terpercaya',
+  google_analytics_id: 'G-QTZJ9S6JP7',
+  google_tag_manager_id: 'GTM-NL94HN56',
+  google_search_console_property: '',
   site_logo: '/assets/img/logo/logo.webp', // uploaded logo/icon image URL
   logo_header: '/assets/img/logo/logo.webp',
   logo_header_dark: '/assets/img/logo/logo-white.webp',
@@ -182,11 +186,22 @@ let memoryCache = null
 let lastCacheTime = 0
 const CACHE_TTL_MS = 30000 // 30 seconds
 
+function settingsForRequest(settings, includeGoogleCredentials) {
+  const visibleSettings = { ...settings }
+  if (!includeGoogleCredentials) delete visibleSettings.google_service_account_json
+  return visibleSettings
+}
+
 export default async function handler(req, res) {
   if (req.method === 'GET') {
+    const user = await getUserFromRequest(req)
+    const includeGoogleCredentials = user?.role === ROLES.ADMIN
     const now = Date.now()
     if (memoryCache && (now - lastCacheTime < CACHE_TTL_MS)) {
-      return res.status(200).json({ success: true, settings: memoryCache })
+      return res.status(200).json({
+        success: true,
+        settings: settingsForRequest(memoryCache, includeGoogleCredentials)
+      })
     }
 
     try {
@@ -200,7 +215,10 @@ export default async function handler(req, res) {
       memoryCache = settingsObj
       lastCacheTime = now
 
-      return res.status(200).json({ success: true, settings: settingsObj })
+      return res.status(200).json({
+        success: true,
+        settings: settingsForRequest(settingsObj, includeGoogleCredentials)
+      })
     } catch (error) {
       console.error('Error fetching settings:', error)
       return res.status(200).json({

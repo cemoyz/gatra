@@ -3,14 +3,18 @@ import { createContext, useContext, useEffect, useState } from 'react'
 const SettingsContext = createContext({
     settings: {
         show_post_views: 'true',
-        show_post_comments: 'true'
+        show_post_comments: 'true',
+        google_analytics_id: 'G-QTZJ9S6JP7',
+        google_tag_manager_id: 'GTM-NL94HN56'
     }
 })
 
 export function SettingsProvider({ children }) {
     const [settings, setSettings] = useState({
         show_post_views: 'true',
-        show_post_comments: 'true'
+        show_post_comments: 'true',
+        google_analytics_id: 'G-QTZJ9S6JP7',
+        google_tag_manager_id: 'GTM-NL94HN56'
     })
 
     useEffect(() => {

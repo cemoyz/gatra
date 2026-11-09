@@ -1,4 +1,5 @@
 import Preloader from "@/components/elements/Preloader"
+import GoogleAnalytics from "@/components/elements/GoogleAnalytics"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { SettingsProvider } from "@/context/SettingsContext"
@@ -70,6 +71,7 @@ function MyApp({ Component, pageProps }) {
 
     return (
         <SettingsProvider>
+            <GoogleAnalytics />
             {/* Top Smooth Route Loading Progress Bar */}
             <div
                 id="global-route-bar"

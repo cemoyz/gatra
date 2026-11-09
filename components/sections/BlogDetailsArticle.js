@@ -13,6 +13,7 @@ export default function BlogDetailsArticle({ blogPost }) {
         category = "Berita",
         title = "",
         img = "blog-details--big-1.webp",
+        imageCaption = "",
         content,
         excerpt,
         postType = "standard",
@@ -80,6 +81,10 @@ export default function BlogDetailsArticle({ blogPost }) {
         : new Date().toLocaleDateString("id-ID", { month: "long", day: "numeric", year: "numeric" })
 
     const categoryName = typeof category === 'string' ? category : (category?.name || 'Berita')
+    const imageTags = String(blogPost.imageTags || '')
+        .split(',')
+        .map(tag => tag.trim())
+        .filter(Boolean)
 
     return (
         <>
@@ -199,16 +204,31 @@ export default function BlogDetailsArticle({ blogPost }) {
                         </a>
                     </div>
                 ) : (
-                    <div style={{ marginBottom: '25px', borderRadius: '12px', overflow: 'hidden' }}>
+                    <figure style={{ margin: '0 0 25px', overflow: 'hidden', borderRadius: '12px', background: '#f8fafc' }}>
                         <img
                             src={getImageUrl(img, "blog-details--big-1.webp")}
-                            alt={title}
+                            alt={imageCaption || title}
                             onError={(e) => {
                                 e.currentTarget.src = '/assets/img/blog/blog-details--big-1.webp'
                             }}
-                            style={{ width: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block', borderRadius: '12px' }}
+                            style={{ width: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block' }}
                         />
-                    </div>
+                        {imageCaption && (
+                            <figcaption style={{ padding: '10px 14px', color: '#475569', fontSize: '13px', lineHeight: 1.5 }}>
+                                {imageCaption}
+                            </figcaption>
+                        )}
+                        {imageTags.length > 0 && (
+                            <div aria-label="Tag gambar" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px', padding: '0 14px 12px' }}>
+                                <span style={{ color: '#64748b', fontSize: '12px', fontWeight: 600 }}>Tag gambar:</span>
+                                {imageTags.map((tag, index) => (
+                                    <span key={`${tag}-${index}`} style={{ padding: '3px 8px', borderRadius: '4px', background: '#e2e8f0', color: '#334155', fontSize: '12px', lineHeight: 1.4 }}>
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </figure>
                 )}
 
                 {/* Article Content Directly Below Banner with Perfect Spacing */}
