@@ -153,7 +153,7 @@ export default function Comments({ postId }) {
                 <div className="ta-post-comments-wrapper">
                     <div className="comment-title-wrapper">
                         <h4 className="ta-title ta-border-bottom mb-35 pb-15" style={{ fontSize: '20px', fontWeight: 700, borderColor: '#e2e8f0' }}>
-                            Komentar Pembaca <span className="comment-count" style={{ background: '#da0105', color: '#fff', fontSize: '12px', padding: '2px 8px', borderRadius: '10px', marginLeft: '6px' }}>{commentsList.length}</span>
+                            Komentar Pembaca <span className="comment-count" style={{ background: '#0077d7', color: '#fff', fontSize: '12px', padding: '2px 8px', borderRadius: '10px', marginLeft: '6px' }}>{commentsList.length}</span>
                         </h4>
                     </div>
 
@@ -195,7 +195,7 @@ export default function Comments({ postId }) {
                                                     <h5 className="avatar-name" style={{ fontSize: '15px', fontWeight: 700, margin: 0 }}>
                                                         <span className="url" style={{ color: '#0f172a' }}>{c.name}</span>
                                                     </h5>
-                                                    <span className="date" style={{ fontSize: '12px', color: '#94a3b8' }}>
+                                                    <span className="date" style={{ fontSize: '12px', color: '#94a3b8' }} suppressHydrationWarning>
                                                         <i className="fa fa-clock-o" style={{ marginRight: '4px' }} />
                                                         {formatDate(c.createdAt)}
                                                     </span>

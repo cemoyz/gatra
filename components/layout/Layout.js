@@ -72,16 +72,7 @@ export default function Layout({ headerStyle, footerStyle, headTitle, breadcrumb
 
                 <BackToTop />
 
-                {!headerStyle && <Header1 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} />}
-                {headerStyle == 1 ? <Header1 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
-                {headerStyle == 2 ? <Header2 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
-                {headerStyle == 3 ? <Header3 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
-                {headerStyle == 4 ? <Header4 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
-                {headerStyle == 5 ? <Header5 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
-                {headerStyle == 6 ? <Header6 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
-                {headerStyle == 7 ? <Header7 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
-                {headerStyle == 8 ? <Header8 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
-                {headerStyle == 9 ? <Header9 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} /> : null}
+                <Header1 scroll={scroll} isMobileMenu={isMobileMenu} handleMobileMenu={handleMobileMenu} settings={settings} />
 
                 <div className={`ta-overlay ${isMobileMenu? "is-open":""}`} onClick={handleMobileMenu}/>
 
@@ -93,19 +84,7 @@ export default function Layout({ headerStyle, footerStyle, headTitle, breadcrumb
                     {children}
                 </main>
 
-                {!footerStyle && < Footer1 settings={settings} />}
-                {footerStyle == 1 ? < Footer1 settings={settings} /> : null}
-                {footerStyle == 2 ? < Footer2 settings={settings} /> : null}
-                {footerStyle == 3 ? < Footer3 settings={settings} /> : null}
-                {footerStyle == 4 ? < Footer4 settings={settings} /> : null}
-                {footerStyle == 5 ? < Footer5 settings={settings} /> : null}
-                {footerStyle == 6 ? < Footer6 settings={settings} /> : null}
-                {footerStyle == 7 ? < Footer7 settings={settings} /> : null}
-                {footerStyle == 8 ? < Footer8 settings={settings} /> : null}
-                {footerStyle == 9 ? < Footer9 settings={settings} /> : null}
-                {footerStyle == 10 ? < Footer10 settings={settings} /> : null}
-                {footerStyle == 11 ? < Footer11 settings={settings} /> : null}
-                {footerStyle == 12 ? < Footer12 settings={settings} /> : null}
+                <Footer1 settings={settings} />
             </div>
 
         </>

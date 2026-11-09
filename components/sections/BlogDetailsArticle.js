@@ -84,6 +84,12 @@ export default function BlogDetailsArticle({ blogPost }) {
         large: { fontSize: '20px', lineHeight: '1.95' }
     }
 
+    const formatArticleContent = (rawHtml) => {
+        if (!rawHtml) return null
+        if (rawHtml.includes('KOMPAS.com')) return rawHtml
+        return rawHtml.replace(/<p(\s[^>]*)?>/, '<p$1><strong>JAKARTA, KOMPAS.com</strong> - ')
+    }
+
     const imageTags = String(blogPost.imageTags || '')
         .split(',')
         .map(tag => tag.trim())
@@ -270,7 +276,7 @@ export default function BlogDetailsArticle({ blogPost }) {
             {/* 8. Article Body Content */}
             <div className="kompas-article-body" style={fontStyles[fontSize]}>
                 {content ? (
-                    <div className="body-html-content" dangerouslySetInnerHTML={{ __html: content }} />
+                    <div className="body-html-content" dangerouslySetInnerHTML={{ __html: formatArticleContent(content) }} />
                 ) : (
                     <>
                         <p>
