@@ -77,7 +77,7 @@ export default function KompasFokusSection({ posts = [] }) {
           gap: 10px;
         }
         .bar-tag {
-          background: #004085;
+          background: #0077d7;
           color: #ffffff;
           font-size: 11px;
           font-weight: 800;
@@ -94,7 +94,7 @@ export default function KompasFokusSection({ posts = [] }) {
         .bar-more-link {
           font-size: 12.5px;
           font-weight: 600;
-          color: #004085;
+          color: #0077d7;
           text-decoration: none;
           transition: color 0.15s ease;
         }
@@ -168,7 +168,7 @@ export default function KompasFokusSection({ posts = [] }) {
           transition: color 0.15s ease;
         }
         .fokus-title a:hover {
-          color: #004085;
+          color: #0077d7;
         }
         .fokus-desc {
           font-size: 12px;

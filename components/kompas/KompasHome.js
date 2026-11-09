@@ -83,7 +83,7 @@ export default function KompasHome({ settings = {}, initialPosts = [] }) {
   return (
     <>
       <Head>
-        <title>{settings.site_title || "KOMPAS.com"} - {settings.site_tagline || "Jernih Melihat Dunia"}</title>
+        <title>{`${settings.site_title || "KOMPAS.com"} - ${settings.site_tagline || "Jernih Melihat Dunia"}`}</title>
         <meta name="description" content={settings.site_tagline || "Portal Berita Terkini, Akurat, dan Terpercaya"} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href={settings.site_favicon || "/assets/img/logo/favicon.webp"} />
@@ -124,7 +124,7 @@ export default function KompasHome({ settings = {}, initialPosts = [] }) {
                 <KompasCategoryGrid
                   title="KOMPAS TEKNO"
                   slug="tekno"
-                  color="#004085"
+                  color="#0077d7"
                   posts={teknoPosts.length >= 3 ? teknoPosts : posts.slice(3, 7)}
                 />
               </div>

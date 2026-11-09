@@ -227,7 +227,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
           display: flex;
           align-items: center;
           justify-content: space-between;
-          border-bottom: 2px solid #004085;
+          border-bottom: 2px solid #0077d7;
           padding-bottom: 10px;
           margin-bottom: 20px;
         }
@@ -240,7 +240,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
           display: inline-block;
           width: 5px;
           height: 20px;
-          background: #004085;
+          background: #0077d7;
           border-radius: 2px;
         }
         .stream-title {
@@ -253,7 +253,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
         .stream-index-link {
           font-size: 13px;
           font-weight: 600;
-          color: #004085;
+          color: #0077d7;
           text-decoration: none;
           transition: color 0.15s ease;
         }
@@ -303,7 +303,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
         .stream-cat-name {
           font-size: 11.5px;
           font-weight: 800;
-          color: #004085;
+          color: #0077d7;
           text-transform: uppercase;
           letter-spacing: 0.3px;
         }
@@ -320,7 +320,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
           transition: color 0.15s ease;
         }
         .stream-card-title a:hover {
-          color: #004085;
+          color: #0077d7;
         }
         .stream-card-excerpt {
           font-size: 13px;
@@ -355,7 +355,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
         .btn-load-more {
           background: #f8fafc;
           border: 1px solid #cbd5e1;
-          color: #004085;
+          color: #0077d7;
           font-size: 13.5px;
           font-weight: 700;
           padding: 10px 24px;
@@ -364,9 +364,9 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
           transition: all 0.2s ease;
         }
         .btn-load-more:hover {
-          background: #004085;
+          background: #0077d7;
           color: #ffffff;
-          border-color: #004085;
+          border-color: #0077d7;
         }
 
         /* Sidebar Widgets */
@@ -393,7 +393,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
           display: inline-block;
           width: 4px;
           height: 16px;
-          background: #004085;
+          background: #0077d7;
           border-radius: 2px;
         }
         .widget-title {
@@ -421,7 +421,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
         .pick-bullet {
           font-size: 16px;
           font-weight: 800;
-          color: #004085;
+          color: #0077d7;
           min-width: 18px;
         }
         .pick-content {
@@ -452,7 +452,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
           transition: color 0.15s ease;
         }
         .pick-title a:hover {
-          color: #004085;
+          color: #0077d7;
         }
 
         /* Cek Fakta Widget */
@@ -544,7 +544,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
 
         /* Newsletter Widget */
         .newsletter-widget {
-          background: linear-gradient(135deg, #004085 0%, #002d59 100%);
+          background: linear-gradient(135deg, #0077d7 0%, #004d8c 100%);
           color: #ffffff;
           border: none;
           text-align: center;

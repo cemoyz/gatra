@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { getImageUrl } from "@/lib/imageUtils"
 
-export default function KompasCategoryGrid({ title = "TEKNO", slug = "tekno", color = "#004085", posts = [] }) {
+export default function KompasCategoryGrid({ title = "TEKNO", slug = "tekno", color = "#0077d7", posts = [] }) {
   if (!posts || posts.length === 0) return null
 
   const lead = posts[0]
@@ -143,7 +143,7 @@ export default function KompasCategoryGrid({ title = "TEKNO", slug = "tekno", co
           transition: color 0.15s ease;
         }
         .channel-more-link:hover {
-          color: #004085;
+          color: #0077d7;
         }
 
         /* Lead Card */
@@ -183,7 +183,7 @@ export default function KompasCategoryGrid({ title = "TEKNO", slug = "tekno", co
           transition: color 0.15s ease;
         }
         .lead-title a:hover {
-          color: #004085;
+          color: #0077d7;
         }
         .lead-excerpt {
           font-size: 13px;
@@ -255,7 +255,7 @@ export default function KompasCategoryGrid({ title = "TEKNO", slug = "tekno", co
           transition: color 0.15s ease;
         }
         .mini-title a:hover {
-          color: #004085;
+          color: #0077d7;
         }
         .mini-time {
           font-size: 11px;

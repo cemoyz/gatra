@@ -59,28 +59,16 @@ export default function KompasHeader({ scroll = false, handleMobileMenu }) {
           <div className="kompas-top-row-inner">
             {/* Left: Brand Logo */}
             <div className="kompas-brand-col">
-              <Link href="/" className="kompas-logo-anchor">
-                <div className="kompas-logo-box">
-                  {/* 31th Anniversary Logo */}
-                  <div className="anniversary-badge">
-                    <span className="anniversary-31">31</span>
-                    <span className="anniversary-th">th</span>
-                    <svg className="anniversary-wave" width="22" height="6" viewBox="0 0 22 6" fill="none">
-                      <path d="M1 3C3.5 1 6.5 1 9 3C11.5 5 14.5 5 17 3C18.5 1.8 20 2 21 3" stroke="#0ea5e9" strokeWidth="1.5" strokeLinecap="round"/>
-                    </svg>
-                  </div>
-
-                  {/* KOMPAS.com lettering */}
-                  <div className="kompas-text-group">
-                    <div className="kompas-title-line">
-                      <span className="kompas-word">KOMPAS</span>
-                      <span className="kompas-dotcom">.com</span>
-                    </div>
-                    <div className="kompas-slogan">
-                      JERNIH MELIHAT DUNIA
-                    </div>
-                  </div>
-                </div>
+              <Link href="/" className="kompas-logo-anchor" title="KOMPAS.com - Jernih Melihat Dunia">
+                <img
+                  src="/assets/img/logo/logo-kompascom-31.png"
+                  alt="Kompas.com - Jernih Melihat Dunia"
+                  className="kompas-official-logo"
+                  height="42"
+                  onError={(e) => {
+                    e.currentTarget.src = "https://asset.kompas.com/data/2026/09/15/kompascom/desktop/images/logo-kompascom-31-desktop-v2.png"
+                  }}
+                />
               </Link>
             </div>
 
@@ -247,78 +235,19 @@ export default function KompasHeader({ scroll = false, handleMobileMenu }) {
         /* Brand / Logo */
         .kompas-brand-col {
           flex-shrink: 0;
+          display: flex;
+          align-items: center;
         }
         .kompas-logo-anchor {
           text-decoration: none;
-          display: inline-block;
-        }
-        .kompas-logo-box {
-          display: flex;
+          display: inline-flex;
           align-items: center;
-          gap: 8px;
         }
-
-        /* 31th Badge */
-        .anniversary-badge {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          position: relative;
-          padding-right: 2px;
-          line-height: 1;
-        }
-        .anniversary-31 {
-          font-size: 26px;
-          font-weight: 900;
-          font-style: italic;
-          background: linear-gradient(135deg, #f59e0b 0%, #f97316 45%, #06b6d4 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          letter-spacing: -1px;
-        }
-        .anniversary-th {
-          position: absolute;
-          top: 0px;
-          right: -8px;
-          font-size: 10px;
-          font-weight: 800;
-          color: #f59e0b;
-        }
-        .anniversary-wave {
-          margin-top: -2px;
-        }
-
-        /* KOMPAS.com lettering */
-        .kompas-text-group {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-        }
-        .kompas-title-line {
-          display: flex;
-          align-items: baseline;
-          line-height: 1.05;
-        }
-        .kompas-word {
-          font-size: 25px;
-          font-weight: 900;
-          color: #ffffff;
-          font-family: Georgia, "Times New Roman", serif;
-          letter-spacing: 0.5px;
-        }
-        .kompas-dotcom {
-          font-size: 23px;
-          font-weight: 800;
-          color: #f97316;
-          font-family: Georgia, "Times New Roman", serif;
-        }
-        .kompas-slogan {
-          font-size: 9.5px;
-          color: #ffffff;
-          font-weight: 600;
-          letter-spacing: 2.2px;
-          margin-top: 3px;
-          opacity: 0.95;
+        .kompas-official-logo {
+          height: 42px;
+          width: auto;
+          object-fit: contain;
+          display: block;
         }
 
         /* Search Box */
