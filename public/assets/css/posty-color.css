@@ -1,0 +1,33 @@
+/* Common Colors */
+
+.bg-white-color {
+    background-color: var(--white-color);
+}
+
+.bg-pink {
+    background-color: var(--pink-color);
+}
+
+.bg-blue {
+    background-color: var(--blue-color);
+}
+
+.bg-blue-2 {
+    background-color: var(--blue-color-2);
+}
+
+.bg-blue-light {
+    background-color: var(--light-blue-color);
+}
+
+.bg-green {
+    background-color: var(--green-color);
+}
+
+.bg-yellow {
+    background-color: var(--yellow-color);
+}
+
+.bg-red {
+    background-color: var(--red-color);
+}

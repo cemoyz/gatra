@@ -6,15 +6,20 @@ import { SettingsProvider } from "@/context/SettingsContext"
 import 'swiper/css';
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import "react-modal-video/css/modal-video.css";
 
 import "@/public/assets/css/bootstrap.min.css"
 import "@/public/assets/css/font-awesome.min.css"
+import "@/public/assets/css/line-awesome.min.css"
 import "@/public/assets/css/lightcase.css"
 import "@/public/assets/css/meanmenu.min.css"
 import "@/public/assets/css/nice-select.min.css"
 import "@/public/assets/css/owl.carousel.min.css"
 import "@/public/assets/css/animate.min.css"
 import "@/public/assets/css/main.css"
+import "@/public/assets/css/common-style.css"
+import "@/public/assets/css/posty-color.css"
+import "@/public/assets/css/posty.css"
 import "@/public/assets/css/dashboard.css"
 
 function MyApp({ Component, pageProps }) {

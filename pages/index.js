@@ -6,6 +6,7 @@ import Newsletter1 from "@/components/sections/Newsletter1"
 import EditorialWelcome from "@/components/sections/EditorialWelcome"
 import BreakingNewsTicker from "@/components/elements/BreakingNewsTicker"
 import KompasHome from "@/components/kompas/KompasHome"
+import PostyHome from "@/components/posty/PostyHome"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
@@ -318,7 +319,7 @@ function Home1({ settings = {} }) {
 }
 
 export default function Home({ initialSettings = {}, initialPosts = [], initialPopularPosts = [] }) {
-    const [homeStyle, setHomeStyle] = useState(initialSettings.home_style || 'kompas')
+    const [homeStyle, setHomeStyle] = useState(initialSettings.home_style || 'posty')
     const [settings, setSettings] = useState(initialSettings)
     const [isLoaded, setIsLoaded] = useState(false)
 
@@ -363,9 +364,11 @@ export default function Home({ initialSettings = {}, initialPosts = [], initialP
         case 'index-rtl':
             return <HomeRtl />
         case 'kompas':
+            return <KompasHome settings={settings} initialPosts={initialPosts} initialPopularPosts={initialPopularPosts} />
+        case 'posty':
         case 'index-1':
         default:
-            return <KompasHome settings={settings} initialPosts={initialPosts} initialPopularPosts={initialPopularPosts} />
+            return <PostyHome settings={settings} initialPosts={initialPosts} initialPopularPosts={initialPopularPosts} />
     }
 }
 
