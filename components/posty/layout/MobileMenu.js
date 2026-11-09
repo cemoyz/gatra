@@ -1,9 +1,32 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from "next/link"
+
+const defaultCategories = [
+	{ id: 1, name: "News", slug: "news" },
+	{ id: 2, name: "Tekno", slug: "tekno" },
+	{ id: 3, name: "Bola", slug: "bola" },
+	{ id: 4, name: "Money", slug: "money" },
+	{ id: 5, name: "Lifestyle", slug: "lifestyle" },
+	{ id: 6, name: "Travel", slug: "travel" },
+	{ id: 7, name: "Tren", slug: "tren" },
+]
 
 export default function MobileMenu({ isMobileMenu, handleMobileMenu }) {
 	const [isAccordion, setIsAccordion] = useState(null)
+	const [categories, setCategories] = useState(defaultCategories)
+
+	useEffect(() => {
+		fetch('/api/categories?headerOnly=true')
+			.then(res => res.json())
+			.then(data => {
+				if (data.success && Array.isArray(data.categories) && data.categories.length > 0) {
+					setCategories(data.categories)
+				}
+			})
+			.catch(() => {})
+	}, [])
+
 	const handleAccordion = (key) => {
 		setIsAccordion(prevState => prevState === key ? null : key)
 	}
@@ -22,13 +45,13 @@ export default function MobileMenu({ isMobileMenu, handleMobileMenu }) {
 						<Link href="/blog">Kanal Berita</Link>
 						<span className={isAccordion === 1 ? "dropdown-plus dropdown-open" : "dropdown-plus"} onClick={() => handleAccordion(1)} />
 						<ul style={{ display: isAccordion === 1 ? "block" : "none" }}>
-							<li><Link href="/blog-filter-category?category=news" onClick={handleMobileMenu}>News</Link></li>
-							<li><Link href="/blog-filter-category?category=tekno" onClick={handleMobileMenu}>Tekno</Link></li>
-							<li><Link href="/blog-filter-category?category=bola" onClick={handleMobileMenu}>Bola</Link></li>
-							<li><Link href="/blog-filter-category?category=money" onClick={handleMobileMenu}>Money</Link></li>
-							<li><Link href="/blog-filter-category?category=lifestyle" onClick={handleMobileMenu}>Lifestyle</Link></li>
-							<li><Link href="/blog-filter-category?category=travel" onClick={handleMobileMenu}>Travel</Link></li>
-							<li><Link href="/blog-filter-category?category=tren" onClick={handleMobileMenu}>Tren</Link></li>
+							{categories.map((cat) => (
+								<li key={cat.id}>
+									<Link href={`/blog-filter-category?category=${cat.slug || cat.name}`} onClick={handleMobileMenu}>
+										{cat.name}
+									</Link>
+								</li>
+							))}
 						</ul>
 					</li>
 					<li>
