@@ -12,8 +12,8 @@ export default function BlogDetails({ initialPost, popularPosts = [], settings =
     const router = useRouter()
     const blogPost = initialPost
 
-    const siteTitle = settings.site_title || "KOMPAS.com"
-    const siteTagline = settings.site_tagline || "Jernih Melihat Dunia"
+    const siteTitle = settings.site_title || "Gatra Portal"
+    const siteTagline = settings.site_tagline || "Portal Berita Terkini, Akurat, dan Terpercaya"
     const pageTitle = blogPost?.title ? `${blogPost.title} - ${siteTitle}` : `${siteTitle} - ${siteTagline}`
     const cleanDomain = domain.replace(/\/$/, '')
     const canonicalUrl = blogPost ? `${cleanDomain}/blog/${blogPost.slug || blogPost.id}` : cleanDomain
