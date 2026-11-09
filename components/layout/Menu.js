@@ -12,8 +12,16 @@ export default function Menu() {
             .then(res => res.json())
             .then(data => {
                 if (data.success && Array.isArray(data.categories)) {
-                    // Limit to 6 categories so with Beranda it fits 7 items in 1 single row
-                    setCategories(data.categories.filter(c => c.showInHeader !== false).slice(0, 6))
+                    const kompasOrder = ['news', 'tren', 'bola', 'tekno', 'money', 'sains', 'otomotif', 'lifestyle', 'edukasi', 'cek-fakta']
+                    const sorted = [...data.categories].sort((a, b) => {
+                        const idxA = kompasOrder.indexOf(a.slug?.toLowerCase())
+                        const idxB = kompasOrder.indexOf(b.slug?.toLowerCase())
+                        if (idxA !== -1 && idxB !== -1) return idxA - idxB
+                        if (idxA !== -1) return -1
+                        if (idxB !== -1) return 1
+                        return 0
+                    })
+                    setCategories(sorted.filter(c => c.showInHeader !== false).slice(0, 8))
                 }
             })
             .catch(console.error)

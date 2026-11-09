@@ -5,6 +5,7 @@ import MargueePost from "@/components/sections/MargueePost"
 import Newsletter1 from "@/components/sections/Newsletter1"
 import EditorialWelcome from "@/components/sections/EditorialWelcome"
 import BreakingNewsTicker from "@/components/elements/BreakingNewsTicker"
+import KompasHome from "@/components/kompas/KompasHome"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { useEffect, useState } from "react"
@@ -316,8 +317,8 @@ function Home1({ settings = {} }) {
     )
 }
 
-export default function Home({ initialSettings = {} }) {
-    const [homeStyle, setHomeStyle] = useState(initialSettings.home_style || 'index-1')
+export default function Home({ initialSettings = {}, initialPosts = [] }) {
+    const [homeStyle, setHomeStyle] = useState(initialSettings.home_style || 'kompas')
     const [settings, setSettings] = useState(initialSettings)
     const [isLoaded, setIsLoaded] = useState(false)
 
@@ -337,6 +338,8 @@ export default function Home({ initialSettings = {} }) {
     }, [])
 
     switch (homeStyle) {
+        case 'legacy-1':
+            return <Home1 settings={settings} />
         case 'index-2':
             return <Home2 />
         case 'index-3':
@@ -359,9 +362,10 @@ export default function Home({ initialSettings = {} }) {
             return <Home11 />
         case 'index-rtl':
             return <HomeRtl />
+        case 'kompas':
         case 'index-1':
         default:
-            return <Home1 settings={settings} />
+            return <KompasHome settings={settings} initialPosts={initialPosts} />
     }
 }
 
@@ -372,16 +376,29 @@ export async function getServerSideProps() {
         records.forEach(item => {
             settings[item.key] = item.value
         })
+
+        const posts = await prisma.post.findMany({
+            where: { status: 'PUBLISHED' },
+            orderBy: { createdAt: 'desc' },
+            take: 50,
+            include: {
+                category: { select: { id: true, name: true, slug: true } },
+                author: { select: { id: true, name: true, avatar: true } }
+            }
+        })
+
         return {
             props: {
-                initialSettings: settings
+                initialSettings: settings,
+                initialPosts: JSON.parse(JSON.stringify(posts))
             }
         }
     } catch (err) {
-        console.error('Error fetching settings in getServerSideProps:', err)
+        console.error('Error fetching data in getServerSideProps:', err)
         return {
             props: {
-                initialSettings: {}
+                initialSettings: {},
+                initialPosts: []
             }
         }
     }

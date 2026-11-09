@@ -126,7 +126,6 @@ async function main() {
     "Exploring the intersection of human creativity, artificial intelligence, and digital journalism."
   ]
 
-  const authorIds = Object.values(authorMap)
   const categoryIds = Object.values(categoryMap)
 
   for (let i = 0; i < blogData.length; i++) {
