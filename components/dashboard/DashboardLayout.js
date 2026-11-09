@@ -113,14 +113,21 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
     fetch('/api/auth/me', {
       headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
     })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok && res.status !== 401 && res.status !== 403) {
+          // If server error (e.g. temporary DB hiccup), do not logout user
+          return null
+        }
+        return res.json()
+      })
       .then(data => {
+        if (!data) return
         if (data.success && data.user && ['ADMIN', 'EDITOR', 'AUTHOR'].includes(data.user.role)) {
           cachedDashboardUser = data.user
           try { sessionStorage.setItem('dash_user', JSON.stringify(data.user)) } catch (e) {}
           setCurrentUser(data.user)
           setAuthLoading(false)
-        } else {
+        } else if (data.status === 401 || (data.success === false && data.message === 'Not authenticated')) {
           cachedDashboardUser = null
           try {
             sessionStorage.removeItem('dash_user')
@@ -133,15 +140,15 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
         }
       })
       .catch(() => {
-        cachedDashboardUser = null
+        // Network offline / fetch failed - keep cached session if available
         try {
-          sessionStorage.removeItem('dash_user')
-          localStorage.removeItem('hoom_token')
-          sessionStorage.removeItem('hoom_token')
-          document.cookie = 'hoom_auth_token=; path=/; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT;'
-          fetch('/api/auth/logout', { method: 'POST' }).catch(() => {})
+          const stored = sessionStorage.getItem('dash_user')
+          if (stored) {
+            const u = JSON.parse(stored)
+            setCurrentUser(u)
+            setAuthLoading(false)
+          }
         } catch (e) {}
-        router.replace('/login')
       })
 
     // Function to load both messages and comments notifications

@@ -74,7 +74,14 @@ export default function EditPost() {
   ])
 
   useEffect(() => {
-    fetch('/api/auth/me')
+    let authToken = null
+    try {
+      authToken = localStorage.getItem('hoom_token') || sessionStorage.getItem('hoom_token')
+    } catch (e) {}
+
+    fetch('/api/auth/me', {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : {}
+    })
       .then(r => r.json())
       .then(data => {
         if (data.success && data.user) setCurrentUser(data.user)
