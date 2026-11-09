@@ -10,11 +10,7 @@ import prisma from "@/lib/prisma"
 
 export default function BlogDetails({ initialPost, popularPosts = [], settings = {}, domain = 'http://localhost:3000' }) {
     const router = useRouter()
-    const [blogPost, setBlogPost] = useState(initialPost)
-
-    useEffect(() => {
-        setBlogPost(initialPost)
-    }, [initialPost])
+    const blogPost = initialPost
 
     const siteTitle = settings.site_title || "KOMPAS.com"
     const siteTagline = settings.site_tagline || "Jernih Melihat Dunia"
@@ -129,10 +125,10 @@ export default function BlogDetails({ initialPost, popularPosts = [], settings =
                             {/* Main Column: 8 Cols (~68%) */}
                             <div className="col-xl-8 col-lg-8">
                                 <div className="kompas-article-wrapper">
-                                    <BlogDetailsArticle blogPost={blogPost} />
+                                    <BlogDetailsArticle key={blogPost.id} blogPost={blogPost} />
                                     {settings.show_post_comments !== 'false' && (
                                         <div className="mt-4">
-                                            <Comments postId={blogPost.id} />
+                                            <Comments key={`comments-${blogPost.id}`} postId={blogPost.id} />
                                         </div>
                                     )}
                                 </div>
@@ -141,6 +137,7 @@ export default function BlogDetails({ initialPost, popularPosts = [], settings =
                             {/* Sidebar Column: 4 Cols (~32%) */}
                             <div className="col-xl-4 col-lg-4">
                                 <KompasArticleSidebar
+                                    key={`sidebar-${blogPost.id}`}
                                     popularPosts={popularPosts}
                                     currentPostId={blogPost.id}
                                 />

@@ -13,7 +13,7 @@ export default function KompasHeroSection({ posts = [], popularPosts = [] }) {
   // Filter popular posts by tab
   const filteredPopular = popularPosts.filter(p => {
     if (activeTab === "all") return true
-    const catSlug = p.category?.slug?.toLowerCase() || p.category?.name?.toLowerCase() || ""
+    const catSlug = (typeof p.category === 'string' ? p.category : (p.category?.slug || p.category?.name || p.categorySlug || "")).toLowerCase()
     if (activeTab === "news") return catSlug.includes("news") || catSlug.includes("nasional") || catSlug.includes("technology")
     if (activeTab === "tren") return catSlug.includes("tren") || catSlug.includes("lifestyle") || catSlug.includes("marketing")
     return true
@@ -76,7 +76,7 @@ export default function KompasHeroSection({ posts = [], popularPosts = [] }) {
                       />
                       {leadPost.category && (
                         <div className="articlePost-subtitle">
-                          {leadPost.category.name}
+                          {leadPost.category.name || (typeof leadPost.category === 'string' ? leadPost.category : '')}
                         </div>
                       )}
                     </div>
@@ -122,7 +122,7 @@ export default function KompasHeroSection({ posts = [], popularPosts = [] }) {
                           <div className="subHL-box">
                             {post.category && (
                               <div className="subHL-category">
-                                {post.category.name}
+                                {post.category.name || (typeof post.category === 'string' ? post.category : '')}
                               </div>
                             )}
                             <h2 className="subHL-title">
@@ -187,7 +187,7 @@ export default function KompasHeroSection({ posts = [], popularPosts = [] }) {
                           <div className="mostBox">
                             {post.category && (
                               <span className="mostChannel">
-                                {post.category.name}
+                                {post.category.name || (typeof post.category === 'string' ? post.category : '')}
                               </span>
                             )}
                             <h4 className="mostTitle">

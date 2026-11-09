@@ -126,9 +126,11 @@ export default async function handler(req, res) {
       // Format response with normalized category/author strings for backwards-compatibility
       let formattedPosts = posts.map(post => ({
         ...post,
-        category: post.category?.name || post.category?.slug || 'General',
+        category: post.category || { id: 0, name: 'General', slug: 'general' },
+        categoryName: post.category?.name || 'General',
         categorySlug: post.category?.slug || 'general',
-        author: post.author?.name || 'Admin',
+        author: post.author || { name: 'Admin', avatar: '/assets/img/author/author-1.webp' },
+        authorName: post.author?.name || 'Admin',
         authorRole: post.author?.designation || post.author?.role || 'Penulis',
         authorAvatar: post.author?.avatar || '/assets/img/author/author-1.webp',
         commentsCount: post._count?.comments || 0

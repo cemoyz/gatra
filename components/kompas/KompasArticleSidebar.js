@@ -107,7 +107,7 @@ export default function KompasArticleSidebar({ popularPosts: propPopular = [], r
                   <div className="popular-number">{idx + 1}</div>
                   <div className="popular-content">
                     {post.category && (
-                      <span className="popular-channel">{post.category.name}</span>
+                      <span className="popular-channel">{post.category.name || (typeof post.category === 'string' ? post.category : '')}</span>
                     )}
                     <h4 className="popular-title">{post.title}</h4>
                     <div className="popular-meta">
@@ -504,3 +504,4 @@ export default function KompasArticleSidebar({ popularPosts: propPopular = [], r
     </aside>
   )
 }
+

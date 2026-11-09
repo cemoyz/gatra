@@ -11,11 +11,11 @@ import BreakingNewsTicker from "@/components/elements/BreakingNewsTicker"
 import BackToTop from "@/components/elements/BackToTop"
 import Sidebar from "@/components/layout/Sidebar"
 
-export default function KompasHome({ settings = {}, initialPosts = [] }) {
+export default function KompasHome({ settings = {}, initialPosts = [], initialPopularPosts = [] }) {
   const [scroll, setScroll] = useState(false)
   const [isMobileMenu, setIsMobileMenu] = useState(false)
   const [posts, setPosts] = useState(initialPosts)
-  const [popularPosts, setPopularPosts] = useState([])
+  const [popularPosts, setPopularPosts] = useState(initialPopularPosts)
   const [loading, setLoading] = useState(initialPosts.length === 0)
 
   // Scroll handler for sticky header
@@ -29,47 +29,58 @@ export default function KompasHome({ settings = {}, initialPosts = [] }) {
 
   // Fetch posts if not passed via SSR
   useEffect(() => {
-    fetch('/api/posts?limit=50&status=PUBLISHED')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && Array.isArray(data.posts) && data.posts.length > 0) {
-          setPosts(data.posts)
-        }
-      })
-      .catch(console.error)
-      .finally(() => setLoading(false))
+    if (initialPosts.length === 0) {
+      fetch('/api/posts?limit=50&status=PUBLISHED')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && Array.isArray(data.posts) && data.posts.length > 0) {
+            setPosts(data.posts)
+          }
+        })
+        .catch(console.error)
+        .finally(() => setLoading(false))
+    }
 
-    // Fetch popular posts for ranking
-    fetch('/api/posts?limit=10&sortBy=popular&status=PUBLISHED')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && Array.isArray(data.posts)) {
-          setPopularPosts(data.posts)
-        }
-      })
-      .catch(console.error)
-  }, [])
+    if (initialPopularPosts.length === 0) {
+      // Fetch popular posts for ranking
+      fetch('/api/posts?limit=10&sortBy=popular&status=PUBLISHED')
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && Array.isArray(data.posts)) {
+            setPopularPosts(data.posts)
+          }
+        })
+        .catch(console.error)
+    }
+  }, [initialPosts.length, initialPopularPosts.length])
 
   const handleMobileMenu = () => setIsMobileMenu(!isMobileMenu)
 
+  // Helper to extract category name/slug safely from string or object
+  const getCatString = (p) => {
+    if (!p) return ""
+    if (typeof p.category === 'string') return p.category.toLowerCase()
+    return ((p.category?.slug || p.category?.name || p.categorySlug || "")).toLowerCase()
+  }
+
   // Filter category posts
   const teknoPosts = posts.filter(p => {
-    const s = (p.category?.slug || p.category?.name || "").toLowerCase()
-    return s.includes('tekno') || s.includes('technology') || s.includes('design')
+    const s = getCatString(p)
+    return s.includes('tekno') || s.includes('technology') || s.includes('gadget')
   })
 
   const bolaPosts = posts.filter(p => {
-    const s = (p.category?.slug || p.category?.name || "").toLowerCase()
-    return s.includes('bola') || s.includes('travel') || s.includes('sport')
+    const s = getCatString(p)
+    return s.includes('bola') || s.includes('sport') || s.includes('sepak')
   })
 
   const moneyPosts = posts.filter(p => {
-    const s = (p.category?.slug || p.category?.name || "").toLowerCase()
+    const s = getCatString(p)
     return s.includes('money') || s.includes('marketing') || s.includes('bisnis') || s.includes('ekonomi')
   })
 
   const factCheckPosts = posts.filter(p => {
-    const s = (p.category?.slug || p.category?.name || "").toLowerCase()
+    const s = getCatString(p)
     return s.includes('cek-fakta') || s.includes('fakta') || s.includes('edukasi') || s.includes('sains')
   })
 

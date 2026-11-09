@@ -2,7 +2,11 @@ import Link from "next/link"
 import { getImageUrl } from "@/lib/imageUtils"
 
 export default function KompasVideoSection({ posts = [] }) {
-  const videoPosts = posts.slice(8, 12)
+  const explicitVideos = posts.filter(p => p.postType === 'video' || p.videoUrl)
+  const videoPosts = explicitVideos.length >= 4 
+    ? explicitVideos.slice(0, 4) 
+    : (posts.length > 16 ? posts.slice(12, 16) : posts.slice(4, 8))
+
   if (videoPosts.length === 0) return null
 
   const mainVideo = videoPosts[0]
@@ -49,7 +53,7 @@ export default function KompasVideoSection({ posts = [] }) {
                   </span>
                 </Link>
                 <div className="main-video-info">
-                  <span className="video-cat-badge">{mainVideo.category?.name || "Video"}</span>
+                  <span className="video-cat-badge">{mainVideo.category?.name || (typeof mainVideo.category === 'string' ? mainVideo.category : "Video")}</span>
                   <h4 className="main-video-title">
                     <Link href={`/blog/${mainVideo.slug || mainVideo.id}`}>
                       {mainVideo.title}
@@ -83,7 +87,7 @@ export default function KompasVideoSection({ posts = [] }) {
                     <span className="side-duration">02:15</span>
                   </Link>
                   <div className="side-video-text">
-                    <span className="side-video-cat">{video.category?.name || "Video"}</span>
+                    <span className="side-video-cat">{video.category?.name || (typeof video.category === 'string' ? video.category : "Video")}</span>
                     <h5 className="side-video-title">
                       <Link href={`/blog/${video.slug || video.id}`}>
                         {video.title}

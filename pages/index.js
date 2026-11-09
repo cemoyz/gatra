@@ -317,7 +317,7 @@ function Home1({ settings = {} }) {
     )
 }
 
-export default function Home({ initialSettings = {}, initialPosts = [] }) {
+export default function Home({ initialSettings = {}, initialPosts = [], initialPopularPosts = [] }) {
     const [homeStyle, setHomeStyle] = useState(initialSettings.home_style || 'kompas')
     const [settings, setSettings] = useState(initialSettings)
     const [isLoaded, setIsLoaded] = useState(false)
@@ -365,7 +365,7 @@ export default function Home({ initialSettings = {}, initialPosts = [] }) {
         case 'kompas':
         case 'index-1':
         default:
-            return <KompasHome settings={settings} initialPosts={initialPosts} />
+            return <KompasHome settings={settings} initialPosts={initialPosts} initialPopularPosts={initialPopularPosts} />
     }
 }
 
@@ -377,20 +377,32 @@ export async function getServerSideProps() {
             settings[item.key] = item.value
         })
 
-        const posts = await prisma.post.findMany({
-            where: { status: 'PUBLISHED' },
-            orderBy: { createdAt: 'desc' },
-            take: 50,
-            include: {
-                category: { select: { id: true, name: true, slug: true } },
-                author: { select: { id: true, name: true, avatar: true } }
-            }
-        })
+        const [posts, popularPosts] = await Promise.all([
+            prisma.post.findMany({
+                where: { status: 'PUBLISHED' },
+                orderBy: { createdAt: 'desc' },
+                take: 50,
+                include: {
+                    category: { select: { id: true, name: true, slug: true } },
+                    author: { select: { id: true, name: true, avatar: true } }
+                }
+            }),
+            prisma.post.findMany({
+                where: { status: 'PUBLISHED' },
+                orderBy: { views: 'desc' },
+                take: 10,
+                include: {
+                    category: { select: { id: true, name: true, slug: true } },
+                    author: { select: { id: true, name: true, avatar: true } }
+                }
+            })
+        ])
 
         return {
             props: {
                 initialSettings: settings,
-                initialPosts: JSON.parse(JSON.stringify(posts))
+                initialPosts: JSON.parse(JSON.stringify(posts)),
+                initialPopularPosts: JSON.parse(JSON.stringify(popularPosts))
             }
         }
     } catch (err) {
@@ -398,7 +410,8 @@ export async function getServerSideProps() {
         return {
             props: {
                 initialSettings: {},
-                initialPosts: []
+                initialPosts: [],
+                initialPopularPosts: []
             }
         }
     }

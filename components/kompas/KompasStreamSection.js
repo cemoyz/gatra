@@ -76,7 +76,7 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
                     <div className="stream-top-meta">
                       {post.category && (
                         <span className="stream-cat-name">
-                          {post.category.name}
+                          {post.category.name || (typeof post.category === 'string' ? post.category : '')}
                         </span>
                       )}
                     </div>
@@ -137,7 +137,9 @@ export default function KompasStreamSection({ streamPosts = [], editorPicks = []
                       <span className="pick-bullet">{i + 1}</span>
                       <div className="pick-content">
                         {post.category && (
-                          <span className="pick-cat">{post.category.name}</span>
+                          <span className="pick-cat">
+                            {post.category.name || (typeof post.category === 'string' ? post.category : '')}
+                          </span>
                         )}
                         <h5 className="pick-title">
                           <Link href={`/blog/${post.slug || post.id}`}>

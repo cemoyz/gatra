@@ -437,11 +437,11 @@ export default function DashboardOverview() {
                       </td>
                       <td style={{ padding: '12px 18px' }}>
                         <span className="dash-badge" style={{ fontSize: '11px' }}>
-                          {post.category || 'Berita'}
+                          {typeof post.category === 'object' ? post.category?.name : (post.category || 'Berita')}
                         </span>
                       </td>
                       <td style={{ padding: '12px 18px', fontSize: '13px', color: 'var(--dash-text-main)', fontWeight: 600 }}>
-                        {post.author || 'Redaksi'}
+                        {typeof post.author === 'object' ? post.author?.name : (post.author || 'Redaksi')}
                       </td>
                       <td style={{ padding: '12px 18px', fontSize: '13px', color: 'var(--dash-text-muted)' }}>
                         <i className="fa fa-eye" style={{ marginRight: '4px' }}></i> {post.views?.toLocaleString() || 0}
@@ -504,7 +504,7 @@ export default function DashboardOverview() {
                     />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                        <span className="dash-badge" style={{ fontSize: '10.5px' }}>{post.category || 'Berita'}</span>
+                        <span className="dash-badge" style={{ fontSize: '10.5px' }}>{typeof post.category === 'object' ? post.category?.name : (post.category || 'Berita')}</span>
                         <span style={{
                           fontSize: '10px',
                           fontWeight: 700,

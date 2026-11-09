@@ -292,7 +292,7 @@ export default function BreakingNewsTicker({ settings = {}, container = false, c
                             {posts.map((post) => (
                                 <Link 
                                     key={post.id} 
-                                    href={`/blog/${post.id || post.slug}`}
+                                    href={`/blog/${post.slug || post.id}`}
                                     className="ticker-item"
                                     style={{
                                         display: 'inline-flex',
@@ -317,7 +317,7 @@ export default function BreakingNewsTicker({ settings = {}, container = false, c
                                             letterSpacing: '0.5px'
                                         }}
                                     >
-                                        {post.category}
+                                        {typeof post.category === 'object' ? post.category?.name : (post.category || 'Berita')}
                                     </span>
                                     <span 
                                         className="ticker-title"

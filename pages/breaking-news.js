@@ -567,16 +567,16 @@ export default function BreakingNewsPage({ initialPosts = [], settings = {}, cat
                                                 </div>
                                                 <div className="bn-card-content">
                                                     <div className="bn-meta-row" style={{ margin: 0 }}>
-                                                        <span className="bn-cat-badge">{post.category}</span>
+                                                        <span className="bn-cat-badge">{typeof post.category === 'object' ? post.category?.name : (post.category || 'Berita')}</span>
                                                     </div>
                                                     <h3 className="bn-card-title">
-                                                        <Link href={`/blog/${post.id}`}>
+                                                        <Link href={`/blog/${post.slug || post.id}`}>
                                                             {post.title}
                                                         </Link>
                                                     </h3>
                                                     <div className="bn-card-footer">
-                                                        <span><i className="fa fa-user-circle-o" /> {post.author}</span>
-                                                        <Link href={`/blog/${post.id}`} style={{ color: '#da0105', fontWeight: 600 }}>
+                                                        <span><i className="fa fa-user-circle-o" /> {typeof post.author === 'object' ? post.author?.name : (post.author || 'Admin')}</span>
+                                                        <Link href={`/blog/${post.slug || post.id}`} style={{ color: '#da0105', fontWeight: 600 }}>
                                                             Selengkapnya →
                                                         </Link>
                                                     </div>

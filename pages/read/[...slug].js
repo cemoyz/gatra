@@ -9,3 +9,4 @@ export async function getServerSideProps(context) {
     context.params.id = targetIdentifier
     return blogGetServerSideProps(context)
 }
+

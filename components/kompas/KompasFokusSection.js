@@ -34,7 +34,7 @@ export default function KompasFokusSection({ posts = [] }) {
                     }}
                   />
                   {post.category && (
-                    <span className="fokus-cat-badge">{post.category.name}</span>
+                    <span className="fokus-cat-badge">{post.category.name || (typeof post.category === 'string' ? post.category : '')}</span>
                   )}
                 </Link>
                 <div className="fokus-body">

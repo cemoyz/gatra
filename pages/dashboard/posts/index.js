@@ -473,10 +473,10 @@ export default function PostsManagement() {
                         </span>
                       </td>
                       <td style={{ padding: '14px 18px' }}>
-                        <Badge variant="outline">{post.category || 'Berita'}</Badge>
+                        <Badge variant="outline">{typeof post.category === 'object' ? post.category?.name : (post.category || 'Berita')}</Badge>
                       </td>
                       <td style={{ padding: '14px 18px', color: 'var(--dash-text-main)', fontSize: '13px', fontWeight: 600 }}>
-                        {post.author || 'Redaksi'}
+                        {typeof post.author === 'object' ? post.author?.name : (post.author || 'Redaksi')}
                       </td>
                       <td style={{ padding: '14px 18px', color: 'var(--dash-text-muted)', fontSize: '13px' }}>
                         <i className="fa fa-eye" style={{ marginRight: '5px', opacity: 0.7 }}></i>
@@ -586,7 +586,7 @@ export default function PostsManagement() {
                     />
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                        <span className="dash-badge" style={{ fontSize: '10.5px' }}>{post.category || 'Berita'}</span>
+                        <span className="dash-badge" style={{ fontSize: '10.5px' }}>{typeof post.category === 'object' ? post.category?.name : (post.category || 'Berita')}</span>
                         <Badge variant={post.status === 'PUBLISHED' ? 'success' : 'warning'} dot style={{ fontSize: '10px' }}>
                           {post.status === 'PUBLISHED' ? 'Terbit' : 'Draf'}
                         </Badge>
