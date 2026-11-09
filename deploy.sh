@@ -18,7 +18,7 @@ if [ -f "docker-compose.yml" ] && command -v docker &> /dev/null; then
     docker compose up -d --build --remove-orphans
 
     echo "🗄️ Pushing Prisma schema to database..."
-    docker compose exec -T web npx prisma db push
+    docker compose exec -T web npx prisma db push --skip-generate
 
     echo "🧹 Cleaning up dangling Docker images..."
     docker image prune -f
@@ -37,7 +37,7 @@ if command -v pm2 &> /dev/null; then
     npx prisma generate
 
     echo "🗄️ Pushing database schema..."
-    npx prisma db push
+    npx prisma db push --skip-generate
 
     echo "🏗️ Building Next.js production bundle..."
     npm run build

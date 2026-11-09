@@ -1,7 +1,8 @@
 import prisma from '@/lib/prisma'
+import { normalizeSiteUrl } from '@/lib/siteUrl'
 
 function generateSiteMap({ domain, posts, categories, authors }) {
-  const cleanDomain = (domain || 'http://localhost:3000').replace(/\/$/, '')
+  const cleanDomain = normalizeSiteUrl(domain)
   const currentDate = new Date().toISOString()
 
   return `<?xml version="1.0" encoding="UTF-8"?>

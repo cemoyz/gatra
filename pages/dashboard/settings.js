@@ -130,7 +130,7 @@ export default function DashboardSettings() {
     social_telegram: '',
     site_url: 'http://localhost:3000',
     google_search_console_property: '',
-    google_site_verification: '',
+    google_site_verification: 'google-site-verification=jb6CVX7m65ir5XZstdFUQNsvXI3dcHOa7UFcYPMNeF8',
     google_analytics_id: 'G-QTZJ9S6JP7',
     google_tag_manager_id: 'GTM-NL94HN56',
     google_news_name: 'Hoom Magazine',

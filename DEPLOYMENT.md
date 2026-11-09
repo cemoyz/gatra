@@ -44,7 +44,7 @@ docker-compose up -d --build
 ### 2. Jalankan Migrasi Database & Seed Data Awal
 ```bash
 # Push skema database Prisma
-docker-compose exec web npx prisma db push
+docker-compose exec web npx prisma db push --skip-generate
 
 # (Opsional) Isi database dengan data artikel & akun redaksi awal
 docker-compose exec web npm run seed
@@ -70,7 +70,7 @@ npm ci
 nano .env
 
 # Push schema ke database
-npx prisma db push
+npx prisma db push --skip-generate
 
 # Isi data seed awal (opsional)
 npm run seed
@@ -237,7 +237,7 @@ PostgreSQL Docker menyerap `POSTGRES_PASSWORD` **hanya pada pembuatan volume dat
 ```bash
 docker-compose down -v
 docker-compose up -d --build
-docker-compose exec web npx prisma db push
+docker-compose exec web npx prisma db push --skip-generate
 docker-compose exec web npm run seed:users
 ```
 

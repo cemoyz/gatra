@@ -1,7 +1,8 @@
 import prisma from '@/lib/prisma'
+import { normalizeSiteUrl } from '@/lib/siteUrl'
 
 function generateNewsSiteMap({ domain, posts, publicationName }) {
-  const cleanDomain = (domain || 'http://localhost:3000').replace(/\/$/, '')
+  const cleanDomain = normalizeSiteUrl(domain)
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"

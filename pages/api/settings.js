@@ -19,6 +19,7 @@ const defaultSettings = {
   google_analytics_id: 'G-QTZJ9S6JP7',
   google_tag_manager_id: 'GTM-NL94HN56',
   google_search_console_property: '',
+  google_site_verification: 'google-site-verification=jb6CVX7m65ir5XZstdFUQNsvXI3dcHOa7UFcYPMNeF8',
   site_logo: '/assets/img/logo/logo.webp', // uploaded logo/icon image URL
   logo_header: '/assets/img/logo/logo.webp',
   logo_header_dark: '/assets/img/logo/logo-white.webp',
@@ -209,6 +210,7 @@ export default async function handler(req, res) {
       const settingsObj = { ...defaultSettings }
 
       records.forEach(item => {
+        if (item.key === 'google_site_verification' && !item.value.trim()) return
         settingsObj[item.key] = item.value
       })
 
@@ -255,6 +257,7 @@ export default async function handler(req, res) {
       const records = await prisma.setting.findMany()
       const settingsObj = { ...defaultSettings }
       records.forEach(item => {
+        if (item.key === 'google_site_verification' && !item.value.trim()) return
         settingsObj[item.key] = item.value
       })
 
