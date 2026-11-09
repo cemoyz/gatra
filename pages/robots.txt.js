@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { normalizeSiteUrl } from '@/lib/siteUrl'
 
 export async function getServerSideProps({ req, res }) {
   try {
@@ -6,7 +7,7 @@ export async function getServerSideProps({ req, res }) {
     const protocol = req.headers['x-forwarded-proto'] || 'http'
     const host = req.headers['host'] || 'localhost:3000'
     const domain = setting?.value?.trim() || `${protocol}://${host}`
-    const cleanDomain = domain.replace(/\/$/, '')
+    const cleanDomain = normalizeSiteUrl(domain)
 
     const robotsContent = `# Googlebot & Web Crawlers Rules for Dua Narasi Portal
 User-agent: *
