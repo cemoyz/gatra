@@ -1,42 +1,47 @@
 import Link from "next/link"
+import { getImageUrl } from "@/lib/imageUtils"
 
-export default function Footer1() {
+export default function Footer1({ settings = {} }) {
+    const siteTitle = settings.site_title || "Gatra Portal"
+    const siteTagline = settings.site_tagline || "Portal Berita Terkini, Akurat, dan Terpercaya Menyajikan Informasi Pilihan Seputar Nasional dan Internasional."
+    const logoLight = getImageUrl(settings.logo_footer || settings.logo_header || settings.site_logo, "/assets/img/logo/logo-light.png")
+    const email = settings.contact_email_1 || settings.contact_email || "redaksi@gatra.com"
+    const phone = settings.contact_phone_1 || settings.contact_phone || "+62 21 555 7890"
+
     return (
         <>
-
             <footer className="footer-section">
                 <div className="footer-top padding">
                     <div className="container">
                         <div className="row">
-                            <div className="col-lg-4 col-md-6">
+                            <div className="col-lg-5 col-md-6">
                                 <div className="footer-item">
-                                    <h3 className="footer-header">About Us</h3>
+                                    <h3 className="footer-header">Tentang {siteTitle}</h3>
                                     <div className="footer-content">
                                         <p className="desc">
-                                            Lorem ipsum dolo consectetur the a adipiscing Lobortis mattis neque any
-                                            adipiscing the nisl. dolo consectetur the a adipiscing.
+                                            {siteTagline}
                                         </p>
                                         <ul className="contact-list">
                                             <li>
-                                                Email Us: <Link href="/mailto:infouemail@gmail.com">infouemail@gmail.com</Link>
+                                                Email: <Link href={`mailto:${email}`}>{email}</Link>
                                             </li>
-                                            <li>Contact: <Link href="/tel:+5-784-8894-678">+5-784-8894-678</Link></li>
+                                            <li>Kontak Redaksi: <Link href={`tel:${phone}`}>{phone}</Link></li>
                                             <li>
                                                 <ul className="footer-social">
                                                     <li>
-                                                        <Link href="/#"><i className="lab la-facebook-f" /></Link>
+                                                        <Link href="/#" className="facebook" aria-label="Facebook"><i className="lab la-facebook-f" /></Link>
                                                     </li>
                                                     <li>
-                                                        <Link href="/#"><i className="lab la-twitter" /></Link>
+                                                        <Link href="/#" className="twitter" aria-label="Twitter"><i className="lab la-twitter" /></Link>
                                                     </li>
                                                     <li>
-                                                        <Link href="/#"><i className="lab la-linkedin-in" /></Link>
+                                                        <Link href="/#" className="linkedin" aria-label="LinkedIn"><i className="lab la-linkedin-in" /></Link>
                                                     </li>
                                                     <li>
-                                                        <Link href="/#"><i className="lab la-instagram" /></Link>
+                                                        <Link href="/#" className="instagram" aria-label="Instagram"><i className="lab la-instagram" /></Link>
                                                     </li>
                                                     <li>
-                                                        <Link href="/#"><i className="lab la-pinterest-p" /></Link>
+                                                        <Link href="/#" className="youtube" aria-label="YouTube"><i className="lab la-youtube" /></Link>
                                                     </li>
                                                 </ul>
                                             </li>
@@ -44,77 +49,32 @@ export default function Footer1() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-lg-4 col-md-6">
+                            <div className="col-lg-3 col-md-6">
                                 <div className="footer-item">
-                                    <h3 className="footer-header">Top Post</h3>
+                                    <h3 className="footer-header">Kanal Berita</h3>
                                     <div className="footer-content">
-                                        <ul className="footer-post-list">
-                                            <li>
-                                                <Link href="/single-post-1"><img src="/assets/img/images/footer-post-1.jpg" alt="post" /></Link>
-                                                <h4 className="post-title">
-                                                    <Link href="/single-post-1">The Season Courses and item Salads wow!
-                                                        <span>July 29, 2024</span></Link>
-                                                </h4>
-                                            </li>
-                                            <li>
-                                                <Link href="/single-post-1"><img src="/assets/img/images/footer-post-2.jpg" alt="post" /></Link>
-                                                <h4 className="post-title">
-                                                    <Link href="/single-post-1">The Season Courses and item Salads wow!
-                                                        <span>July 29, 2024</span></Link>
-                                                </h4>
-                                            </li>
-                                            <li>
-                                                <Link href="/single-post-1"><img src="/assets/img/images/footer-post-3.jpg" alt="post" /></Link>
-                                                <h4 className="post-title">
-                                                    <Link href="/single-post-1">The Season Courses and item Salads wow!
-                                                        <span>July 29, 2024</span></Link>
-                                                </h4>
-                                            </li>
+                                        <ul className="footer-links" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=news">News</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=tekno">Tekno</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=bola">Bola</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=money">Money</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=lifestyle">Lifestyle</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=tren">Tren</Link></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-lg-4 col-md-6">
                                 <div className="footer-item">
-                                    <h3 className="footer-header">Top Comment</h3>
+                                    <h3 className="footer-header">Tautan Cepat</h3>
                                     <div className="footer-content">
-                                        <ul className="comment-list">
-                                            <li>
-                                                <div className="icon">
-                                                    <i className="las la-comments" />
-                                                </div>
-                                                <div className="comment-content">
-                                                    <h4 className="comment-author">
-                                                        <Link href="/author-details">David Bin</Link> <span>On</span>
-                                                    </h4>
-                                                    <span className="comment">Navigation System Doesn Work in Read Space? We’ll
-                                                        See</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className="icon">
-                                                    <i className="las la-comments" />
-                                                </div>
-                                                <div className="comment-content">
-                                                    <h4 className="comment-author">
-                                                        <Link href="/author-details">David Bin</Link> <span>On</span>
-                                                    </h4>
-                                                    <span className="comment">Navigation System Doesn Work in Read Space? We’ll
-                                                        See</span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className="icon">
-                                                    <i className="las la-comments" />
-                                                </div>
-                                                <div className="comment-content">
-                                                    <h4 className="comment-author">
-                                                        <Link href="/author-details">David Bin</Link> <span>On</span>
-                                                    </h4>
-                                                    <span className="comment">Navigation System Doesn Work in Read Space? We’ll
-                                                        See</span>
-                                                </div>
-                                            </li>
+                                        <ul className="footer-links" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                            <li className="mb-2"><Link href="/blog">Semua Berita Terkini</Link></li>
+                                            <li className="mb-2"><Link href="/breaking-news">Breaking News</Link></li>
+                                            <li className="mb-2"><Link href="/about">Tentang Redaksi</Link></li>
+                                            <li className="mb-2"><Link href="/pedoman-media-siber">Pedoman Media Siber</Link></li>
+                                            <li className="mb-2"><Link href="/contact">Hubungi Kami & Pasang Iklan</Link></li>
+                                            <li className="mb-2"><Link href="/subscribe">Berlangganan Newsletter</Link></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -127,14 +87,16 @@ export default function Footer1() {
                     <div className="container">
                         <div className="footer-bottom-wrap">
                             <div className="footer-logo">
-                                <Link href="/"><img src="/assets/img/logo/logo-light.png" alt="logo" /></Link>
+                                <Link href="/">
+                                    <img src={logoLight} alt={siteTitle} style={{ maxHeight: '40px', width: 'auto' }} />
+                                </Link>
                             </div>
                             <ul className="footer-menu-list">
-                                <li><Link href="/index-2">Home</Link></li>
-                                <li><Link href="/video-playlist-1">Features</Link></li>
-                                <li><Link href="/blog-default">Categories</Link></li>
-                                <li><Link href="/blog-layout-1">Design</Link></li>
-                                <li><Link href="/contact">Contact</Link></li>
+                                <li><Link href="/">Beranda</Link></li>
+                                <li><Link href="/blog">Kanal Berita</Link></li>
+                                <li><Link href="/breaking-news">Breaking News</Link></li>
+                                <li><Link href="/about">Tentang Kami</Link></li>
+                                <li><Link href="/contact">Kontak</Link></li>
                             </ul>
                         </div>
                     </div>
@@ -143,20 +105,17 @@ export default function Footer1() {
                 <div className="copyright-area">
                     <div className="container">
                         <div className="copyright-wrap">
-                            <p><span>Posty </span> {new Date().getFullYear()}. All Rights Reserved.</p>
+                            <p><span>{siteTitle}</span> © {new Date().getFullYear()}. All Rights Reserved.</p>
                             <ul className="list">
-                                <li><Link href="/contact">.Contact</Link></li>
-                                <li><Link href="/blog-default">.Blog</Link></li>
-                                <li><Link href="/contact">.Complaint</Link></li>
-                                <li><Link href="/contact">.Advertise</Link></li>
+                                <li><Link href="/contact">Kontak</Link></li>
+                                <li><Link href="/blog">Berita</Link></li>
+                                <li><Link href="/pedoman-media-siber">Pedoman Siber</Link></li>
+                                <li><Link href="/contact">Iklan</Link></li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                {/* ./ copyright-area */}
             </footer>
-
-
         </>
     )
 }

@@ -79,8 +79,8 @@ export default function Header1({ scroll, isMobileMenu, handleMobileMenu, isSide
 										</button>
 									</div>
 									<div className="site-logo">
-										<Link className="light" href="/"><img src="/assets/img/logo/logo-dark.png" alt="logo " /></Link>
-										<Link className="dark" href="/"><img src="/assets/img/logo/logo-light.png" alt="logo " /></Link>
+										<Link className="light" href="/"><img src={logoDark} alt={settings.site_title || "logo"} style={{ maxHeight: '36px', width: 'auto' }} /></Link>
+										<Link className="dark" href="/"><img src={logoLight} alt={settings.site_title || "logo"} style={{ maxHeight: '36px', width: 'auto' }} /></Link>
 									</div>
 									<nav className="navigation-menu">
 										<Menu />

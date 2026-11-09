@@ -135,9 +135,9 @@ export default function Layout({ headerStyle, footerStyle, breadcrumbTitle, chil
 
 			{/* <NewsLetter1 /> */}
 
-			{!footerStyle && < Footer1 />}
-			{footerStyle == 1 ? < Footer1 /> : null}
-			{footerStyle == 2 ? < Footer2 /> : null}
+			{!footerStyle && <Footer1 settings={settings} />}
+			{footerStyle == 1 ? <Footer1 settings={settings} /> : null}
+			{footerStyle == 2 ? <Footer2 settings={settings} /> : null}
 
 			<BackToTop target="#top" />
 			<AddClassBody />
