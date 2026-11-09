@@ -55,112 +55,118 @@ export default function KompasHeroSection({ posts = [], popularPosts = [] }) {
   }
 
   return (
-    <section className="kompas-hero-section">
-      <div className="container">
+    <section className="kompas-hl-section">
+      <div className="kompas-container">
         <div className="row g-4">
-          {/* LEFT: Sorotan Utama & 3 Sub-Headlines */}
+          {/* LEFT COLUMN: articleHL (Headline Utama + 3 Sub-Headlines) */}
           <div className="col-lg-8">
-            {leadPost && (
-              <div className="kompas-lead-card">
-                <Link href={`/blog/${leadPost.slug || leadPost.id}`} className="kompas-lead-img-box">
-                  <img
-                    src={getImageUrl(leadPost.img)}
-                    alt={leadPost.title}
-                    className="kompas-lead-img"
-                    onError={(e) => {
-                      e.currentTarget.src = "/assets/img/blog/blog-2-1.webp"
-                    }}
-                  />
-                  {leadPost.category && (
-                    <span className="kompas-badge-category">
-                      {leadPost.category.name}
-                    </span>
-                  )}
-                </Link>
-                <div className="kompas-lead-content">
-                  <h1 className="kompas-lead-title">
-                    <Link href={`/blog/${leadPost.slug || leadPost.id}`}>
-                      {leadPost.title}
-                    </Link>
-                  </h1>
-                  {leadPost.excerpt && (
-                    <p className="kompas-lead-excerpt">
-                      {leadPost.excerpt}
-                    </p>
-                  )}
-                  <div className="kompas-article-meta">
-                    <span className="kompas-meta-source">Kompas.com</span>
-                    <span className="kompas-meta-dot">•</span>
-                    <span className="kompas-meta-time" suppressHydrationWarning>{formatTime(leadPost.createdAt)}</span>
-                  </div>
-                </div>
-              </div>
-            )}
+            <div className="articleHL headline_wp">
+              {/* Big Lead Headline */}
+              {leadPost && (
+                <article className="articleHL-big">
+                  <Link href={`/blog/${leadPost.slug || leadPost.id}`} className="articleHL-img-link">
+                    <div className="articleItem-img">
+                      <img
+                        src={getImageUrl(leadPost.img)}
+                        alt={leadPost.title}
+                        className="hl-img"
+                        onError={(e) => {
+                          e.currentTarget.src = "/assets/img/blog/blog-2-1.webp"
+                        }}
+                      />
+                      {leadPost.category && (
+                        <div className="articlePost-subtitle">
+                          {leadPost.category.name}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
 
-            {/* 3 Sub-Headlines Grid */}
-            <div className="kompas-subheadline-grid">
-              <div className="row g-3">
-                {subHeadlines.map((post) => (
-                  <div key={post.id} className="col-md-4 col-sm-6">
-                    <div className="kompas-sub-card">
-                      <Link href={`/blog/${post.slug || post.id}`} className="kompas-sub-img-box">
-                        <img
-                          src={getImageUrl(post.img)}
-                          alt={post.title}
-                          className="kompas-sub-img"
-                          onError={(e) => {
-                            e.currentTarget.src = "/assets/img/blog/blog-2-2.webp"
-                          }}
-                        />
+                  <div className="articleHL-box">
+                    <h1 className="articleTitle">
+                      <Link href={`/blog/${leadPost.slug || leadPost.id}`}>
+                        {leadPost.title}
                       </Link>
-                      <div className="kompas-sub-body">
-                        {post.category && (
-                          <span className="kompas-sub-category">
-                            {post.category.name}
-                          </span>
-                        )}
-                        <h2 className="kompas-sub-title">
-                          <Link href={`/blog/${post.slug || post.id}`}>
-                            {post.title}
-                          </Link>
-                        </h2>
-                        <span className="kompas-sub-time" suppressHydrationWarning>
-                          {formatRelativeTime(post.createdAt)}
-                        </span>
-                      </div>
+                    </h1>
+                    {leadPost.excerpt && (
+                      <p className="articleExcerpt">
+                        {leadPost.excerpt}
+                      </p>
+                    )}
+                    <div className="articleMeta">
+                      <span className="metaSource">Kompas.com</span>
+                      <span className="metaDot">•</span>
+                      <span className="metaTime" suppressHydrationWarning>{formatTime(leadPost.createdAt)}</span>
                     </div>
                   </div>
-                ))}
+                </article>
+              )}
+
+              {/* 3 Sub-Headlines in Grid (articleHL-small) */}
+              <div className="articleHL-small clearfix --Grid">
+                <div className="row g-3">
+                  {subHeadlines.map((post) => (
+                    <div key={post.id} className="col-md-4 col-sm-6">
+                      <article className="articleItem subHL-item">
+                        <Link href={`/blog/${post.slug || post.id}`} className="article-link">
+                          <div className="subHL-img-wrap">
+                            <img
+                              src={getImageUrl(post.img)}
+                              alt={post.title}
+                              className="subHL-img"
+                              onError={(e) => {
+                                e.currentTarget.src = "/assets/img/blog/blog-2-2.webp"
+                              }}
+                            />
+                          </div>
+                          <div className="subHL-box">
+                            {post.category && (
+                              <div className="subHL-category">
+                                {post.category.name}
+                              </div>
+                            )}
+                            <h2 className="subHL-title">
+                              {post.title}
+                            </h2>
+                            <span className="subHL-time" suppressHydrationWarning>
+                              {formatRelativeTime(post.createdAt)}
+                            </span>
+                          </div>
+                        </Link>
+                      </article>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* RIGHT: TERPOPULER Widget (Classic Kompas.com) */}
+          {/* RIGHT COLUMN: mostList most_side (TERPOPULER) */}
           <div className="col-lg-4">
-            <div className="kompas-popular-widget">
-              {/* Widget Header with Blue Line */}
-              <div className="kompas-widget-header">
-                <div className="kompas-widget-title-box">
-                  <span className="kompas-widget-bar"></span>
-                  <h3 className="kompas-widget-title">TERPOPULER</h3>
+            <aside className="mostList most_side">
+              {/* Header with Blue Bar Accent */}
+              <div className="mostHeader">
+                <div className="mostTitleBox">
+                  <span className="mostBar"></span>
+                  <h3 className="mostHeading">TERPOPULER</h3>
                 </div>
 
-                {/* Filter Tabs */}
-                <div className="kompas-pop-tabs">
+                {/* Tabs */}
+                <div className="mostTabs">
                   <button
-                    className={`pop-tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+                    className={`mostTabBtn ${activeTab === 'all' ? 'active' : ''}`}
                     onClick={() => setActiveTab('all')}
                   >
                     Semua
                   </button>
                   <button
-                    className={`pop-tab-btn ${activeTab === 'news' ? 'active' : ''}`}
+                    className={`mostTabBtn ${activeTab === 'news' ? 'active' : ''}`}
                     onClick={() => setActiveTab('news')}
                   >
                     News
                   </button>
                   <button
-                    className={`pop-tab-btn ${activeTab === 'tren' ? 'active' : ''}`}
+                    className={`mostTabBtn ${activeTab === 'tren' ? 'active' : ''}`}
                     onClick={() => setActiveTab('tren')}
                   >
                     Tren
@@ -168,35 +174,37 @@ export default function KompasHeroSection({ posts = [], popularPosts = [] }) {
                 </div>
               </div>
 
-              {/* Numbered Ranked List 1-5 */}
-              <div className="kompas-pop-list">
+              {/* Numbered List 1-5 (mostItem) */}
+              <div className="mostItemsList">
                 {filteredPopular.length > 0 ? (
                   filteredPopular.map((post, idx) => (
-                    <div key={post.id} className="kompas-pop-item">
-                      <div className="kompas-pop-rank">
-                        {idx + 1}
-                      </div>
-                      <div className="kompas-pop-content">
-                        {post.category && (
-                          <span className="kompas-pop-cat">
-                            {post.category.name}
-                          </span>
-                        )}
-                        <h4 className="kompas-pop-title">
-                          <Link href={`/blog/${post.slug || post.id}`}>
-                            {post.title}
-                          </Link>
-                        </h4>
-                        <div className="kompas-pop-meta">
-                          <span suppressHydrationWarning>{formatRelativeTime(post.createdAt)}</span>
-                          {post.views > 0 && (
-                            <>
-                              <span className="meta-sep">•</span>
-                              <span suppressHydrationWarning>{formatNumber(post.views)} dibaca</span>
-                            </>
-                          )}
+                    <div key={post.id} className="mostItem">
+                      <Link href={`/blog/${post.slug || post.id}`} className="mostLink">
+                        <div className="mostFlex">
+                          <div className="mostNumber">
+                            {idx + 1}
+                          </div>
+                          <div className="mostBox">
+                            {post.category && (
+                              <span className="mostChannel">
+                                {post.category.name}
+                              </span>
+                            )}
+                            <h4 className="mostTitle">
+                              {post.title}
+                            </h4>
+                            <div className="mostMeta">
+                              <span suppressHydrationWarning>{formatRelativeTime(post.createdAt)}</span>
+                              {post.views > 0 && (
+                                <>
+                                  <span className="metaDot">•</span>
+                                  <span suppressHydrationWarning>{formatNumber(post.views)} dibaca</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      </Link>
                     </div>
                   ))
                 ) : (
@@ -206,267 +214,273 @@ export default function KompasHeroSection({ posts = [], popularPosts = [] }) {
                 )}
               </div>
 
-              {/* Topik Pilihan Mini-Box */}
-              <div className="kompas-topic-box">
-                <div className="topic-box-header">
+              {/* Sorotan Khusus Topic Card */}
+              <div className="mostTopicCard">
+                <div className="topicCardHead">
                   <i className="fas fa-layer-group text-primary me-2"></i>
                   <span>Sorotan Khusus</span>
                 </div>
-                <div className="topic-box-chips">
-                  <Link href="/blog-filter-search?search=pemilu" className="topic-chip">
-                    #Pemilu
-                  </Link>
-                  <Link href="/blog-filter-search?search=timnas" className="topic-chip">
-                    #TimnasIndonesia
-                  </Link>
-                  <Link href="/blog-filter-search?search=ai" className="topic-chip">
-                    #KecerdasanBuatan
-                  </Link>
-                  <Link href="/blog-filter-search?search=ekonomi" className="topic-chip">
-                    #EkonomiDigital
-                  </Link>
+                <div className="topicChips">
+                  <Link href="/blog-filter-search?search=pemilu" className="chip">#Pemilu</Link>
+                  <Link href="/blog-filter-search?search=timnas" className="chip">#TimnasIndonesia</Link>
+                  <Link href="/blog-filter-search?search=ai" className="chip">#KecerdasanBuatan</Link>
+                  <Link href="/blog-filter-search?search=ekonomi" className="chip">#EkonomiDigital</Link>
                 </div>
               </div>
-            </div>
+            </aside>
           </div>
         </div>
       </div>
 
       <style jsx>{`
-        .kompas-hero-section {
-          padding-top: 24px;
+        .kompas-hl-section {
+          padding-top: 20px;
           padding-bottom: 24px;
           background: #ffffff;
+          font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
-        /* Lead Headline Card */
-        .kompas-lead-card {
-          border-bottom: 1px solid #e2e8f0;
+        .kompas-container {
+          max-width: 1180px;
+          margin: 0 auto;
+          padding: 0 16px;
+          width: 100%;
+        }
+
+        /* ── articleHL (Main Headline) ── */
+        .articleHL-big {
+          border-bottom: 1px solid #e5e7eb;
           padding-bottom: 20px;
           margin-bottom: 20px;
         }
-        .kompas-lead-img-box {
+        .articleHL-img-link {
+          text-decoration: none;
+          display: block;
+        }
+        .articleItem-img {
           position: relative;
           display: block;
           width: 100%;
           aspect-ratio: 16 / 9;
           overflow: hidden;
-          border-radius: 8px;
-          background: #0f172a;
+          border-radius: 6px;
+          background: #111827;
         }
-        .kompas-lead-img {
+        .hl-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.35s ease;
         }
-        .kompas-lead-img-box:hover .kompas-lead-img {
-          transform: scale(1.03);
+        .articleHL-img-link:hover .hl-img {
+          transform: scale(1.025);
         }
-        .kompas-badge-category {
+        .articlePost-subtitle {
           position: absolute;
-          top: 14px;
-          left: 14px;
-          background: #004085;
+          top: 12px;
+          left: 12px;
+          background: #0077d7;
           color: #ffffff;
           font-size: 11px;
           font-weight: 800;
           text-transform: uppercase;
-          padding: 4px 10px;
+          padding: 3px 8px;
           border-radius: 4px;
           letter-spacing: 0.5px;
-          z-index: 2;
         }
-        .kompas-lead-content {
-          padding-top: 16px;
+        .articleHL-box {
+          padding-top: 14px;
         }
-        .kompas-lead-title {
-          font-size: 28px;
+        .articleTitle {
+          font-size: 26px;
           font-weight: 800;
           line-height: 1.28;
-          color: #0f172a;
-          margin-bottom: 10px;
+          color: #111827;
+          margin-bottom: 8px;
         }
-        .kompas-lead-title a {
+        .articleTitle a {
           color: inherit;
           text-decoration: none;
           transition: color 0.15s ease;
         }
-        .kompas-lead-title a:hover {
-          color: #004085;
+        .articleTitle a:hover {
+          color: #0077d7;
         }
-        .kompas-lead-excerpt {
-          font-size: 14.5px;
-          color: #475569;
-          line-height: 1.6;
+        .articleExcerpt {
+          font-size: 14px;
+          color: #4b5563;
+          line-height: 1.55;
           margin-bottom: 10px;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
-        .kompas-article-meta {
+        .articleMeta {
           display: flex;
           align-items: center;
           gap: 6px;
-          font-size: 12.5px;
-          color: #64748b;
+          font-size: 12px;
+          color: #6b7280;
         }
-        .kompas-meta-source {
+        .metaSource {
           font-weight: 700;
-          color: #004085;
+          color: #0077d7;
         }
-        .kompas-meta-dot {
-          color: #cbd5e1;
+        .metaDot {
+          color: #d1d5db;
         }
 
-        /* 3 Sub-headlines */
-        .kompas-subheadline-grid {
-          padding-top: 4px;
+        /* ── articleHL-small (3 Sub-headlines) ── */
+        .subHL-item {
+          height: 100%;
         }
-        .kompas-sub-card {
+        .article-link {
+          text-decoration: none;
           display: flex;
           flex-direction: column;
           height: 100%;
         }
-        .kompas-sub-img-box {
+        .subHL-img-wrap {
           display: block;
           width: 100%;
           aspect-ratio: 16 / 10;
           overflow: hidden;
           border-radius: 6px;
-          background: #f1f5f9;
-          margin-bottom: 10px;
+          background: #f3f4f6;
+          margin-bottom: 8px;
         }
-        .kompas-sub-img {
+        .subHL-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.3s ease;
         }
-        .kompas-sub-img-box:hover .kompas-sub-img {
+        .article-link:hover .subHL-img {
           transform: scale(1.04);
         }
-        .kompas-sub-body {
+        .subHL-box {
           display: flex;
           flex-direction: column;
           flex: 1;
         }
-        .kompas-sub-category {
+        .subHL-category {
           font-size: 11px;
           font-weight: 700;
-          color: #004085;
+          color: #0077d7;
           text-transform: uppercase;
-          margin-bottom: 4px;
+          margin-bottom: 3px;
         }
-        .kompas-sub-title {
-          font-size: 14.5px;
+        .subHL-title {
+          font-size: 14px;
           font-weight: 700;
           line-height: 1.35;
-          color: #1e293b;
+          color: #111827;
           margin-bottom: 6px;
           display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
           flex: 1;
-        }
-        .kompas-sub-title a {
-          color: inherit;
-          text-decoration: none;
           transition: color 0.15s ease;
         }
-        .kompas-sub-title a:hover {
-          color: #004085;
+        .article-link:hover .subHL-title {
+          color: #0077d7;
         }
-        .kompas-sub-time {
+        .subHL-time {
           font-size: 11.5px;
-          color: #94a3b8;
+          color: #9ca3af;
         }
 
-        /* TERPOPULER WIDGET */
-        .kompas-popular-widget {
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
+        /* ── mostList most_side (TERPOPULER) ── */
+        .mostList {
+          background: #f9fafb;
+          border: 1px solid #e5e7eb;
           border-radius: 8px;
           padding: 18px;
         }
-        .kompas-widget-header {
+        .mostHeader {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          border-bottom: 2px solid #e2e8f0;
-          padding-bottom: 12px;
-          margin-bottom: 14px;
+          border-bottom: 2px solid #e5e7eb;
+          padding-bottom: 10px;
+          margin-bottom: 12px;
         }
-        .kompas-widget-title-box {
+        .mostTitleBox {
           display: flex;
           align-items: center;
           gap: 8px;
         }
-        .kompas-widget-bar {
+        .mostBar {
           display: inline-block;
           width: 4px;
           height: 18px;
-          background: #004085;
+          background: #0077d7;
           border-radius: 2px;
         }
-        .kompas-widget-title {
+        .mostHeading {
           font-size: 16px;
           font-weight: 800;
-          color: #0f172a;
+          color: #111827;
           margin: 0;
           letter-spacing: 0.3px;
         }
-        .kompas-pop-tabs {
+        .mostTabs {
           display: flex;
           align-items: center;
           gap: 4px;
         }
-        .pop-tab-btn {
+        .mostTabBtn {
           background: none;
           border: none;
           font-size: 12px;
           font-weight: 600;
-          color: #64748b;
+          color: #6b7280;
           padding: 3px 8px;
           border-radius: 4px;
           cursor: pointer;
           transition: all 0.15s ease;
         }
-        .pop-tab-btn.active {
-          background: #004085;
+        .mostTabBtn.active {
+          background: #0077d7;
           color: #ffffff;
         }
 
         /* Numbered Items */
-        .kompas-pop-list {
+        .mostItemsList {
           display: flex;
           flex-direction: column;
         }
-        .kompas-pop-item {
-          display: flex;
-          gap: 14px;
-          padding: 12px 0;
-          border-bottom: 1px solid #e2e8f0;
+        .mostItem {
+          border-bottom: 1px solid #e5e7eb;
         }
-        .kompas-pop-item:last-child {
+        .mostItem:last-child {
           border-bottom: none;
-          padding-bottom: 6px;
         }
-        .kompas-pop-rank {
-          font-size: 28px;
+        .mostLink {
+          text-decoration: none;
+          display: block;
+          padding: 12px 0;
+        }
+        .mostFlex {
+          display: flex;
+          gap: 12px;
+          align-items: flex-start;
+        }
+        .mostNumber {
+          font-size: 26px;
           font-weight: 900;
           line-height: 1;
-          color: #004085;
+          color: #0077d7;
           min-width: 22px;
           text-align: center;
-          opacity: 0.9;
+          padding-top: 2px;
         }
-        .kompas-pop-content {
+        .mostBox {
           flex: 1;
         }
-        .kompas-pop-cat {
+        .mostChannel {
           display: inline-block;
           font-size: 11px;
           font-weight: 700;
@@ -474,82 +488,71 @@ export default function KompasHeroSection({ posts = [], popularPosts = [] }) {
           text-transform: uppercase;
           margin-bottom: 2px;
         }
-        .kompas-pop-title {
+        .mostTitle {
           font-size: 13.5px;
           font-weight: 700;
           line-height: 1.35;
-          color: #1e293b;
+          color: #1f2937;
           margin-bottom: 4px;
           display: -webkit-box;
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
-        }
-        .kompas-pop-title a {
-          color: inherit;
-          text-decoration: none;
           transition: color 0.15s ease;
         }
-        .kompas-pop-title a:hover {
-          color: #004085;
+        .mostLink:hover .mostTitle {
+          color: #0077d7;
         }
-        .kompas-pop-meta {
+        .mostMeta {
           font-size: 11px;
-          color: #94a3b8;
+          color: #9ca3af;
           display: flex;
           align-items: center;
           gap: 4px;
         }
-        .meta-sep {
-          color: #cbd5e1;
-        }
 
-        /* Sorotan Khusus Topic Box */
-        .kompas-topic-box {
-          margin-top: 16px;
+        /* Topic Card */
+        .mostTopicCard {
+          margin-top: 14px;
           padding-top: 14px;
-          border-top: 1px dashed #cbd5e1;
+          border-top: 1px dashed #d1d5db;
         }
-        .topic-box-header {
-          font-size: 13px;
+        .topicCardHead {
+          font-size: 12.5px;
           font-weight: 700;
-          color: #334155;
-          margin-bottom: 10px;
+          color: #374151;
+          margin-bottom: 8px;
           display: flex;
           align-items: center;
         }
-        .topic-box-chips {
+        .topicChips {
           display: flex;
           flex-wrap: wrap;
           gap: 6px;
         }
-        .topic-chip {
+        .chip {
           font-size: 11.5px;
           font-weight: 600;
-          color: #004085;
+          color: #0077d7;
           background: #ffffff;
-          border: 1px solid #cbd5e1;
-          padding: 4px 9px;
+          border: 1px solid #d1d5db;
+          padding: 3px 8px;
           border-radius: 12px;
           text-decoration: none;
           transition: all 0.15s ease;
         }
-        .topic-chip:hover {
-          background: #004085;
+        .chip:hover {
+          background: #0077d7;
           color: #ffffff;
-          border-color: #004085;
+          border-color: #0077d7;
         }
 
         @media (max-width: 767px) {
-          .kompas-lead-title {
+          .articleTitle {
             font-size: 20px;
-          }
-          .kompas-subheadline-grid .col-sm-6 {
-            margin-bottom: 15px;
           }
         }
       `}</style>
     </section>
   )
 }
-

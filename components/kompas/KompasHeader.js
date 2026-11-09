@@ -55,7 +55,7 @@ export default function KompasHeader({ scroll = false, handleMobileMenu }) {
     <header className={`kompas-exact-header ${scroll ? 'kompas-header-sticky' : ''}`}>
       {/* 1. TOP ROW: Brand, Search Bar, PLUS Button, Action Icons */}
       <div className="kompas-top-row">
-        <div className="container-fluid px-lg-4 px-3">
+        <div className="kompas-container">
           <div className="kompas-top-row-inner">
             {/* Left: Brand Logo */}
             <div className="kompas-brand-col">
@@ -149,7 +149,7 @@ export default function KompasHeader({ scroll = false, handleMobileMenu }) {
 
       {/* 2. BOTTOM ROW: Navigation Menu (Black background) */}
       <nav className="kompas-nav-row">
-        <div className="container-fluid px-lg-4 px-3">
+        <div className="kompas-container">
           <div className="kompas-nav-inner">
             <div className="kompas-nav-scroll-list">
               {navMenuItems.map((item) => (
@@ -184,20 +184,52 @@ export default function KompasHeader({ scroll = false, handleMobileMenu }) {
         </div>
       </nav>
 
+      {/* 3. TOPIK PILIHAN STRIP (Trending Topics Strip) */}
+      <div className="kompas-trending-strip">
+        <div className="kompas-container">
+          <div className="kompas-trending-inner">
+            <div className="trending-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" strokeWidth="1" className="me-1">
+                <path d="M12 2c1.5 3 4 5.5 4 8.5a6 6 0 1 1-12 0c0-3 2.5-5.5 4-8.5 1 2 2.5 3.5 4 3.5z"/>
+              </svg>
+              <span>Topik Pilihan:</span>
+            </div>
+            <div className="trending-tags-scroll">
+              {trendingTopics.map((topic, i) => (
+                <Link
+                  key={i}
+                  href={`/blog-filter-search?search=${encodeURIComponent(topic.query)}`}
+                  className="trending-tag-pill"
+                >
+                  {topic.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* CSS matching the exact screenshot */}
       <style jsx>{`
         .kompas-exact-header {
           background-color: #000000;
           color: #ffffff;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+          font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
           position: relative;
           z-index: 1000;
-          border-bottom: 1px solid #171717;
+          border-bottom: 1px solid #e5e7eb;
         }
         .kompas-header-sticky {
           position: sticky;
           top: 0;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .kompas-container {
+          max-width: 1180px;
+          margin: 0 auto;
+          padding: 0 16px;
+          width: 100%;
         }
 
         /* ── Top Row ── */
@@ -481,6 +513,57 @@ export default function KompasHeader({ scroll = false, handleMobileMenu }) {
         }
         .kompas-nav-hamburger:hover {
           color: #0077d7;
+        }
+
+        /* ── Topik Pilihan Strip (Trending) ── */
+        .kompas-trending-strip {
+          background: #ffffff;
+          border-bottom: 1px solid #e5e7eb;
+          padding: 8px 0;
+          font-size: 12.5px;
+        }
+        .kompas-trending-inner {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .trending-title {
+          display: flex;
+          align-items: center;
+          font-weight: 700;
+          color: #111827;
+          white-space: nowrap;
+          flex-shrink: 0;
+          font-size: 12.5px;
+        }
+        .trending-tags-scroll {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          overflow-x: auto;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          white-space: nowrap;
+        }
+        .trending-tags-scroll::-webkit-scrollbar {
+          display: none;
+        }
+        .trending-tag-pill {
+          display: inline-block;
+          background: #f3f4f6;
+          color: #374151;
+          padding: 3px 10px;
+          border-radius: 14px;
+          text-decoration: none;
+          font-weight: 500;
+          font-size: 12px;
+          border: 1px solid #e5e7eb;
+          transition: all 0.15s ease;
+        }
+        .trending-tag-pill:hover {
+          background: #0077d7;
+          color: #ffffff;
+          border-color: #0077d7;
         }
 
         @media (max-width: 991px) {

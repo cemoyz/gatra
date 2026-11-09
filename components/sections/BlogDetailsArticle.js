@@ -1,7 +1,5 @@
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import PostStandard from "./PostStandard"
-import ShareModal from "@/components/elements/ShareModal"
 import { getImageUrl } from "@/lib/imageUtils"
 
 export default function BlogDetailsArticle({ blogPost }) {
@@ -26,45 +24,19 @@ export default function BlogDetailsArticle({ blogPost }) {
         createdAt
     } = blogPost
 
-    const [isShareOpen, setIsShareOpen] = useState(false)
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [settings, setSettings] = useState({
-        show_author_bio: 'true',
-        show_related_posts: 'true',
-        show_post_views: 'true',
-        show_post_comments: 'true'
-    })
+    const [fontSize, setFontSize] = useState("normal") // "small", "normal", "large"
+    const [copied, setCopied] = useState(false)
+    const [isPlayingAudio, setIsPlayingAudio] = useState(false)
     const [relatedPosts, setRelatedPosts] = useState([])
 
     useEffect(() => {
-        // Check if user is logged in
-        fetch('/api/auth/me')
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && data.user) {
-                    setIsLoggedIn(true)
-                }
-            })
-            .catch(() => setIsLoggedIn(false))
-
-        // Fetch display settings
-        fetch('/api/settings')
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && data.settings) {
-                    setSettings(prev => ({ ...prev, ...data.settings }))
-                }
-            })
-            .catch(console.error)
-
-        // Fetch related posts from same category
         if (category) {
             const catSlug = typeof category === 'string' ? category : category?.slug
-            fetch(`/api/posts?category=${encodeURIComponent(catSlug)}&limit=3`)
+            fetch(`/api/posts?category=${encodeURIComponent(catSlug)}&limit=4`)
                 .then(res => res.json())
                 .then(data => {
-                    if (data.success && data.posts) {
-                        setRelatedPosts(data.posts.filter(p => p.id !== id).slice(0, 2))
+                    if (data.success && Array.isArray(data.posts)) {
+                        setRelatedPosts(data.posts.filter(p => p.id !== id).slice(0, 3))
                     }
                 })
                 .catch(console.error)
@@ -72,319 +44,312 @@ export default function BlogDetailsArticle({ blogPost }) {
     }, [id, category])
 
     const authorName = typeof author === 'string' ? author : (author?.name || 'Alexis D.')
-    const authorBio = author?.bio || 'Penulis dan kontributor redaksi di Hoom Magazine.'
     const authorAvatar = author?.avatar || '/assets/img/author/author-1.webp'
-    const editorName = blogPost?.editorName || 'By Dua Narasi'
+    const authorBio = author?.bio || 'Jurnalis dan kontributor redaksi Kompas.com menyajikan liputan mendalam dan terpercaya.'
+    const editorName = blogPost?.editorName || 'Sarah Connor'
+    const categoryName = typeof category === 'string' ? category : (category?.name || 'News')
+    const categorySlug = typeof category === 'string' ? category.toLowerCase() : (category?.slug || 'news')
 
-    const formattedDate = createdAt
-        ? new Date(createdAt).toLocaleDateString("id-ID", { month: "long", day: "numeric", year: "numeric" })
-        : new Date().toLocaleDateString("id-ID", { month: "long", day: "numeric", year: "numeric" })
+    const formatTime = (dateStr) => {
+        if (!dateStr) return "Baru saja"
+        try {
+            const d = new Date(dateStr)
+            const day = String(d.getDate()).padStart(2, '0')
+            const month = String(d.getMonth() + 1).padStart(2, '0')
+            const year = d.getFullYear()
+            const hours = String(d.getHours()).padStart(2, '0')
+            const mins = String(d.getMinutes()).padStart(2, '0')
+            return `${day}/${month}/${year}, ${hours}:${mins} WIB`
+        } catch {
+            return "Baru saja"
+        }
+    }
 
-    const categoryName = typeof category === 'string' ? category : (category?.name || 'Berita')
+    const currentUrl = typeof window !== 'undefined' ? window.location.href : `https://kompas.com/blog/${id}`
+
+    const handleCopyLink = () => {
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(currentUrl)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2500)
+        }
+    }
+
+    const shareUrl = encodeURIComponent(currentUrl)
+    const shareTitle = encodeURIComponent(title)
+
+    const fontStyles = {
+        small: { fontSize: '16px', lineHeight: '1.75' },
+        normal: { fontSize: '18px', lineHeight: '1.85' },
+        large: { fontSize: '20px', lineHeight: '1.95' }
+    }
+
     const imageTags = String(blogPost.imageTags || '')
         .split(',')
         .map(tag => tag.trim())
         .filter(Boolean)
 
     return (
-        <>
-            <article className="ta-blog-box" style={{ background: '#ffffff', borderRadius: '16px', padding: '32px', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
-                {/* Category Badge & Meta Header */}
-                <div style={{ marginBottom: '12px' }}>
-                    <span style={{
-                        background: '#da0105',
-                        color: '#ffffff',
-                        padding: '5px 12px',
-                        borderRadius: '6px',
-                        fontSize: '11.5px',
-                        fontWeight: 800,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.6px',
-                        display: 'inline-block'
-                    }}>
-                        {categoryName}
+        <article className="kompas-article-detail">
+            {/* 1. Breadcrumbs */}
+            <nav className="kompas-breadcrumbs" aria-label="Breadcrumb">
+                <Link href="/" className="bc-item">KOMPAS.com</Link>
+                <span className="bc-sep">&gt;</span>
+                <Link href={`/blog-filter-category?category=${categorySlug}`} className="bc-item">
+                    {categoryName}
+                </Link>
+                <span className="bc-sep">&gt;</span>
+                <span className="bc-current">Berita</span>
+            </nav>
+
+            {/* 2. Channel Rubric Tag */}
+            <div className="kompas-rubric-header">
+                <Link href={`/blog-filter-category?category=${categorySlug}`} className="rubric-tag">
+                    KOMPAS {categoryName.toUpperCase()}
+                </Link>
+            </div>
+
+            {/* 3. Headline Title */}
+            <h1 className="kompas-detail-title">
+                {title}
+            </h1>
+
+            {/* 4. Subtitle / Excerpt */}
+            {excerpt && (
+                <p className="kompas-detail-dek">
+                    {excerpt}
+                </p>
+            )}
+
+            {/* 5. Kompas Byline & Publication Meta */}
+            <div className="kompas-byline-box">
+                <div className="byline-source">
+                    <span className="source-brand">Kompas.com</span>
+                    <span className="source-sep">-</span>
+                    <span className="source-time" suppressHydrationWarning>{formatTime(createdAt)}</span>
+                </div>
+                <div className="byline-editorial">
+                    <span className="byline-item">
+                        <strong>Penulis :</strong> {authorName}
+                    </span>
+                    <span className="byline-pipe">|</span>
+                    <span className="byline-item">
+                        <strong>Editor :</strong> {editorName}
                     </span>
                 </div>
+            </div>
 
-                {/* Article Title */}
-                <h1 style={{
-                    fontSize: '32px',
-                    fontWeight: 800,
-                    marginTop: '6px',
-                    marginBottom: '16px',
-                    lineHeight: '1.3',
-                    color: '#0f172a',
-                    letterSpacing: '-0.3px'
-                }}>
-                    {title}
-                </h1>
+            {/* 6. Social Share & Reader Tools Bar */}
+            <div className="kompas-share-bar">
+                <div className="share-buttons-group">
+                    <span className="share-label">Bagikan:</span>
+                    {/* WhatsApp */}
+                    <a
+                        href={`https://api.whatsapp.com/send?text=${shareTitle}%20${shareUrl}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="share-btn share-wa"
+                        title="Bagikan ke WhatsApp"
+                    >
+                        <i className="fab fa-whatsapp"></i> WhatsApp
+                    </a>
+                    {/* Facebook */}
+                    <a
+                        href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="share-btn share-fb"
+                        title="Bagikan ke Facebook"
+                    >
+                        <i className="fab fa-facebook-f"></i>
+                    </a>
+                    {/* Twitter / X */}
+                    <a
+                        href={`https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="share-btn share-x"
+                        title="Bagikan ke X"
+                    >
+                        <i className="fab fa-twitter"></i>
+                    </a>
+                    {/* Telegram */}
+                    <a
+                        href={`https://t.me/share/url?url=${shareUrl}&text=${shareTitle}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="share-btn share-tg"
+                        title="Bagikan ke Telegram"
+                    >
+                        <i className="fab fa-telegram-plane"></i>
+                    </a>
+                    {/* Copy Link */}
+                    <button
+                        onClick={handleCopyLink}
+                        className="share-btn share-copy"
+                        title="Salin Tautan"
+                    >
+                        <i className="fas fa-link"></i> {copied ? "Tersalin!" : "Salin"}
+                    </button>
+                </div>
 
-                {/* Meta info right under title */}
-                <ul className="meta-infos d-flex align-items-center list-unstyled flex-wrap" style={{ gap: '14px', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid #f1f5f9' }}>
-                    <li>
-                        <Link
-                            href={blogPost?.authorId ? `/author?id=${blogPost.authorId}` : `/author?name=${encodeURIComponent(authorName)}`}
-                            className="author-wrapper d-flex justify-content-center align-items-center"
-                            style={{ textDecoration: 'none', color: '#1e293b', fontWeight: 600 }}
+                {/* Font Resizer & Audio Tool */}
+                <div className="reader-tools-group">
+                    {audioUrl && (
+                        <button
+                            className="audio-listen-btn"
+                            onClick={() => setIsPlayingAudio(!isPlayingAudio)}
                         >
-                            <span className="author-thumb" style={{ marginRight: '8px' }}>
-                                <img
-                                    src={authorAvatar}
-                                    alt={authorName}
-                                    onError={(e) => { e.currentTarget.src = '/assets/img/author/author-1.webp' }}
-                                    style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
-                                />
-                            </span>
-                            <span className="author-name">Penulis: {authorName}</span>
-                        </Link>
-                    </li>
-                    {settings.show_post_editor !== 'false' && (
-                        <li style={{ color: '#475569', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            <i className="fa fa-pencil-square-o" style={{ color: '#da0105' }} />
-                            Editor: <strong>{editorName}</strong>
-                        </li>
+                            <i className={`fas ${isPlayingAudio ? 'fa-pause' : 'fa-volume-up'} me-1`}></i>
+                            <span>Dengarkan</span>
+                        </button>
                     )}
-                    <li style={{ color: '#64748b', fontSize: '13px' }}>
-                        <i className="fa fa-calendar-o" style={{ marginRight: '5px' }} />
-                        {formattedDate}
-                    </li>
-                    {settings.show_post_views !== 'false' && (
-                        <li style={{ color: '#64748b', fontSize: '13px' }}>
-                            <i className="fa fa-eye" style={{ marginRight: '5px' }} />
-                            {views} Views
-                        </li>
-                    )}
-                    {settings.show_post_comments !== 'false' && (
-                        <li style={{ color: '#64748b', fontSize: '13px' }}>
-                            <i className="fa fa-comment-o" style={{ marginRight: '5px' }} />
-                            {blogPost.commentsCount ?? (blogPost.comments ? blogPost.comments.length : 0)} Komentar
-                        </li>
-                    )}
-                </ul>
+                    <div className="font-size-adjuster">
+                        <span className="font-label">Ukuran:</span>
+                        <button
+                            className={`btn-font ${fontSize === 'small' ? 'active' : ''}`}
+                            onClick={() => setFontSize('small')}
+                            title="Huruf Kecil"
+                        >
+                            A-
+                        </button>
+                        <button
+                            className={`btn-font ${fontSize === 'normal' ? 'active' : ''}`}
+                            onClick={() => setFontSize('normal')}
+                            title="Huruf Standar"
+                        >
+                            A
+                        </button>
+                        <button
+                            className={`btn-font ${fontSize === 'large' ? 'active' : ''}`}
+                            onClick={() => setFontSize('large')}
+                            title="Huruf Besar"
+                        >
+                            A+
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-                {/* 1. Format-specific Header Media */}
-                {postType === "video" && videoUrl ? (
-                    <div className="thumb video-wrapper mb-25" style={{ position: 'relative', paddingTop: '56.25%', borderRadius: '12px', overflow: 'hidden' }}>
-                        <iframe
-                            src={videoUrl.includes('youtube.com/watch?v=') ? videoUrl.replace('watch?v=', 'embed/') : videoUrl}
-                            title={title}
-                            style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 'none' }}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        />
-                    </div>
-                ) : postType === "audio" && audioUrl ? (
-                    <div className="audio-wrapper mb-25" style={{ padding: '20px', background: '#0f172a', borderRadius: '10px' }}>
-                        <audio controls style={{ width: '100%' }}>
-                            <source src={audioUrl} />
-                            Your browser does not support the audio element.
-                        </audio>
-                    </div>
-                ) : postType === "quote" && quoteText ? (
-                    <div className="content d-flex flex-column ta-format-quote align-items-center text-center mb-25" style={{ background: '#f8fafc', padding: '30px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-                        <div className="qa-icon mx-auto mb-20">
-                            <img src="/assets/img/icons/quote-icon.webp" alt="Quote" />
-                        </div>
-                        <div className="excerpt">
-                            <blockquote style={{ fontSize: '20px', fontStyle: 'italic', color: '#1e293b' }}>
-                                “{quoteText}”
-                            </blockquote>
-                        </div>
-                        {quoteAuthor && (
-                            <div className="qupte-author d-flex align-items-center mx-auto mt-15">
-                                <h6 className="name" style={{ margin: 0, color: '#3b82f6' }}>— {quoteAuthor}</h6>
-                            </div>
-                        )}
-                    </div>
-                ) : postType === "link" && externalUrl ? (
-                    <div className="mb-25" style={{ padding: '24px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '10px' }}>
-                        <h5 style={{ color: '#1e40af', marginBottom: '8px' }}>Tautan Sumber Eksternal</h5>
-                        <a href={externalUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', fontWeight: 600, wordBreak: 'break-all' }}>
-                            {externalUrl} <i className="fa fa-external-link" style={{ marginLeft: '6px' }} />
-                        </a>
-                    </div>
+            {/* Audio Player if activated */}
+            {isPlayingAudio && audioUrl && (
+                <div className="audio-player-wrapper">
+                    <audio controls autoPlay style={{ width: '100%' }}>
+                        <source src={audioUrl} />
+                    </audio>
+                </div>
+            )}
+
+            {/* 7. Featured Media / Photo with Kompas Caption */}
+            {postType === "video" && videoUrl ? (
+                <div className="kompas-video-wrapper">
+                    <iframe
+                        src={videoUrl.includes('youtube.com/watch?v=') ? videoUrl.replace('watch?v=', 'embed/') : videoUrl}
+                        title={title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                    />
+                </div>
+            ) : (
+                <figure className="kompas-lead-figure">
+                    <img
+                        src={getImageUrl(img, "blog-details--big-1.webp")}
+                        alt={imageCaption || title}
+                        className="lead-photo"
+                        onError={(e) => {
+                            e.currentTarget.src = '/assets/img/blog/blog-details--big-1.webp'
+                        }}
+                    />
+                    <figcaption className="photo-caption">
+                        <span className="caption-credit">(KOMPAS.com/DOK. REDAKSI)</span>
+                        {imageCaption ? ` - ${imageCaption}` : ` - Foto dokumentasi terkait peristiwa ${title}`}
+                    </figcaption>
+                </figure>
+            )}
+
+            {/* 8. Article Body Content */}
+            <div className="kompas-article-body" style={fontStyles[fontSize]}>
+                {content ? (
+                    <div className="body-html-content" dangerouslySetInnerHTML={{ __html: content }} />
                 ) : (
-                    <figure style={{ margin: '0 0 25px', overflow: 'hidden', borderRadius: '12px', background: '#f8fafc' }}>
-                        <img
-                            src={getImageUrl(img, "blog-details--big-1.webp")}
-                            alt={imageCaption || title}
-                            onError={(e) => {
-                                e.currentTarget.src = '/assets/img/blog/blog-details--big-1.webp'
-                            }}
-                            style={{ width: '100%', maxHeight: '480px', objectFit: 'cover', display: 'block' }}
-                        />
-                        {imageCaption && (
-                            <figcaption style={{ padding: '10px 14px', color: '#475569', fontSize: '13px', lineHeight: 1.5 }}>
-                                {imageCaption}
-                            </figcaption>
-                        )}
-                        {imageTags.length > 0 && (
-                            <div aria-label="Tag gambar" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px', padding: '0 14px 12px' }}>
-                                <span style={{ color: '#64748b', fontSize: '12px', fontWeight: 600 }}>Tag gambar:</span>
-                                {imageTags.map((tag, index) => (
-                                    <span key={`${tag}-${index}`} style={{ padding: '3px 8px', borderRadius: '4px', background: '#e2e8f0', color: '#334155', fontSize: '12px', lineHeight: 1.4 }}>
-                                        {tag}
-                                    </span>
-                                ))}
-                            </div>
-                        )}
-                    </figure>
+                    <>
+                        <p>
+                            <strong>JAKARTA, KOMPAS.com</strong> - {excerpt || 'Menyajikan informasi komprehensif, aktual, dan terverifikasi untuk seluruh pembaca di tanah air.'}
+                        </p>
+                        <p>
+                            Liputan mendalam ini mengkaji berbagai sudut pandang penting terkait dinamika peristiwa terkini, didukung oleh data dan konfirmasi narasumber terpercaya.
+                        </p>
+                    </>
                 )}
 
-                {/* Article Content Directly Below Banner with Perfect Spacing */}
-                <div className="post-details-content" style={{ fontSize: '16.5px', lineHeight: '1.85', color: '#334155', marginTop: '0px' }}>
-                    {content ? (
-                        <div dangerouslySetInnerHTML={{ __html: content }} />
-                    ) : (
-                        <>
-                            <p>{excerpt || 'Temukan berbagai wawasan mendalam, berita terkini, serta analisis komprehensif seputar topik menarik di Hoom Magazine.'}</p>
-                            <p>Menjaga kualitas informasi dan pengalaman membaca yang nyaman adalah komitmen kami untuk menghadirkan konten terbaik bagi para pembaca setia.</p>
-                        </>
-                    )}
+                {/* Inline "Baca juga" Kompas Callout */}
+                {relatedPosts.length > 0 && (
+                    <div className="kompas-baca-juga">
+                        <span className="baca-juga-badge">Baca juga:</span>
+                        <Link href={`/blog/${relatedPosts[0].slug || relatedPosts[0].id}`} className="baca-juga-link">
+                            {relatedPosts[0].title}
+                        </Link>
+                    </div>
+                )}
+            </div>
 
-                    {settings.show_social_links !== 'false' && (
-                        <div className="ta-single-share-wrapper mt-40 pt-25 pb-15 ta-border-top" style={{ borderColor: '#e2e8f0' }}>
-                                <div className="d-flex align-items-center justify-content-between flex-wrap" style={{ gap: '16px' }}>
-                                    <div className="share-prompt-text">
-                                        <h5 className="mb-1" style={{ fontSize: '16px', fontWeight: '700', color: '#0f172a' }}>Bagikan Artikel Ini</h5>
-                                        <p className="mb-0" style={{ fontSize: '13px', color: '#64748b' }}>Bagikan informasi bermanfaat ini melalui WhatsApp, Telegram, media sosial, atau salin link.</p>
-                                    </div>
-                                    <div>
-                                        <button
-                                            type="button"
-                                            onClick={() => setIsShareOpen(true)}
-                                            className="ta-button ta-share-action-btn"
-                                            style={{
-                                                padding: '11px 26px',
-                                                fontSize: '14px',
-                                                borderRadius: '10px',
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '9px',
-                                                backgroundColor: '#da0105',
-                                                color: '#ffffff',
-                                                border: 'none',
-                                                boxShadow: '0 4px 14px rgba(218, 1, 5, 0.25)',
-                                                cursor: 'pointer',
-                                                fontWeight: '700',
-                                                transition: 'all 0.2s ease'
-                                            }}
-                                        >
-                                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
-                                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                                                <polyline points="16 6 12 2 8 6" />
-                                                <line x1="12" y1="2" x2="12" y2="15" />
-                                            </svg>
-                                            Share Artikel
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <ShareModal
-                                    isOpen={isShareOpen}
-                                    onClose={() => setIsShareOpen(false)}
-                                    title={title}
-                                    excerpt={excerpt}
-                                />
-                            </div>
-                        )}
+            {/* 9. Image Tags / Keywords */}
+            {imageTags.length > 0 && (
+                <div className="kompas-tag-list">
+                    <span className="tag-lead">Tag:</span>
+                    {imageTags.map((tag, i) => (
+                        <Link key={i} href={`/blog-filter-tag?tag=${encodeURIComponent(tag)}`} className="tag-pill">
+                            #{tag}
+                        </Link>
+                    ))}
                 </div>
-            </article>
+            )}
 
-            {/* Author & Editor Bio Box (Controlled by show_author_bio setting) */}
-            {settings.show_author_bio === 'true' && (
-                <div
-                    className="ta-author-box p-4"
-                    style={{
-                        background: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '16px',
-                        display: 'flex',
-                        gap: '20px',
-                        alignItems: 'center',
-                        flexWrap: 'wrap',
-                        boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
-                    }}
-                >
+            {/* 10. Author / Redaksi Box */}
+            <div className="kompas-editorial-profile">
+                <div className="profile-avatar-box">
                     <img
                         src={authorAvatar}
                         alt={authorName}
                         onError={(e) => { e.currentTarget.src = '/assets/img/author/author-1.webp' }}
-                        style={{ width: '76px', height: '76px', borderRadius: '50%', objectFit: 'cover', border: '3px solid #ffffff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
+                        className="profile-avatar"
                     />
-                    <div style={{ flex: 1, minWidth: '220px' }}>
-                        <div style={{ fontSize: '11px', color: '#da0105', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Ditulis Oleh</div>
-                        <h4 style={{ margin: '2px 0 6px', fontSize: '18px', fontWeight: 700 }}>
-                            <Link href={blogPost?.authorId ? `/author?id=${blogPost.authorId}` : `/author?name=${encodeURIComponent(authorName)}`} style={{ color: '#0f172a', textDecoration: 'none' }}>
-                                {authorName}
-                            </Link>
-                        </h4>
-                        <p style={{ margin: 0, fontSize: '14px', color: '#64748b', lineHeight: '1.5' }}>{authorBio}</p>
-
-                        {settings.show_post_editor !== 'false' && (
-                            <div style={{ marginTop: '12px', paddingTop: '10px', borderTop: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#475569' }}>
-                                <span style={{ background: '#fee2e2', color: '#dc2626', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
-                                    Editor
-                                </span>
-                                <span>Penyunting Berita: <strong>{editorName}</strong></span>
-                            </div>
-                        )}
-                    </div>
                 </div>
-            )}
+                <div className="profile-info">
+                    <h5 className="profile-name">
+                        <Link href={`/author?name=${encodeURIComponent(authorName)}`}>
+                            {authorName}
+                        </Link>
+                    </h5>
+                    <span className="profile-role">Jurnalis & Penulis Kompas.com</span>
+                    <p className="profile-bio">{authorBio}</p>
+                </div>
+            </div>
 
-            {/* Related Posts (Controlled by show_related_posts setting) */}
-            {settings.show_related_posts === 'true' && relatedPosts.length > 0 && (
-                <div className="ta-related-posts" style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                    <h3 className="ta-title ta-border-bottom pb-15 mb-20" style={{ fontSize: '18px', fontWeight: 700, borderColor: '#e2e8f0' }}>
-                        Artikel Terkait
-                    </h3>
-                    <div className="row">
-                        {relatedPosts.map(post => (
-                            <div key={post.id} className="col-md-6 mb-3 mb-md-0">
-                                <div
-                                    style={{
-                                        border: '1px solid #e2e8f0',
-                                        borderRadius: '12px',
-                                        padding: '12px',
-                                        background: '#f8fafc',
-                                        height: '100%',
-                                        display: 'flex',
-                                        gap: '12px',
-                                        alignItems: 'center',
-                                        transition: 'transform 0.2s ease, box-shadow 0.2s ease'
-                                    }}
-                                >
-                                    <img
-                                        src={getImageUrl(post.img, `blog-2-${(post.id % 12) + 1}.webp`)}
-                                        alt={post.title}
-                                        onError={(e) => {
-                                            e.currentTarget.src = `/assets/img/blog/blog-2-${(post.id % 12) + 1}.webp`
-                                        }}
-                                        style={{ width: '68px', height: '68px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 }}
-                                    />
-                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                        <span style={{ fontSize: '10.5px', color: '#da0105', fontWeight: 700, textTransform: 'uppercase' }}>
-                                            {post.category || categoryName}
-                                        </span>
-                                        <h5 style={{
-                                            fontSize: '13px',
-                                            margin: '2px 0 4px 0',
-                                            lineHeight: '1.35',
-                                            fontWeight: 600,
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: 2,
-                                            WebkitBoxOrient: 'vertical',
-                                            overflow: 'hidden'
-                                        }}>
-                                            <Link href={`/blog/${post.id}`} style={{ color: '#0f172a', textDecoration: 'none' }}>
-                                                {post.title}
-                                            </Link>
-                                        </h5>
-                                        <div style={{ fontSize: '11px', color: '#94a3b8' }}>
-                                            <i className="fa fa-eye" style={{ marginRight: '4px' }} /> {post.views || 0} views
-                                        </div>
-                                    </div>
+            {/* 11. Berita Terkait Grid */}
+            {relatedPosts.length > 0 && (
+                <div className="kompas-related-section">
+                    <div className="related-header">
+                        <span className="related-bar"></span>
+                        <h4 className="related-title">BERITA TERKAIT</h4>
+                    </div>
+                    <div className="row g-3">
+                        {relatedPosts.map((post) => (
+                            <div key={post.id} className="col-md-4">
+                                <div className="related-card">
+                                    <Link href={`/blog/${post.slug || post.id}`} className="related-thumb-link">
+                                        <img
+                                            src={getImageUrl(post.img)}
+                                            alt={post.title}
+                                            className="related-img"
+                                            onError={(e) => { e.currentTarget.src = '/assets/img/blog/blog-2-1.webp' }}
+                                        />
+                                    </Link>
+                                    <h5 className="related-post-title">
+                                        <Link href={`/blog/${post.slug || post.id}`}>
+                                            {post.title}
+                                        </Link>
+                                    </h5>
                                 </div>
                             </div>
                         ))}
@@ -392,19 +357,442 @@ export default function BlogDetailsArticle({ blogPost }) {
                 </div>
             )}
 
-            {/* Navigation back to blog */}
-            <div className="ta-dn-wrapper pt-10 pb-10">
-                <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <Link href="/" className="ta-inline-btn" style={{ fontWeight: 600, color: '#475569', textDecoration: 'none' }}>
-                        <i className="fa fa-long-arrow-left" style={{ marginRight: '6px' }} /> Kembali ke Beranda
-                    </Link>
-                    {isLoggedIn && (
-                        <Link href="/dashboard/posts" className="ta-inline-btn" style={{ fontWeight: 600, color: '#3b82f6', textDecoration: 'none' }}>
-                            <i className="fa fa-sliders" style={{ marginRight: '6px' }} /> Kelola di Dashboard
-                        </Link>
-                    )}
-                </div>
-            </div>
-        </>
+            <style jsx>{`
+                .kompas-article-detail {
+                    background: #ffffff;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 8px;
+                    padding: 24px 28px;
+                    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                }
+
+                /* Breadcrumb */
+                .kompas-breadcrumbs {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-size: 12px;
+                    color: #6b7280;
+                    margin-bottom: 14px;
+                    flex-wrap: wrap;
+                }
+                .bc-item {
+                    color: #6b7280;
+                    text-decoration: none;
+                }
+                .bc-item:hover {
+                    color: #0077d7;
+                }
+                .bc-sep {
+                    color: #9ca3af;
+                }
+                .bc-current {
+                    color: #111827;
+                    font-weight: 600;
+                }
+
+                /* Rubric Header */
+                .kompas-rubric-header {
+                    margin-bottom: 8px;
+                }
+                .rubric-tag {
+                    font-size: 12px;
+                    font-weight: 800;
+                    color: #0077d7;
+                    letter-spacing: 0.5px;
+                    text-decoration: none;
+                }
+                .rubric-tag:hover {
+                    text-decoration: underline;
+                }
+
+                /* Title & Dek */
+                .kompas-detail-title {
+                    font-size: 32px;
+                    font-weight: 800;
+                    line-height: 1.28;
+                    color: #111827;
+                    margin-bottom: 12px;
+                    letter-spacing: -0.3px;
+                }
+                .kompas-detail-dek {
+                    font-size: 16px;
+                    color: #4b5563;
+                    line-height: 1.5;
+                    margin-bottom: 16px;
+                }
+
+                /* Byline Box */
+                .kompas-byline-box {
+                    border-top: 1px solid #f3f4f6;
+                    border-bottom: 1px solid #f3f4f6;
+                    padding: 10px 0;
+                    margin-bottom: 16px;
+                    font-size: 13px;
+                    color: #4b5563;
+                }
+                .byline-source {
+                    margin-bottom: 4px;
+                }
+                .source-brand {
+                    font-weight: 700;
+                    color: #0077d7;
+                }
+                .source-sep {
+                    margin: 0 6px;
+                    color: #9ca3af;
+                }
+                .source-time {
+                    color: #6b7280;
+                }
+                .byline-editorial {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                }
+                .byline-pipe {
+                    color: #d1d5db;
+                }
+
+                /* Share Bar */
+                .kompas-share-bar {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background: #f9fafb;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 6px;
+                    padding: 8px 14px;
+                    margin-bottom: 20px;
+                    flex-wrap: wrap;
+                    gap: 12px;
+                }
+                .share-buttons-group {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                }
+                .share-label {
+                    font-size: 12px;
+                    font-weight: 700;
+                    color: #374151;
+                }
+                .share-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    padding: 5px 10px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    text-decoration: none;
+                    color: #ffffff;
+                    border: none;
+                    cursor: pointer;
+                    transition: opacity 0.15s ease;
+                }
+                .share-btn:hover {
+                    opacity: 0.9;
+                    color: #ffffff;
+                }
+                .share-wa {
+                    background: #25d366;
+                }
+                .share-fb {
+                    background: #1877f2;
+                }
+                .share-x {
+                    background: #000000;
+                }
+                .share-tg {
+                    background: #0088cc;
+                }
+                .share-copy {
+                    background: #4b5563;
+                }
+
+                .reader-tools-group {
+                    display: flex;
+                    align-items: center;
+                    gap: 14px;
+                }
+                .audio-listen-btn {
+                    background: #0077d7;
+                    color: #ffffff;
+                    border: none;
+                    border-radius: 4px;
+                    padding: 5px 10px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    cursor: pointer;
+                }
+                .font-size-adjuster {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+                .font-label {
+                    font-size: 11.5px;
+                    color: #6b7280;
+                    font-weight: 600;
+                }
+                .btn-font {
+                    background: #ffffff;
+                    border: 1px solid #d1d5db;
+                    border-radius: 3px;
+                    padding: 2px 6px;
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: #374151;
+                    cursor: pointer;
+                }
+                .btn-font.active {
+                    background: #0077d7;
+                    color: #ffffff;
+                    border-color: #0077d7;
+                }
+
+                /* Audio Player */
+                .audio-player-wrapper {
+                    background: #0f172a;
+                    padding: 12px;
+                    border-radius: 6px;
+                    margin-bottom: 20px;
+                }
+
+                /* Lead Figure */
+                .kompas-lead-figure {
+                    margin: 0 0 24px;
+                }
+                .lead-photo {
+                    width: 100%;
+                    max-height: 480px;
+                    object-fit: cover;
+                    border-radius: 6px;
+                    display: block;
+                }
+                .photo-caption {
+                    font-size: 12.5px;
+                    color: #6b7280;
+                    line-height: 1.5;
+                    padding-top: 8px;
+                    font-style: italic;
+                }
+                .caption-credit {
+                    font-weight: 700;
+                    color: #374151;
+                    font-style: normal;
+                }
+
+                /* Video Wrapper */
+                .kompas-video-wrapper {
+                    position: relative;
+                    padding-top: 56.25%;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    margin-bottom: 24px;
+                    background: #000;
+                }
+                .kompas-video-wrapper iframe {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    border: none;
+                }
+
+                /* Article Body */
+                .kompas-article-body {
+                    color: #1f2937;
+                    margin-bottom: 28px;
+                }
+                .body-html-content :global(p) {
+                    margin-bottom: 20px;
+                }
+                .body-html-content :global(h2),
+                .body-html-content :global(h3) {
+                    font-weight: 800;
+                    color: #111827;
+                    margin: 28px 0 14px;
+                }
+                .body-html-content :global(img) {
+                    max-width: 100%;
+                    height: auto;
+                    border-radius: 6px;
+                    margin: 16px 0;
+                }
+
+                /* Baca Juga Inline Box */
+                .kompas-baca-juga {
+                    background: #f0f9ff;
+                    border-left: 4px solid #0077d7;
+                    padding: 12px 16px;
+                    margin: 24px 0;
+                    border-radius: 0 6px 6px 0;
+                    font-size: 15px;
+                }
+                .baca-juga-badge {
+                    font-weight: 800;
+                    color: #0077d7;
+                    margin-right: 8px;
+                }
+                .baca-juga-link {
+                    color: #111827;
+                    text-decoration: none;
+                    font-weight: 700;
+                }
+                .baca-juga-link:hover {
+                    color: #0077d7;
+                    text-decoration: underline;
+                }
+
+                /* Tag List */
+                .kompas-tag-list {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                    padding: 16px 0;
+                    border-top: 1px solid #e5e7eb;
+                    margin-bottom: 24px;
+                }
+                .tag-lead {
+                    font-size: 12.5px;
+                    font-weight: 700;
+                    color: #374151;
+                }
+                .tag-pill {
+                    font-size: 12px;
+                    color: #0077d7;
+                    background: #f3f4f6;
+                    border: 1px solid #e5e7eb;
+                    padding: 4px 10px;
+                    border-radius: 14px;
+                    text-decoration: none;
+                    font-weight: 500;
+                    transition: all 0.15s ease;
+                }
+                .tag-pill:hover {
+                    background: #0077d7;
+                    color: #ffffff;
+                    border-color: #0077d7;
+                }
+
+                /* Profile Box */
+                .kompas-editorial-profile {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    background: #f9fafb;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 8px;
+                    padding: 16px;
+                    margin-bottom: 28px;
+                }
+                .profile-avatar {
+                    width: 58px;
+                    height: 58px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+                .profile-name {
+                    font-size: 15px;
+                    font-weight: 800;
+                    margin: 0 0 2px;
+                }
+                .profile-name a {
+                    color: #111827;
+                    text-decoration: none;
+                }
+                .profile-name a:hover {
+                    color: #0077d7;
+                }
+                .profile-role {
+                    font-size: 11.5px;
+                    font-weight: 600;
+                    color: #0077d7;
+                    display: block;
+                    margin-bottom: 4px;
+                }
+                .profile-bio {
+                    font-size: 12.5px;
+                    color: #6b7280;
+                    line-height: 1.5;
+                    margin: 0;
+                }
+
+                /* Related Articles */
+                .kompas-related-section {
+                    border-top: 2px solid #e5e7eb;
+                    padding-top: 20px;
+                }
+                .related-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-bottom: 16px;
+                }
+                .related-bar {
+                    display: inline-block;
+                    width: 4px;
+                    height: 18px;
+                    background: #0077d7;
+                    border-radius: 2px;
+                }
+                .related-title {
+                    font-size: 16px;
+                    font-weight: 800;
+                    color: #111827;
+                    margin: 0;
+                }
+                .related-thumb-link {
+                    display: block;
+                    width: 100%;
+                    aspect-ratio: 16 / 10;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    background: #f3f4f6;
+                    margin-bottom: 8px;
+                }
+                .related-img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    transition: transform 0.3s ease;
+                }
+                .related-thumb-link:hover .related-img {
+                    transform: scale(1.04);
+                }
+                .related-post-title {
+                    font-size: 13.5px;
+                    font-weight: 700;
+                    line-height: 1.35;
+                }
+                .related-post-title a {
+                    color: #111827;
+                    text-decoration: none;
+                    transition: color 0.15s ease;
+                }
+                .related-post-title a:hover {
+                    color: #0077d7;
+                }
+
+                @media (max-width: 767px) {
+                    .kompas-detail-title {
+                        font-size: 24px;
+                    }
+                    .kompas-article-detail {
+                        padding: 16px;
+                    }
+                    .kompas-share-bar {
+                        flex-direction: column;
+                        align-items: flex-start;
+                    }
+                }
+            `}</style>
+        </article>
     )
 }

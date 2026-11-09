@@ -113,8 +113,8 @@ export default function BlogDetails({ initialPost, settings = {}, domain = 'http
                 )}
             </Head>
 
-            <div className="ta-blog-area pt-70 pb-90" style={{ position: 'relative', zIndex: 1, clear: 'both' }}>
-                <div className="container">
+            <div className="kompas-article-page pt-20 pb-70">
+                <div className="kompas-container">
                     {!blogPost ? (
                         <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748b' }}>
                             <h3>Artikel Tidak Ditemukan</h3>
@@ -132,7 +132,7 @@ export default function BlogDetails({ initialPost, settings = {}, domain = 'http
                         </div>
                     ) : (
                         /* Sidebar Layout Template (Left or Right) */
-                        <div className="row" style={{ alignItems: 'flex-start' }}>
+                        <div className="row g-4" style={{ alignItems: 'flex-start' }}>
                             {isLeftSidebar && (
                                 <div className="col-xl-4 col-lg-4 order-2 order-xl-1">
                                     <BlogSidebar />
@@ -154,6 +154,19 @@ export default function BlogDetails({ initialPost, settings = {}, domain = 'http
                         </div>
                     )}
                 </div>
+
+                <style jsx>{`
+                    .kompas-article-page {
+                        background-color: #ffffff;
+                        font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                    }
+                    .kompas-container {
+                        max-width: 1180px;
+                        margin: 0 auto;
+                        padding: 0 16px;
+                        width: 100%;
+                    }
+                `}</style>
             </div>
         </Layout>
     )
