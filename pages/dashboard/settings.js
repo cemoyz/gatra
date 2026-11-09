@@ -1026,7 +1026,7 @@ export default function DashboardSettings() {
                             >
                               <option value="">-- Pilih Artikel Utama Tengah --</option>
                               {allPosts.map(p => (
-                                <option key={p.id} value={p.id}>#{p.id} - {p.title} ({p.category})</option>
+                                <option key={p.id} value={p.id}>#{p.id} - {p.title} ({typeof p.category === 'object' ? p.category?.name : (p.category || 'General')})</option>
                               ))}
                             </Select>
                           </div>

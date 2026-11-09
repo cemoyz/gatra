@@ -520,7 +520,7 @@ export default function DashboardOverview() {
                         {post.title}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '12px', color: 'var(--dash-text-muted)' }}>
-                        <span><i className="fa fa-user"></i> {post.author || 'Redaksi'}</span>
+                        <span><i className="fa fa-user"></i> {typeof post.author === 'object' ? post.author?.name : (post.author || 'Redaksi')}</span>
                         <span><i className="fa fa-eye"></i> {post.views?.toLocaleString() || 0}</span>
                       </div>
                     </div>

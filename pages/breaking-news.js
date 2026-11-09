@@ -506,7 +506,7 @@ export default function BreakingNewsPage({ initialPosts = [], settings = {}, cat
                                         <div className="col-lg-5 align-self-center">
                                             <div className="bn-lead-content">
                                                 <div className="bn-meta-row">
-                                                    <span className="bn-cat-badge">{leadPost.category}</span>
+                                                    <span className="bn-cat-badge">{typeof leadPost.category === 'object' ? leadPost.category?.name : (leadPost.category || 'Berita')}</span>
                                                     <span><i className="fa fa-clock-o" /> {formatTimeAgo(leadPost.createdAt)}</span>
                                                     {leadPost.views > 0 && (
                                                         <span><i className="fa fa-eye" /> {leadPost.views} tayangan</span>
@@ -523,11 +523,11 @@ export default function BreakingNewsPage({ initialPosts = [], settings = {}, cat
                                                 <div className="bn-author-row">
                                                     <img 
                                                         src={getImageUrl(leadPost.authorAvatar, "/assets/img/author/author-1.webp")} 
-                                                        alt={leadPost.author} 
+                                                        alt={typeof leadPost.author === 'object' ? leadPost.author?.name : (leadPost.author || 'Admin')} 
                                                         className="bn-author-avatar"
                                                     />
                                                     <div>
-                                                        <div className="bn-author-name">{leadPost.author}</div>
+                                                        <div className="bn-author-name">{typeof leadPost.author === 'object' ? leadPost.author?.name : (leadPost.author || 'Admin')}</div>
                                                         <div className="bn-author-role">{leadPost.authorRole}</div>
                                                     </div>
                                                     <div style={{ marginLeft: 'auto' }}>
