@@ -1,0 +1,732 @@
+/* ==========================================================================
+   MOBILE & RESPONSIVE POLISH STYLESHEET (GATRA / POSTY)
+   Comprehensive mobile optimizations for viewports <= 991px, <= 767px, <= 480px
+   ========================================================================== */
+
+/* Prevent accidental horizontal overflow on all screen sizes */
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  position: relative;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Smooth touch scrolling */
+* {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================================
+   1. MOBILE MENU & OVERLAY BACKDROP
+   ========================================================================== */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-navigation-menu {
+  width: 86vw !important;
+  max-width: 340px !important;
+  z-index: 9999 !important;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15) !important;
+  padding: 24px 0 60px !important;
+}
+
+.mobile-navigation-menu #mobile-menu-close {
+  top: 18px !important;
+  right: 18px !important;
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 50% !important;
+  background: #f1f5f9 !important;
+  color: #334155 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 18px !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.mobile-navigation-menu #mobile-menu-close:hover {
+  background: #fee2e2 !important;
+  color: #dc2626 !important;
+}
+
+.mobile-menu-header {
+  padding: 0 24px 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 12px;
+}
+
+.mobile-menu-header .drawer-logo {
+  max-height: 36px;
+  width: auto;
+}
+
+.mobile-navigation-menu .main-menu li > a {
+  padding: 13px 24px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: #1e293b !important;
+  transition: color 0.15s ease, background-color 0.15s ease !important;
+}
+
+.mobile-navigation-menu .main-menu li > a:hover {
+  color: var(--primary-color, #da0105) !important;
+  background-color: #f8fafc !important;
+}
+
+.mobile-navigation-menu .dropdown-plus {
+  right: 20px !important;
+  top: 0 !important;
+  height: 48px !important;
+  width: 48px !important;
+}
+
+.mobile-navigation-menu .dropdown_menu ul li a {
+  padding: 10px 24px 10px 40px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #64748b !important;
+}
+
+.mobile-drawer-footer {
+  padding: 20px 24px 0;
+  margin-top: 20px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.mobile-drawer-footer .drawer-auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1e293b;
+  text-decoration: none;
+  margin-bottom: 14px;
+}
+
+/* ==========================================================================
+   2. HEADER & NAVIGATION OPTIMIZATIONS (<= 991px & <= 767px)
+   ========================================================================== */
+@media (max-width: 991px) {
+  /* Compact top bar */
+  .top-bar {
+    padding: 6px 0;
+    font-size: 12px;
+  }
+  
+  .top-bar-left ul li a {
+    font-size: 12px;
+  }
+
+  /* Mid header adjustments */
+  .mid-header {
+    padding: 14px 0;
+  }
+
+  .site-logo img {
+    max-height: 38px !important;
+  }
+
+  /* Bottom header navigation wrapper */
+  .bottom-header .navigation-inner {
+    height: 60px;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Hide verbose top bar on mobile to keep first view clean */
+  .top-bar {
+    display: none !important;
+  }
+
+  /* Mid header mobile layout */
+  .mid-header {
+    padding: 10px 0 !important;
+  }
+
+  .mid-header-wrap {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .mid-header-left {
+    display: none !important; /* Move social icons to mobile drawer */
+  }
+
+  .site-logo {
+    text-align: left !important;
+    margin: 0 !important;
+  }
+
+  .site-logo img {
+    max-height: 34px !important;
+  }
+
+  .mid-header-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .mid-header-right .header-btn {
+    padding: 6px 14px !important;
+    font-size: 12px !important;
+    height: 34px !important;
+    line-height: 22px !important;
+    border-radius: 6px !important;
+  }
+
+  .mid-header-right .user {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 16px !important;
+    border-radius: 6px !important;
+  }
+
+  /* Sticky Bottom Header on mobile */
+  .bottom-header {
+    padding: 0 !important;
+  }
+
+  .bottom-header .navigation-inner {
+    height: 54px !important;
+    padding: 0 4px !important;
+  }
+
+  .bottom-header .site-logo img {
+    max-height: 30px !important;
+  }
+
+  .mobile-menu-icon {
+    margin-left: 10px !important;
+  }
+}
+
+/* ==========================================================================
+   3. BREAKING NEWS / TOP NEWS TICKER
+   ========================================================================== */
+@media (max-width: 767px) {
+  .news-area {
+    padding: 8px 0 !important;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .news-carousel {
+    height: auto !important;
+    line-height: 1.4 !important;
+    padding: 4px 0 !important;
+  }
+
+  .hero-text {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding-bottom: 0 !important;
+    text-align: left !important;
+  }
+
+  .hero-text .news {
+    flex-shrink: 0 !important;
+    height: 28px !important;
+    padding: 0 8px !important;
+    font-size: 10.5px !important;
+    border-radius: 4px !important;
+  }
+
+  .hero-text .news img {
+    max-height: 12px !important;
+    margin-right: 4px !important;
+  }
+
+  .hero-text span:not(.news) {
+    font-size: 13.5px !important;
+    line-height: 1.35 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    color: var(--heading-color, #0f172a) !important;
+  }
+
+  .news-carousel .swiper-arrow {
+    display: none !important; /* Autoplay takes care of slides on mobile */
+  }
+}
+
+/* ==========================================================================
+   4. HERO POSTS SECTION (ORDER & CARD STYLES)
+   ========================================================================== */
+@media (max-width: 991px) {
+  .hero-post-area {
+    padding: 16px 0 40px 0 !important;
+  }
+
+  .post-area-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+
+  /* CRITICAL: Center Big Hero Slider comes FIRST on mobile */
+  .post-area-wrap .post-carousel-wrap {
+    order: -1 !important;
+    width: 100% !important;
+  }
+
+  .post-area-wrap .post-area-right-2 {
+    order: 1 !important;
+    width: 100% !important;
+  }
+
+  .post-area-wrap .post-area-right {
+    order: 2 !important;
+    width: 100% !important;
+  }
+
+  /* Big Hero Card on mobile */
+  .post-carousel-card {
+    height: 360px !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+  }
+
+  .post-carousel-card .post-carousel-thumb {
+    height: 100% !important;
+  }
+
+  .post-carousel-card .post-carousel-thumb img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Gradient backdrop for readable text */
+  .post-carousel-card::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.05) 0%, rgba(15, 23, 42, 0.85) 100%) !important;
+    pointer-events: none !important;
+    border-radius: 10px !important;
+    z-index: 1 !important;
+  }
+
+  .post-carousel-card .post-carousel-content {
+    left: 18px !important;
+    right: 18px !important;
+    bottom: 20px !important;
+    width: auto !important;
+    z-index: 2 !important;
+  }
+
+  .post-carousel-card .post-carousel-content .title {
+    font-size: 21px !important;
+    line-height: 1.35 !important;
+    max-width: 100% !important;
+    color: #ffffff !important;
+    margin: 10px 0 !important;
+  }
+
+  .post-carousel-card .post-carousel-content .card-btn {
+    font-size: 11px !important;
+    padding: 3px 10px !important;
+  }
+
+  .post-carousel-card .post-list {
+    margin: 0 !important;
+  }
+
+  .post-carousel-card .post-list li,
+  .post-carousel-card .post-list li span,
+  .post-carousel-card .post-list li a {
+    color: #e2e8f0 !important;
+    font-size: 12px !important;
+  }
+
+  /* Secondary cards (Left slot in desktop, 2nd in mobile) */
+  .post-area-right-2 .post-card-wrap {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+  }
+
+  .post-area-right-2 .post-card {
+    margin-bottom: 0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    border: 1px solid #f1f5f9 !important;
+    background: #ffffff !important;
+  }
+
+  .post-area-right-2 .post-thumb img {
+    width: 100% !important;
+    aspect-ratio: 16/10 !important;
+    height: auto !important;
+    object-fit: cover !important;
+  }
+
+  .post-area-right-2 .post-content {
+    padding: 12px !important;
+  }
+
+  .post-area-right-2 .post-content .title {
+    font-size: 14.5px !important;
+    line-height: 1.35 !important;
+    margin-top: 6px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  /* Right side list posts */
+  .post-area-right .list-post-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding-bottom: 14px !important;
+    margin-bottom: 14px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+  }
+
+  .post-area-right .list-post-card .post-thumb {
+    width: 84px !important;
+    height: 64px !important;
+    flex-shrink: 0 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+  }
+
+  .post-area-right .list-post-card .post-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .post-area-right .list-post-card .post-content .title {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    margin: 0 0 4px 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .post-carousel-card {
+    height: 310px !important;
+  }
+
+  .post-carousel-card .post-carousel-content .title {
+    font-size: 18.5px !important;
+  }
+
+  .post-area-right-2 .post-card-wrap {
+    grid-template-columns: 1fr !important;
+  }
+
+  .post-area-right-2 .post-card {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 10px !important;
+  }
+
+  .post-area-right-2 .post-thumb {
+    width: 100px !important;
+    height: 75px !important;
+    flex-shrink: 0 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+  }
+
+  .post-area-right-2 .post-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .post-area-right-2 .post-content {
+    padding: 0 !important;
+    flex: 1 !important;
+  }
+}
+
+/* ==========================================================================
+   5. LATEST NEWS POSTS (NEW-POST-AREA / BLOG ARCHIVE)
+   ========================================================================== */
+@media (max-width: 767px) {
+  .news-post {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 14px !important;
+    border-radius: 8px !important;
+    margin-bottom: 16px !important;
+    gap: 12px !important;
+  }
+
+  .news-post .post-thumb {
+    width: 100% !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+  }
+
+  .news-post .post-thumb img {
+    width: 100% !important;
+    aspect-ratio: 16/10 !important;
+    height: auto !important;
+    max-height: 220px !important;
+    object-fit: cover !important;
+  }
+
+  .news-post .post-content .title {
+    font-size: 18px !important;
+    line-height: 1.35 !important;
+    margin: 8px 0 !important;
+  }
+
+  .news-post .post-list {
+    margin-bottom: 8px !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .news-post .post-list li {
+    font-size: 12px !important;
+  }
+
+  .news-post p {
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+    color: #64748b !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    margin-bottom: 8px !important;
+  }
+
+  .news-post .news-post-btn {
+    display: none !important;
+  }
+
+  /* Section Headings on mobile */
+  .section-heading {
+    margin-bottom: 20px !important;
+  }
+
+  .section-title {
+    font-size: 20px !important;
+  }
+
+  /* Sidebar when stacked on mobile */
+  .news-post-area .col-lg-4,
+  .sidebar-widget-area {
+    margin-top: 36px !important;
+    border-top: 1px solid #f1f5f9 !important;
+    padding-top: 28px !important;
+  }
+
+  .widget {
+    margin-bottom: 30px !important;
+  }
+}
+
+/* ==========================================================================
+   6. ARTICLE DETAILS PAGE (BLOG/[ID].JS) MOBILE POLISH
+   ========================================================================== */
+@media (max-width: 767px) {
+  .post-layout-1.padding {
+    padding: 20px 0 40px !important;
+  }
+
+  .post-layout-1 .top-content {
+    margin-bottom: 20px !important;
+  }
+
+  .post-layout-1 .top-content .title {
+    font-size: 24px !important;
+    line-height: 1.35 !important;
+    margin: 12px 0 !important;
+  }
+
+  .post-layout-1 .top-content .post-list {
+    flex-wrap: wrap !important;
+    gap: 6px 12px !important;
+    font-size: 12.5px !important;
+  }
+
+  .post-layout-1 .post-social {
+    margin-top: 16px !important;
+    padding-top: 12px !important;
+    border-top: 1px solid #f1f5f9 !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  .post-layout-1 .layout-thumb {
+    margin-bottom: 20px !important;
+  }
+
+  .post-layout-1 .layout-thumb img {
+    max-height: 260px !important;
+    aspect-ratio: 16/10 !important;
+    object-fit: cover !important;
+  }
+
+  .post-body-content {
+    font-size: 16px !important;
+    line-height: 1.8 !important;
+  }
+
+  /* Prevent oversized images or tables inside article body from stretching the screen */
+  .post-body-content img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 6px !important;
+  }
+
+  .post-body-content iframe,
+  .post-body-content video {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .post-body-content table {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+  }
+
+  .layout-social-box {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    padding: 16px !important;
+  }
+}
+
+/* ==========================================================================
+   7. FOOTER MOBILE POLISH
+   ========================================================================== */
+@media (max-width: 767px) {
+  .footer-section {
+    padding-top: 40px !important;
+  }
+
+  .footer-item {
+    margin-bottom: 30px !important;
+  }
+
+  .footer-item .widget-title {
+    font-size: 17px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .footer-bottom-wrap {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 14px !important;
+    padding: 16px 0 !important;
+  }
+
+  .footer-bottom .footer-menu-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px 14px !important;
+  }
+
+  .footer-bottom .footer-menu-list li:not(:first-of-type) {
+    margin-left: 0 !important;
+  }
+
+  .copyright-wrap {
+    text-align: center !important;
+    padding: 14px 0 !important;
+  }
+}
+
+/* ==========================================================================
+   8. CATEGORIES & SUBSCRIBE SECTIONS MOBILE
+   ========================================================================== */
+@media (max-width: 767px) {
+  .categories-section {
+    padding: 30px 0 !important;
+  }
+
+  .categories-section .col-md-6 {
+    margin-bottom: 16px;
+  }
+
+  .categorie-item {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+  }
+
+  .subscribe-section {
+    padding: 36px 0 !important;
+  }
+
+  .subscribe-content {
+    margin-bottom: 30px !important;
+    text-align: center !important;
+  }
+
+  .subscribe-content .title {
+    font-size: 22px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 18px !important;
+  }
+
+  .subscribe-form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .subscribe-form .form-control {
+    width: 100% !important;
+    border-radius: 6px !important;
+    height: 46px !important;
+  }
+
+  .subscribe-form #submit {
+    width: 100% !important;
+    position: static !important;
+    border-radius: 6px !important;
+    height: 46px !important;
+  }
+}

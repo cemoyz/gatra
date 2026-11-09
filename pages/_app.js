@@ -20,6 +20,7 @@ import "@/public/assets/css/main.css"
 import "@/public/assets/css/common-style.css"
 import "@/public/assets/css/posty-color.css"
 import "@/public/assets/css/posty.css"
+import "@/public/assets/css/mobile-responsive.css"
 import "@/public/assets/css/dashboard.css"
 
 function MyApp({ Component, pageProps }) {

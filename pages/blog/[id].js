@@ -194,7 +194,7 @@ export default function BlogDetails({
                                     <Link href={`/blog-filter-category?category=${categorySlug}`} className={`card-btn ${badgeColor}`}>
                                         {categoryName}
                                     </Link>
-                                    <h1 className="title" style={{ fontSize: "36px", fontWeight: 700, lineHeight: 1.3, marginTop: "14px", marginBottom: "16px" }}>
+                                    <h1 className="title" style={{ fontSize: "clamp(22px, 4.5vw, 36px)", fontWeight: 700, lineHeight: 1.35, marginTop: "14px", marginBottom: "16px" }}>
                                         {blogPost.title}
                                     </h1>
                                     <ul className="post-list">
