@@ -730,3 +730,131 @@ html, body {
     height: 46px !important;
   }
 }
+
+/* ==========================================================================
+   9. FOOTER TEXT VISIBILITY (FIX INVISIBLE LINKS ON DARK BACKGROUND)
+   ========================================================================== */
+.footer-section {
+  background-color: #111418 !important;
+  color: #94a3b8 !important;
+}
+
+.footer-section .footer-header,
+.footer-section .footer-item h3 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 17px !important;
+  letter-spacing: 0.3px !important;
+  margin-bottom: 22px !important;
+}
+
+.footer-section .desc {
+  color: #94a3b8 !important;
+  font-size: 14.5px !important;
+  line-height: 1.7 !important;
+}
+
+.footer-section .contact-list li {
+  color: #cbd5e1 !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  margin-bottom: 10px !important;
+}
+
+.footer-section .contact-list li a {
+  color: #f1f5f9 !important;
+  font-weight: 500 !important;
+  transition: color 0.2s ease !important;
+}
+
+.footer-section .contact-list li a:hover {
+  color: var(--primary-color, #da0105) !important;
+}
+
+.footer-section .footer-links {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.footer-section .footer-links li {
+  margin-bottom: 10px !important;
+}
+
+.footer-section .footer-links li a {
+  color: #cbd5e1 !important;
+  font-size: 14.5px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  transition: all 0.2s ease !important;
+}
+
+.footer-section .footer-links li a:hover {
+  color: #ffffff !important;
+  transform: translateX(4px) !important;
+}
+
+.footer-section .footer-menu-list li a {
+  color: #94a3b8 !important;
+  font-size: 13.5px !important;
+  font-weight: 500 !important;
+  transition: color 0.2s ease !important;
+}
+
+.footer-section .footer-menu-list li a:hover {
+  color: #ffffff !important;
+}
+
+.footer-section .copyright-wrap p {
+  color: #94a3b8 !important;
+  font-size: 13.5px !important;
+}
+
+.footer-section .copyright-wrap .list li a {
+  color: #94a3b8 !important;
+  font-size: 13.5px !important;
+  transition: color 0.2s ease !important;
+}
+
+.footer-section .copyright-wrap .list li a:hover {
+  color: #ffffff !important;
+}
+
+/* Sidebar slideout dark & light text support */
+.sidebar-area .sidebar-menu-links ul li a {
+  color: var(--heading-color, #1e293b);
+  font-size: 14.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.sidebar-area .sidebar-menu-links ul li a:hover {
+  color: var(--primary-color, #da0105);
+  transform: translateX(4px);
+}
+
+[data-theme="dark"] .sidebar-area .sidebar-menu-links ul li a {
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .sidebar-area .sidebar-menu-links ul li a:hover {
+  color: var(--primary-color, #da0105) !important;
+}
+
+[data-theme="dark"] .sidebar-area .sidebar-info span {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .sidebar-area .sidebar-info li {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .sidebar-area h4 {
+  color: #ffffff !important;
+}
+

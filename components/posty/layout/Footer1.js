@@ -58,30 +58,34 @@ export default function Footer1({ settings = {} }) {
                             </div>
                             <div className="col-lg-3 col-md-6">
                                 <div className="footer-item">
-                                    <h3 className="footer-header">Kanal Berita</h3>
+                                    <h3 className="footer-header" style={{ color: '#ffffff', fontWeight: 700, fontSize: '17px', marginBottom: '20px' }}>
+                                        Kanal Berita
+                                    </h3>
                                     <div className="footer-content">
                                         <ul className="footer-links" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                            <li className="mb-2"><Link href="/blog-filter-category?category=news">News</Link></li>
-                                            <li className="mb-2"><Link href="/blog-filter-category?category=tekno">Tekno</Link></li>
-                                            <li className="mb-2"><Link href="/blog-filter-category?category=bola">Bola</Link></li>
-                                            <li className="mb-2"><Link href="/blog-filter-category?category=money">Money</Link></li>
-                                            <li className="mb-2"><Link href="/blog-filter-category?category=lifestyle">Lifestyle</Link></li>
-                                            <li className="mb-2"><Link href="/blog-filter-category?category=tren">Tren</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=news"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />News</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=tekno"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Tekno</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=bola"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Bola</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=money"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Money</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=lifestyle"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Lifestyle</Link></li>
+                                            <li className="mb-2"><Link href="/blog-filter-category?category=tren"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Tren</Link></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-lg-4 col-md-6">
                                 <div className="footer-item">
-                                    <h3 className="footer-header">Tautan Cepat</h3>
+                                    <h3 className="footer-header" style={{ color: '#ffffff', fontWeight: 700, fontSize: '17px', marginBottom: '20px' }}>
+                                        Tautan Cepat
+                                    </h3>
                                     <div className="footer-content">
                                         <ul className="footer-links" style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                                            <li className="mb-2"><Link href="/blog">Semua Berita Terkini</Link></li>
-                                            <li className="mb-2"><Link href="/breaking-news">Breaking News</Link></li>
-                                            <li className="mb-2"><Link href="/about">Tentang Redaksi</Link></li>
-                                            <li className="mb-2"><Link href="/pedoman-media-siber">Pedoman Media Siber</Link></li>
-                                            <li className="mb-2"><Link href="/contact">Hubungi Kami & Pasang Iklan</Link></li>
-                                            <li className="mb-2"><Link href="/subscribe">Berlangganan Newsletter</Link></li>
+                                            <li className="mb-2"><Link href="/blog"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Semua Berita Terkini</Link></li>
+                                            <li className="mb-2"><Link href="/breaking-news"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Breaking News</Link></li>
+                                            <li className="mb-2"><Link href="/about"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Tentang Redaksi</Link></li>
+                                            <li className="mb-2"><Link href="/pedoman-media-siber"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Pedoman Media Siber</Link></li>
+                                            <li className="mb-2"><Link href="/contact"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Hubungi Kami & Pasang Iklan</Link></li>
+                                            <li className="mb-2"><Link href="/subscribe"><i className="las la-angle-right" style={{ fontSize: '12px', color: '#da0105', marginRight: '6px' }} />Berlangganan Newsletter</Link></li>
                                         </ul>
                                     </div>
                                 </div>
