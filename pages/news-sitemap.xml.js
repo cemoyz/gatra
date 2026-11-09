@@ -57,10 +57,14 @@ export async function getServerSideProps({ req, res }) {
     const host = req.headers['host'] || 'localhost:3000'
     const domain = sMap.site_url?.trim() || `${protocol}://${host}`
     const publicationName = sMap.google_news_name || sMap.site_title || 'Dua Narasi'
+    const newsWindowStart = new Date(Date.now() - 48 * 60 * 60 * 1000)
 
-    // Google News sitemaps should include news published within the last 48 hours, or latest 1000
+    // Google News sitemaps should only include articles published in the last 48 hours.
     const posts = await prisma.post.findMany({
-      where: { status: 'PUBLISHED' },
+      where: {
+        status: 'PUBLISHED',
+        createdAt: { gte: newsWindowStart }
+      },
       select: {
         id: true,
         title: true,
