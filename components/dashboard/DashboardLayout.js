@@ -354,6 +354,7 @@ export default function DashboardLayout({ children, title = 'Dashboard' }) {
 
   const allNavItems = [
     { label: 'Ringkasan / Analytics', path: '/dashboard', icon: 'fa-tachometer', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
+    { label: 'Analytics & SEO', path: '/dashboard/analytics', icon: 'fa-line-chart', roles: ['ADMIN', 'EDITOR'] },
     { label: userRole === 'AUTHOR' ? 'Artikel Saya' : 'Semua Artikel', path: '/dashboard/posts', icon: 'fa-newspaper', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
     { label: 'Tulis Artikel Baru', path: '/dashboard/posts/new', icon: 'fa-edit', roles: ['ADMIN', 'EDITOR', 'AUTHOR'] },
     { label: 'Kategori Berita', path: '/dashboard/categories', icon: 'fa-folder-open', roles: ['ADMIN', 'EDITOR'] },
