@@ -12,9 +12,11 @@ const defaultCategories = [
 	{ id: 7, name: "Tren", slug: "tren" },
 ]
 
-export default function MobileMenu({ isMobileMenu, handleMobileMenu }) {
+export default function MobileMenu({ isMobileMenu, handleMobileMenu, settings = {} }) {
 	const [isAccordion, setIsAccordion] = useState(null)
 	const [categories, setCategories] = useState(defaultCategories)
+	const logoHeader = settings.logo_header || settings.site_logo || null
+	const siteTitle = settings.site_title || "Dua Narasi"
 
 	useEffect(() => {
 		fetch('/api/categories?headerOnly=true')
@@ -42,10 +44,14 @@ export default function MobileMenu({ isMobileMenu, handleMobileMenu }) {
 
 			<div className={`mobile-navigation-menu ${isMobileMenu ? "open-mobile-menu" : ""}`}>
 				<div className="mobile-menu-header d-flex align-items-center justify-content-between">
-					<Link href="/" onClick={handleMobileMenu}>
-						<span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--primary-color, #da0105)', letterSpacing: '0.5px' }}>
-							GATRA<span style={{ color: '#0f172a' }}>.COM</span>
-						</span>
+					<Link href="/" onClick={handleMobileMenu} style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none' }}>
+						{logoHeader ? (
+							<img src={logoHeader} alt={siteTitle} style={{ maxHeight: '32px', width: 'auto' }} />
+						) : (
+							<span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--primary-color, #da0105)', letterSpacing: '0.5px' }}>
+								{siteTitle}
+							</span>
+						)}
 					</Link>
 					<button id="mobile-menu-close" onClick={handleMobileMenu} aria-label="Close menu">
 						<i className="las la-times" />

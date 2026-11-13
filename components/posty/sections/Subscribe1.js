@@ -2,6 +2,10 @@
 import { useState } from 'react'
 
 export default function Subscribe1({ settings = {} }) {
+    if (settings.show_newsletter === 'false') {
+        return null
+    }
+
     const [email, setEmail] = useState('')
     const [status, setStatus] = useState(null)
     const [submitting, setSubmitting] = useState(false)

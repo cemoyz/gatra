@@ -1,15 +1,20 @@
 import Link from 'next/link'
 import { getImageUrl } from "@/lib/imageUtils"
 
-export default function RecentPost({ posts = [] }) {
+export default function RecentPost({ posts = [], settings = {} }) {
+    if (settings.show_recent_posts === 'false') {
+        return null
+    }
+
+    const title = settings.title_recent_posts || "Recent Posts"
     const recentList = posts && posts.length > 10 ? posts.slice(10, 16) : null
-    const leftCol = recentList ? recentList.slice(0, 3) : null
-    const rightCol = recentList ? recentList.slice(3, 6) : null
+    const leftCol = recentList ? recentList.slice(0, 3) : (posts && posts.length > 0 ? posts.slice(0, 3) : null)
+    const rightCol = recentList ? recentList.slice(3, 6) : (posts && posts.length > 3 ? posts.slice(3, 6) : null)
 
     const formatDate = (dateStr) => {
         if (!dateStr) return "Recently"
         try {
-            return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+            return new Date(dateStr).toLocaleDateString("id-ID", { month: "short", day: "numeric", year: "numeric" })
         } catch {
             return "Recently"
         }
@@ -21,7 +26,7 @@ export default function RecentPost({ posts = [] }) {
                 <div className="container">
                     <div className="top-area mb-40 title-border">
                         <div className="section-heading">
-                            <h3 className="section-title"><span className="bg-grey-2">Recent Posts</span></h3>
+                            <h3 className="section-title"><span className="bg-grey-2">{title}</span></h3>
                         </div>
                         <div className="right-btn">
                             <Link href="/blog" className="default-btn">Lihat Semua</Link>

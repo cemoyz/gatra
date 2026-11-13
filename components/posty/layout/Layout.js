@@ -128,6 +128,7 @@ export default function Layout({ headerStyle, footerStyle, breadcrumbTitle, chil
 			<MobileMenu
 				isMobileMenu={isMobileMenu}
 				handleMobileMenu={handleMobileMenu}
+				settings={settings}
 			/>
 
 			{breadcrumbTitle && <Breadcrumb breadcrumbTitle={breadcrumbTitle} />}

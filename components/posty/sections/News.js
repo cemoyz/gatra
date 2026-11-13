@@ -26,10 +26,13 @@ const swiperOptions = {
 }
 
 export default function News({ posts = [], settings = {} }) {
-    const displayPosts = posts && posts.length > 0 ? posts.slice(0, 5) : [
+    let displayPosts = posts && posts.length > 0 ? posts.slice(0, 5) : [
         { id: 'sample-1', title: "The Improbable Rise and Savage Fall of Siegfried. How My Phone’s Most Annoying Feature Saved My Life", slug: "" },
         { id: 'sample-2', title: "Artificial Intelligence and the Modern Horizon of Digital News Media in 2026", slug: "" }
     ]
+    if (settings.breaking_ticker_custom_text && settings.breaking_ticker_custom_text.trim()) {
+        displayPosts = [{ id: 'custom-ticker', title: settings.breaking_ticker_custom_text.trim(), slug: "" }, ...displayPosts]
+    }
     const tickerTitle = settings.breaking_ticker_title || "Top News"
 
     return (

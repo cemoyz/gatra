@@ -36,7 +36,10 @@ const swiperOptions = {
 
 import { getImageUrl } from "@/lib/imageUtils"
 
-export default function Trending1({ posts = [] }) {
+export default function Trending1({ posts = [], settings = {} }) {
+    if (settings.show_trending_posts === 'false') {
+        return null
+    }
     const displayPosts = posts && posts.length > 0 ? posts.slice(0, 8) : null
 
     return (

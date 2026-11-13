@@ -1,13 +1,17 @@
 import Link from 'next/link'
 import { getImageUrl } from "@/lib/imageUtils"
 
-export default function FashionBlog1({ posts = [], title = "Lifestyle & Fashion" }) {
+export default function FashionBlog1({ posts = [], settings = {}, title }) {
+    if (settings.show_lifestyle_section === 'false') {
+        return null
+    }
+    const sectionTitle = title || settings.title_lifestyle_posts || "Lifestyle & Fashion"
     const displayPosts = posts && posts.length > 0 ? posts.slice(0, 3) : null
 
     const formatDate = (dateStr) => {
         if (!dateStr) return "Recently"
         try {
-            return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+            return new Date(dateStr).toLocaleDateString("id-ID", { month: "short", day: "numeric", year: "numeric" })
         } catch {
             return "Recently"
         }
@@ -19,7 +23,7 @@ export default function FashionBlog1({ posts = [], title = "Lifestyle & Fashion"
                 <div className="container">
                     <div className="top-area mb-40 title-border">
                         <div className="section-heading">
-                            <h3 className="section-title"><span className="bg-grey-2">{title}</span></h3>
+                            <h3 className="section-title"><span className="bg-grey-2">{sectionTitle}</span></h3>
                         </div>
                         <div className="right-btn">
                             <Link href="/blog" className="default-btn">Lihat Semua</Link>

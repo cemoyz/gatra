@@ -120,17 +120,23 @@ export default function PostyHome({
         }
     }
 
-    // 4. Popular Posts (Most Read)
-    let mostReadPosts = popularPosts.length >= 3 ? popularPosts.slice(0, 3) : posts.slice(4, 7)
+    // 4. Popular Posts (Most Read - 1 Hero Besar + 4 Artikel Kecil)
+    let popSource = settings.popular_posts_sort === 'latest' ? posts : (popularPosts.length > 0 ? popularPosts : posts)
     if (settings.popular_posts_category && settings.popular_posts_category !== 'all') {
-        const filtered = (popularPosts.length > 0 ? popularPosts : posts).filter(p => {
+        const filtered = popSource.filter(p => {
             const s = p.category?.slug || (typeof p.category === 'string' ? p.category : '')
             return s.toLowerCase() === settings.popular_posts_category.toLowerCase()
         })
-        if (filtered.length >= 3) {
-            mostReadPosts = filtered.slice(0, 3)
+        if (filtered.length > 0) {
+            popSource = filtered
         }
     }
+    let mostReadPosts = [...popSource]
+    if (mostReadPosts.length < 5) {
+        const remaining = posts.filter(p => !mostReadPosts.some(m => m.id === p.id))
+        mostReadPosts = [...mostReadPosts, ...remaining]
+    }
+    mostReadPosts = mostReadPosts.slice(0, 5)
 
     // 5. Section Slices
     const newsTickerPosts = posts.slice(0, 5)
@@ -156,6 +162,14 @@ export default function PostyHome({
     const showTrending = settings.show_trending_posts !== 'false'
     const showPopular = settings.show_popular_posts !== 'false'
     const showHandpick = settings.show_handpick_posts !== 'false'
+    const showCategories = settings.show_categories_section !== 'false'
+    const showLatestNews = settings.show_latest_posts !== 'false'
+    const showVideo = settings.show_video_section !== 'false'
+    const showLifestyle = settings.show_lifestyle_section !== 'false'
+    const showCta2 = settings.show_cta_banner_2 !== 'false'
+    const showTravel = settings.show_travel_section !== 'false'
+    const showNewsletter = settings.show_newsletter !== 'false'
+    const showRecent = settings.show_recent_posts !== 'false'
 
     return (
         <>
@@ -177,7 +191,7 @@ export default function PostyHome({
                 {showFeatured && <HeroPost1 posts={heroPosts} popularPosts={popularPosts} settings={settings} />}
 
                 {/* 4. CTA Banner 1 */}
-                <Cta1 />
+                <Cta1 settings={settings} />
 
                 {/* 5. Editor's Pick Section & Follow Us */}
                 {showHandpick && <EditorBlog1 posts={editorPosts} settings={settings} />}
@@ -185,29 +199,29 @@ export default function PostyHome({
                 {/* 6. Most Read Post Section */}
                 {showPopular && <HeroPost2 posts={mostReadPosts} settings={settings} />}
 
-                {/* 7. Categories Grid */}
-                <Categories categories={categories} settings={settings} />
+                {/* 7. Categories Slider */}
+                {showCategories && <Categories categories={categories} settings={settings} />}
 
                 {/* 8. Latest News & Sidebar Section */}
-                <NewsPost1 posts={latestNewsPosts} popularPosts={popularPosts} categories={categories} settings={settings} />
+                {showLatestNews && <NewsPost1 posts={latestNewsPosts} popularPosts={popularPosts} categories={categories} settings={settings} />}
 
                 {/* 9. Video Section (What to Watch) */}
-                <Watch posts={videoPosts} settings={settings} />
+                {showVideo && <Watch posts={videoPosts} settings={settings} />}
 
                 {/* 10. Lifestyle / Fashion Section */}
-                <FashionBlog1 posts={lifestylePosts.length >= 3 ? lifestylePosts : posts.slice(3, 6)} settings={settings} />
+                {showLifestyle && <FashionBlog1 posts={lifestylePosts.length >= 3 ? lifestylePosts : posts.slice(3, 6)} settings={settings} />}
 
                 {/* 11. CTA Banner 2 */}
-                <Cta2 />
+                {showCta2 && <Cta2 settings={settings} />}
 
                 {/* 12. Travel / Feature Section */}
-                <HeroPost3 posts={travelPosts.length >= 3 ? travelPosts : posts.slice(7, 10)} categoryName="Travel & Adventure" settings={settings} />
+                {showTravel && <HeroPost3 posts={travelPosts.length >= 3 ? travelPosts : posts.slice(7, 10)} categoryName="Travel & Adventure" settings={settings} />}
 
                 {/* 13. Newsletter Subscribe */}
-                <Subscribe1 settings={settings} />
+                {showNewsletter && <Subscribe1 settings={settings} />}
 
                 {/* 14. Recent Posts Grid */}
-                <RecentPost posts={posts} settings={settings} />
+                {showRecent && <RecentPost posts={posts} settings={settings} />}
             </Layout>
         </>
     )

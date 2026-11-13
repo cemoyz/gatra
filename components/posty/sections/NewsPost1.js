@@ -2,6 +2,11 @@ import Link from 'next/link'
 import { getImageUrl } from "@/lib/imageUtils"
 
 export default function NewsPost1({ posts = [], popularPosts = [], categories = [], settings = {} }) {
+    if (settings.show_latest_posts === 'false') {
+        return null
+    }
+
+    const latestTitle = settings.title_latest_posts || "Latest Posts"
     const displayPosts = posts && posts.length > 0 ? posts.slice(0, 5) : null
     const displayPopular = popularPosts && popularPosts.length > 0 ? popularPosts.slice(0, 4) : posts.slice(0, 4)
     const displayCats = categories && categories.length > 0 ? categories.slice(0, 5) : [
@@ -35,7 +40,7 @@ export default function NewsPost1({ posts = [], popularPosts = [], categories = 
                         <div className="col-lg-8">
                             <div className="news-post-wrap">
                                 <div className="section-heading mb-40">
-                                    <h3 className="section-title title-border"><span>Latest Posts</span></h3>
+                                    <h3 className="section-title title-border"><span>{latestTitle}</span></h3>
                                 </div>
                                 {displayPosts && displayPosts.length > 0 ? (
                                     displayPosts.map((post, idx) => {

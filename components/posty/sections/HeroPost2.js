@@ -5,7 +5,9 @@ export default function HeroPost2({ posts = [], settings = {} }) {
     const p1 = posts[0] || null
     const p2 = posts[1] || null
     const p3 = posts[2] || null
-    const titlePopular = settings.title_popular_posts || "Paling Banyak Dibaca"
+    const p4 = posts[3] || null
+    const p5 = posts[4] || null
+    const titlePopular = settings.title_popular_posts || "Popular Post"
 
     const formatDate = (dateStr) => {
         if (!dateStr) return "Recently"
@@ -59,6 +61,7 @@ export default function HeroPost2({ posts = [], settings = {} }) {
                         ) : null}
 
                         <div className="post-area-right">
+                            {/* Kolom 1: 2 Artikel Kecil */}
                             <div className="post-card-wrap wrap-2">
                                 {[p2, p3].filter(Boolean).map((p, idx) => (
                                     <div key={p.id || idx} className="post-card">
@@ -73,6 +76,38 @@ export default function HeroPost2({ posts = [], settings = {} }) {
                                         </div>
                                         <div className="post-content">
                                             <Link href={`/blog/${p.slug || p.id}`} className={`card-btn ${idx === 0 ? 'bg-blue' : 'bg-pink'}`}>
+                                                {p.category?.name || (typeof p.category === 'string' ? p.category : 'Popular')}
+                                            </Link>
+                                            <h3 className="title">
+                                                <Link href={`/blog/${p.slug || p.id}`}>{p.title}</Link>
+                                            </h3>
+                                            <ul className="post-list">
+                                                <li className="author">
+                                                    by <span><Link href={`/blog/${p.slug || p.id}`}>{p.author?.name || (typeof p.author === 'string' ? p.author : 'Redaksi')}</Link></span>
+                                                </li>
+                                                <li className="date" suppressHydrationWarning>{formatDate(p.createdAt)}</li>
+                                                {p.views > 0 && <li><i className="las la-eye" />{p.views}</li>}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Kolom 2: 2 Artikel Kecil Tambahan Sebelah Kanan */}
+                            <div className="post-card-wrap wrap-2">
+                                {[p4, p5].filter(Boolean).map((p, idx) => (
+                                    <div key={p.id || (idx + 3)} className="post-card">
+                                        <div className="post-thumb">
+                                            <Link href={`/blog/${p.slug || p.id}`}>
+                                                <img
+                                                    src={getImageUrl(p.img, `/assets/img/post/popular-post-${idx + 3}.jpg`)}
+                                                    alt={p.title}
+                                                    onError={(e) => { e.currentTarget.src = `/assets/img/post/post-img-${idx + 1}.jpg` }}
+                                                />
+                                            </Link>
+                                        </div>
+                                        <div className="post-content">
+                                            <Link href={`/blog/${p.slug || p.id}`} className={`card-btn ${idx === 0 ? 'bg-yellow' : 'bg-green'}`}>
                                                 {p.category?.name || (typeof p.category === 'string' ? p.category : 'Popular')}
                                             </Link>
                                             <h3 className="title">

@@ -53,18 +53,28 @@ export default function Sidebar({ isSidebar, handleSidebar, settings = {} }) {
 					</div>
 
 					<ul className="sidebar-social">
-						<li>
-							<Link href="/#" className="facebook" aria-label="Facebook"><i className="lab la-facebook-f" /></Link>
-						</li>
-						<li>
-							<Link href="/#" className="twitter" aria-label="Twitter"><i className="lab la-twitter" /></Link>
-						</li>
-						<li>
-							<Link href="/#" className="instagram" aria-label="Instagram"><i className="lab la-instagram" /></Link>
-						</li>
-						<li>
-							<Link href="/#" className="youtube" aria-label="YouTube"><i className="lab la-youtube" /></Link>
-						</li>
+						{settings.enable_facebook !== 'false' && settings.social_facebook && (
+							<li><a href={settings.social_facebook} target="_blank" rel="noopener noreferrer" className="facebook" aria-label="Facebook"><i className="lab la-facebook-f" /></a></li>
+						)}
+						{settings.enable_twitter !== 'false' && settings.social_twitter && (
+							<li><a href={settings.social_twitter} target="_blank" rel="noopener noreferrer" className="twitter" aria-label="Twitter"><i className="lab la-twitter" /></a></li>
+						)}
+						{settings.enable_instagram !== 'false' && settings.social_instagram && (
+							<li><a href={settings.social_instagram} target="_blank" rel="noopener noreferrer" className="instagram" aria-label="Instagram"><i className="lab la-instagram" /></a></li>
+						)}
+						{settings.enable_youtube !== 'false' && settings.social_youtube && (
+							<li><a href={settings.social_youtube} target="_blank" rel="noopener noreferrer" className="youtube" aria-label="YouTube"><i className="lab la-youtube" /></a></li>
+						)}
+						{settings.enable_whatsapp !== 'false' && settings.social_whatsapp && (
+							<li><a href={`https://wa.me/${settings.social_whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="whatsapp" aria-label="WhatsApp"><i className="lab la-whatsapp" /></a></li>
+						)}
+						{!settings.social_facebook && !settings.social_twitter && !settings.social_instagram && (
+							<>
+								<li><Link href="/#" className="facebook" aria-label="Facebook"><i className="lab la-facebook-f" /></Link></li>
+								<li><Link href="/#" className="twitter" aria-label="Twitter"><i className="lab la-twitter" /></Link></li>
+								<li><Link href="/#" className="instagram" aria-label="Instagram"><i className="lab la-instagram" /></Link></li>
+							</>
+						)}
 					</ul>
 				</div>
 			</div>

@@ -126,6 +126,33 @@ export default function DashboardSettings() {
     sidebar_ad_image: '/assets/img/bg/sidebar-ad.webp',
     sidebar_ad_url: '',
     sidebar_ad_open_new_tab: 'true',
+    // Horizontal CTA Banner Settings (Home Appliances Banner)
+    show_cta_banner: 'true',
+    cta_banner_mode: 'custom_text',
+    cta_banner_badge: '72% Off',
+    cta_banner_title: 'Home Appliances',
+    cta_banner_subtitle: 'FOR PERFECT HOME.',
+    cta_banner_btn_text: 'Shop Now',
+    cta_banner_btn_url: '/contact',
+    cta_banner_open_new_tab: 'false',
+    cta_banner_bg: '/assets/img/bg-img/cta-bg.jpg',
+    // Homepage Extended Sections
+    show_categories_section: 'true',
+    show_latest_posts: 'true',
+    title_latest_posts: 'Latest Posts',
+    show_video_section: 'true',
+    title_video_section: 'What to Watch',
+    show_lifestyle_section: 'true',
+    title_lifestyle_posts: 'Lifestyle & Fashion',
+    show_cta_banner_2: 'true',
+    cta_2_title: 'Dua Narasi - Portal Berita & Opini Terpercaya',
+    cta_2_btn_text: 'Hubungi Kami',
+    cta_2_btn_url: '/contact',
+    show_travel_section: 'true',
+    title_travel_posts: 'Travel & Adventure',
+    show_recent_posts: 'true',
+    title_recent_posts: 'Recent Posts',
+    newsletter_title: 'Dapatkan berita dan analisis terhangat langsung di email Anda!',
     social_whatsapp: '',
     social_telegram: '',
     site_url: 'http://localhost:3000',
@@ -1391,6 +1418,465 @@ export default function DashboardSettings() {
                           </Select>
                         </div>
                       </div>
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* 6. HORIZONTAL CTA BANNER (HOME APPLIANCES BANNER) */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-bullhorn">6. Banner Promosi / Iklan Horizontal (CTA Banner)</CardTitle>
+                      <CardDescription>Kelola banner horizontal di bawah segmen Berita Utama (Home Appliances): teks promo, judul, tombol CTA, dan gambar latar.</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_cta_banner !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_cta_banner !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_cta_banner !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_cta_banner: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                {settings.show_cta_banner !== 'false' && (
+                  <CardContent>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      {/* Mode Banner */}
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label>Tipe / Format Tampilan Banner</Label>
+                        <Select
+                          value={settings.cta_banner_mode || 'custom_text'}
+                          onChange={(e) => setSettings({ ...settings, cta_banner_mode: e.target.value })}
+                        >
+                          <option value="custom_text">Teks &amp; Tombol Dinamis (Badge, Judul, Subtitle, Tombol CTA)</option>
+                          <option value="image_only">Banner Gambar Penuh (Gambar Sponsor Langsung dengan Tautan)</option>
+                        </Select>
+                      </div>
+
+                      {/* Image Uploader */}
+                      <div>
+                        <Label style={{ marginBottom: '8px', display: 'block' }}>
+                          {settings.cta_banner_mode === 'image_only' ? 'Gambar Banner Sponsor Penuh' : 'Gambar Latar Belakang Banner (Background)'}
+                        </Label>
+                        <ImageUploader
+                          value={settings.cta_banner_bg || ''}
+                          onChange={(url) => setSettings({ ...settings, cta_banner_bg: url })}
+                          label="Upload Banner (Rekomendasi 1170x200 atau 1200x240)"
+                          presetFolder="bg-img"
+                          presetImages={['cta-bg.jpg', 'cta-bg-2.jpg', 'cta-bg-3.jpg']}
+                        />
+                      </div>
+
+                      {settings.cta_banner_mode !== 'image_only' && (
+                        <>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label>Badge Diskon / Label Promosi</Label>
+                              <Input
+                                placeholder="Contoh: 72% Off atau Promo Spesial"
+                                value={settings.cta_banner_badge || ''}
+                                onChange={(e) => setSettings({ ...settings, cta_banner_badge: e.target.value })}
+                              />
+                            </div>
+
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label>Judul Utama Banner</Label>
+                              <Input
+                                placeholder="Contoh: Home Appliances"
+                                value={settings.cta_banner_title || ''}
+                                onChange={(e) => setSettings({ ...settings, cta_banner_title: e.target.value })}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="dash-form-group" style={{ margin: 0 }}>
+                            <Label>Subjudul / Slogan Pendukung</Label>
+                            <Input
+                              placeholder="Contoh: FOR PERFECT HOME."
+                              value={settings.cta_banner_subtitle || ''}
+                              onChange={(e) => setSettings({ ...settings, cta_banner_subtitle: e.target.value })}
+                            />
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label>Teks Tombol CTA</Label>
+                              <Input
+                                placeholder="Contoh: Shop Now atau Pelajari Selengkapnya"
+                                value={settings.cta_banner_btn_text || ''}
+                                onChange={(e) => setSettings({ ...settings, cta_banner_btn_text: e.target.value })}
+                              />
+                            </div>
+
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label>Tautan / Target URL Tombol</Label>
+                              <Input
+                                placeholder="Contoh: /contact atau https://tokopedia.com"
+                                value={settings.cta_banner_btn_url || ''}
+                                onChange={(e) => setSettings({ ...settings, cta_banner_btn_url: e.target.value })}
+                              />
+                            </div>
+
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label>Target Pembukaan Tautan</Label>
+                              <Select
+                                value={settings.cta_banner_open_new_tab || 'false'}
+                                onChange={(e) => setSettings({ ...settings, cta_banner_open_new_tab: e.target.value })}
+                              >
+                                <option value="false">Buka di Tab yang Sama (_self)</option>
+                                <option value="true">Buka di Tab Baru (_blank)</option>
+                              </Select>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {settings.cta_banner_mode === 'image_only' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                          <div className="dash-form-group" style={{ margin: 0 }}>
+                            <Label>Tautan / Target URL Saat Banner Diklik</Label>
+                            <Input
+                              placeholder="Contoh: https://sponsor.com atau /subscribe"
+                              value={settings.cta_banner_btn_url || ''}
+                              onChange={(e) => setSettings({ ...settings, cta_banner_btn_url: e.target.value })}
+                            />
+                          </div>
+
+                          <div className="dash-form-group" style={{ margin: 0 }}>
+                            <Label>Target Pembukaan Tautan</Label>
+                            <Select
+                              value={settings.cta_banner_open_new_tab || 'false'}
+                              onChange={(e) => setSettings({ ...settings, cta_banner_open_new_tab: e.target.value })}
+                            >
+                              <option value="false">Buka di Tab yang Sama (_self)</option>
+                              <option value="true">Buka di Tab Baru (_blank)</option>
+                            </Select>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Mini Live Preview */}
+                      <div style={{ marginTop: '8px', padding: '16px', background: 'var(--dash-muted-bg)', borderRadius: '10px', border: '1px solid var(--dash-border)' }}>
+                        <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--dash-text-muted)', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          <i className="fa fa-eye"></i> Pratinjau Tampilan Banner:
+                        </div>
+                        <div style={{
+                          position: 'relative',
+                          borderRadius: '10px',
+                          overflow: 'hidden',
+                          minHeight: '110px',
+                          backgroundImage: `url(${getImageUrl(settings.cta_banner_bg, '/assets/img/bg-img/cta-bg.jpg')})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '16px 24px',
+                          flexWrap: 'wrap',
+                          gap: '12px'
+                        }}>
+                          {settings.cta_banner_mode === 'image_only' ? (
+                            <div style={{ color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.8)', fontSize: '13px', fontWeight: 600 }}>
+                              Mode Banner Gambar Penuh Aktif
+                            </div>
+                          ) : (
+                            <>
+                              <div>
+                                {settings.cta_banner_badge && (
+                                  <span style={{ background: '#FB7A19', color: '#fff', fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '3px', textTransform: 'uppercase', display: 'inline-block', marginBottom: '6px' }}>
+                                    {settings.cta_banner_badge}
+                                  </span>
+                                )}
+                                <div style={{ fontSize: '18px', fontWeight: 800, color: '#1e293b', lineHeight: 1.2 }}>
+                                  {settings.cta_banner_title || 'Home Appliances'}
+                                </div>
+                                <div style={{ fontSize: '11px', color: '#475569', fontWeight: 600, marginTop: '2px', textTransform: 'uppercase' }}>
+                                  {settings.cta_banner_subtitle || 'FOR PERFECT HOME.'}
+                                </div>
+                              </div>
+                              {settings.cta_banner_btn_text && (
+                                <span style={{ background: '#1d4ed8', color: '#fff', fontSize: '12px', fontWeight: 700, padding: '8px 18px', borderRadius: '30px', boxShadow: '0 2px 8px rgba(29,78,216,0.3)' }}>
+                                  {settings.cta_banner_btn_text}
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* 7. SLIDER KATEGORI BERITA */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-th-large">7. Slider Kategori Berita (Categories Slider)</CardTitle>
+                      <CardDescription>Seksi carousel interaktif yang menampilkan seluruh kategori portal dengan gambar dan auto-slide.</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_categories_section !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_categories_section !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_categories_section !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_categories_section: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+              </Card>
+
+              {/* 8. BERITA TERKINI & SIDEBAR */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-newspaper-o">8. Berita Terkini &amp; Bilah Samping (Latest News &amp; Sidebar)</CardTitle>
+                      <CardDescription>Seksi artikel terkini 2 kolom dengan bilah samping (sidebar banner, trending, dan daftar kategori).</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_latest_posts !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_latest_posts !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_latest_posts !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_latest_posts: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                {settings.show_latest_posts !== 'false' && (
+                  <CardContent>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Judul Seksi Berita Terkini</Label>
+                      <Input
+                        placeholder="Contoh: Berita Terkini atau Latest Posts"
+                        value={settings.title_latest_posts || ''}
+                        onChange={(e) => setSettings({ ...settings, title_latest_posts: e.target.value })}
+                      />
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* 9. VIDEO BERITA (WHAT TO WATCH) */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-video-camera">9. Seksi Video Berita (What to Watch)</CardTitle>
+                      <CardDescription>Seksi pemutar video dan cuplikan artikel video pilihan redaksi.</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_video_section !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_video_section !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_video_section !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_video_section: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                {settings.show_video_section !== 'false' && (
+                  <CardContent>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Judul Seksi Video</Label>
+                      <Input
+                        placeholder="Contoh: What to Watch atau Video Pilihan"
+                        value={settings.title_video_section || ''}
+                        onChange={(e) => setSettings({ ...settings, title_video_section: e.target.value })}
+                      />
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* 10. GAYA HIDUP & FASHION */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-heartbeat">10. Seksi Gaya Hidup (Lifestyle &amp; Fashion)</CardTitle>
+                      <CardDescription>Seksi artikel seputar gaya hidup, tren, dan inspirasi pembaca.</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_lifestyle_section !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_lifestyle_section !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_lifestyle_section !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_lifestyle_section: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                {settings.show_lifestyle_section !== 'false' && (
+                  <CardContent>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Judul Seksi Gaya Hidup</Label>
+                      <Input
+                        placeholder="Contoh: Lifestyle & Fashion atau Gaya Hidup"
+                        value={settings.title_lifestyle_posts || ''}
+                        onChange={(e) => setSettings({ ...settings, title_lifestyle_posts: e.target.value })}
+                      />
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* 11. BANNER HORIZONTAL BAWAH (CTA BANNER 2) */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-bullhorn">11. Banner Promosi Horizontal Bawah (CTA Banner 2)</CardTitle>
+                      <CardDescription>Banner strip informasi / promosi di atas seksi Travel &amp; Adventure.</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_cta_banner_2 !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_cta_banner_2 !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_cta_banner_2 !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_cta_banner_2: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                {settings.show_cta_banner_2 !== 'false' && (
+                  <CardContent>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label>Judul Banner</Label>
+                        <Input
+                          placeholder="Dua Narasi - Portal Berita & Opini Terpercaya"
+                          value={settings.cta_2_title || ''}
+                          onChange={(e) => setSettings({ ...settings, cta_2_title: e.target.value })}
+                        />
+                      </div>
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label>Teks Tombol</Label>
+                        <Input
+                          placeholder="Hubungi Kami"
+                          value={settings.cta_2_btn_text || ''}
+                          onChange={(e) => setSettings({ ...settings, cta_2_btn_text: e.target.value })}
+                        />
+                      </div>
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label>Tautan Tombol</Label>
+                        <Input
+                          placeholder="/contact"
+                          value={settings.cta_2_btn_url || ''}
+                          onChange={(e) => setSettings({ ...settings, cta_2_btn_url: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* 12. TRAVEL & FEATURE */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-plane">12. Seksi Travel &amp; Wisata (Feature Section)</CardTitle>
+                      <CardDescription>Seksi artikel seputar wisata, petualangan, dan liputan khusus.</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_travel_section !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_travel_section !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_travel_section !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_travel_section: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                {settings.show_travel_section !== 'false' && (
+                  <CardContent>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Judul Seksi Travel</Label>
+                      <Input
+                        placeholder="Contoh: Travel & Adventure atau Wisata Pilihan"
+                        value={settings.title_travel_posts || ''}
+                        onChange={(e) => setSettings({ ...settings, title_travel_posts: e.target.value })}
+                      />
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* 13. NEWSLETTER SUBSCRIBE */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-envelope">13. Seksi Berlangganan Newsletter</CardTitle>
+                      <CardDescription>Formulir pendaftaran email newsletter pembaca di halaman beranda.</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_newsletter !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_newsletter !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_newsletter !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_newsletter: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                {settings.show_newsletter !== 'false' && (
+                  <CardContent>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Judul Ajakan Berlangganan</Label>
+                      <Input
+                        placeholder="Dapatkan berita dan analisis terhangat langsung di email Anda!"
+                        value={settings.newsletter_title || ''}
+                        onChange={(e) => setSettings({ ...settings, newsletter_title: e.target.value })}
+                      />
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
+
+              {/* 14. RECENT POSTS GRID */}
+              <Card>
+                <CardHeader>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <CardTitle icon="fa-clock-o">14. Seksi Berita Terbaru (Recent Posts Grid)</CardTitle>
+                      <CardDescription>Grid artikel terbaru 2 kolom di bagian bawah halaman sebelum footer.</CardDescription>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '12.5px', fontWeight: 600, color: settings.show_recent_posts !== 'false' ? '#10b981' : 'var(--dash-text-muted)' }}>
+                        {settings.show_recent_posts !== 'false' ? 'Aktif' : 'Nonaktif'}
+                      </span>
+                      <Switch
+                        checked={settings.show_recent_posts !== 'false'}
+                        onChange={(e) => setSettings({ ...settings, show_recent_posts: String(e.target.checked) })}
+                      />
+                    </div>
+                  </div>
+                </CardHeader>
+                {settings.show_recent_posts !== 'false' && (
+                  <CardContent>
+                    <div className="dash-form-group" style={{ margin: 0 }}>
+                      <Label>Judul Seksi Berita Terbaru</Label>
+                      <Input
+                        placeholder="Contoh: Recent Posts atau Berita Terbaru"
+                        value={settings.title_recent_posts || ''}
+                        onChange={(e) => setSettings({ ...settings, title_recent_posts: e.target.value })}
+                      />
                     </div>
                   </CardContent>
                 )}
