@@ -132,6 +132,24 @@ export default function Watch({ posts = [], settings = {} }) {
 							freeMode={true}
 							watchSlidesProgress={true}
 							modules={[FreeMode, Navigation, Thumbs]}
+							breakpoints={{
+								320: {
+									slidesPerView: 1.5,
+									spaceBetween: 8,
+								},
+								576: {
+									slidesPerView: 2.3,
+									spaceBetween: 10,
+								},
+								768: {
+									slidesPerView: 3,
+									spaceBetween: 10,
+								},
+								992: {
+									slidesPerView: 4,
+									spaceBetween: 10,
+								},
+							}}
 							className="swiper-wrapper"
 						>
 							{displayPosts.map((post, idx) => (

@@ -81,12 +81,16 @@ export default function Categories({ categories = [], settings = {} }) {
                             speed={650}
                             breakpoints={{
                                 320: {
-                                    slidesPerView: 1.25,
+                                    slidesPerView: 1.3,
+                                    spaceBetween: 12,
+                                },
+                                440: {
+                                    slidesPerView: 1.75,
                                     spaceBetween: 14,
                                 },
                                 576: {
-                                    slidesPerView: 2,
-                                    spaceBetween: 18,
+                                    slidesPerView: 2.3,
+                                    spaceBetween: 16,
                                 },
                                 768: {
                                     slidesPerView: 3,
@@ -318,27 +322,45 @@ export default function Categories({ categories = [], settings = {} }) {
 
                 @media (max-width: 991px) {
                     .cat-nav-prev {
-                        left: -8px;
+                        left: -6px;
                     }
                     .cat-nav-next {
-                        right: -8px;
+                        right: -6px;
                     }
                 }
 
                 @media (max-width: 575px) {
                     .cat-card-item {
-                        height: 260px;
+                        height: 240px;
+                        border-radius: 12px;
+                    }
+                    .cat-title :global(a) {
+                        font-size: 18px;
+                    }
+                    .cat-post-count {
+                        font-size: 12px;
+                        margin-bottom: 4px;
+                    }
+                    .cat-card-content {
+                        bottom: 22px;
+                        padding: 0 10px;
+                    }
+                    :global(.cat-see-btn) {
+                        padding: 5px 16px;
+                        font-size: 11px;
                     }
                     .cat-nav-btn {
-                        width: 38px;
-                        height: 38px;
-                        font-size: 15px;
+                        width: 34px;
+                        height: 34px;
+                        font-size: 14px;
+                        background: rgba(255, 255, 255, 0.94);
+                        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
                     }
                     .cat-nav-prev {
-                        left: -4px;
+                        left: 4px;
                     }
                     .cat-nav-next {
-                        right: -4px;
+                        right: 4px;
                     }
                 }
             `}</style>
