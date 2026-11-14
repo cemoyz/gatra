@@ -113,37 +113,102 @@ export default function NewsPost1({ posts = [], popularPosts = [], categories = 
                             </div>
                         </div>
                         <div className="col-lg-4">
-                            {showAd && (
-                                <div className="poster mb-40">
-                                    <div className="bg-shape" />
+                            {showAd && (() => {
+                                const customImg = settings.sidebar_ad_image && settings.sidebar_ad_image.trim() ? getImageUrl(settings.sidebar_ad_image) : null
+                                const hasText = Boolean(adTitle || adSubtitle)
+
+                                return (
                                     <div
-                                        className="poster-men"
-                                        style={settings.sidebar_ad_image ? {
-                                            backgroundImage: `url(${getImageUrl(settings.sidebar_ad_image)})`,
+                                        className="poster mb-40"
+                                        style={customImg ? {
+                                            backgroundImage: hasText 
+                                                ? `linear-gradient(rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.7)), url(${customImg})`
+                                                : `url(${customImg})`,
+                                            backgroundColor: '#0f172a',
                                             backgroundSize: 'cover',
-                                            backgroundPosition: 'center'
-                                        } : {}}
-                                    />
-                                    <div className="poster-content">
-                                        <Link href="/">
-                                            <img
-                                                src={getImageUrl(settings.logo_footer || settings.logo_header, "/assets/img/logo/logo-light.png")}
-                                                alt={adTitle}
-                                                style={{ maxHeight: '35px', width: 'auto' }}
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat',
+                                            borderRadius: '12px',
+                                            padding: hasText ? '36px 26px' : '0',
+                                            minHeight: '340px',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            justifyContent: 'space-between',
+                                            position: 'relative',
+                                            overflow: 'hidden',
+                                            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.12)'
+                                        } : {
+                                            borderRadius: '12px',
+                                            overflow: 'hidden'
+                                        }}
+                                    >
+                                        {!customImg && <div className="bg-shape" />}
+                                        {!customImg && <div className="poster-men" />}
+                                        {customImg && !hasText ? (
+                                            <Link
+                                                href={adUrl}
+                                                target={adNewTab ? "_blank" : "_self"}
+                                                rel={adNewTab ? "noopener noreferrer" : undefined}
+                                                style={{ display: 'block', width: '100%', height: '100%', minHeight: '340px' }}
                                             />
-                                        </Link>
-                                        <h4 className="title">{adTitle}</h4>
-                                        {adSubtitle && <p style={{ color: '#fff', fontSize: '13px', opacity: 0.9 }}>{adSubtitle}</p>}
-                                        <Link
-                                            href={adUrl}
-                                            className="default-btn poster-btn"
-                                            target={adNewTab ? "_blank" : "_self"}
-                                        >
-                                            Baca Sekarang
-                                        </Link>
+                                        ) : (
+                                            <div className="poster-content" style={{ position: 'relative', zIndex: 2, width: '100%' }}>
+                                                <Link href="/">
+                                                    <img
+                                                        src={getImageUrl(settings.logo_light || settings.logo_footer || settings.logo_header, "/assets/img/logo/logo-light.png")}
+                                                        alt={adTitle || "Logo"}
+                                                        style={{ maxHeight: '34px', width: 'auto', display: 'block', marginBottom: '18px' }}
+                                                    />
+                                                </Link>
+                                                {adTitle && (
+                                                    <h4
+                                                        className="title"
+                                                        style={{
+                                                            color: '#ffffff',
+                                                            fontSize: '22px',
+                                                            fontWeight: 700,
+                                                            margin: '0 0 10px 0',
+                                                            textShadow: '0 2px 4px rgba(0,0,0,0.5)',
+                                                            lineHeight: 1.3
+                                                        }}
+                                                    >
+                                                        {adTitle}
+                                                    </h4>
+                                                )}
+                                                {adSubtitle && (
+                                                    <p
+                                                        style={{
+                                                            color: 'rgba(255, 255, 255, 0.95)',
+                                                            fontSize: '13.5px',
+                                                            lineHeight: 1.5,
+                                                            margin: '0 0 22px 0',
+                                                            textShadow: '0 1px 3px rgba(0,0,0,0.5)'
+                                                        }}
+                                                    >
+                                                        {adSubtitle}
+                                                    </p>
+                                                )}
+                                                <Link
+                                                    href={adUrl}
+                                                    className="default-btn poster-btn"
+                                                    target={adNewTab ? "_blank" : "_self"}
+                                                    rel={adNewTab ? "noopener noreferrer" : undefined}
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        padding: '10px 22px',
+                                                        fontSize: '13px',
+                                                        fontWeight: 600,
+                                                        borderRadius: '6px',
+                                                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                                                    }}
+                                                >
+                                                    Baca Sekarang
+                                                </Link>
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-                            )}
+                                )
+                            })()}
                             <div className="trending-post-wrap">
                                 <div className="section-heading mb-30">
                                     <h3 className="section-title title-border"><span>{trendingTitle}</span></h3>
