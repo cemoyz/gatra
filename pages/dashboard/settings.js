@@ -142,16 +142,27 @@ export default function DashboardSettings() {
     title_latest_posts: 'Latest Posts',
     show_video_section: 'true',
     title_video_section: 'What to Watch',
+    video_posts_mode: 'manual',
+    video_post_slot_1: '',
+    video_post_slot_2: '',
+    video_post_slot_3: '',
+    video_post_slot_4: '',
     show_lifestyle_section: 'true',
     title_lifestyle_posts: 'Lifestyle & Fashion',
     show_cta_banner_2: 'true',
+    cta_2_mode: 'custom_text',
+    cta_2_bg: '/assets/img/bg-img/cta-bg-2.jpg',
+    cta_2_logo: '/assets/img/logo/logo-light-2.png',
     cta_2_title: 'Dua Narasi - Portal Berita & Opini Terpercaya',
     cta_2_btn_text: 'Hubungi Kami',
     cta_2_btn_url: '/contact',
+    cta_2_open_new_tab: 'false',
     show_travel_section: 'true',
     title_travel_posts: 'Travel & Adventure',
     show_recent_posts: 'true',
     title_recent_posts: 'Recent Posts',
+    recent_posts_limit: '12',
+    recent_posts_offset: '0',
     newsletter_title: 'Dapatkan berita dan analisis terhangat langsung di email Anda!',
     social_whatsapp: '',
     social_telegram: '',
@@ -1687,13 +1698,139 @@ export default function DashboardSettings() {
                 </CardHeader>
                 {settings.show_video_section !== 'false' && (
                   <CardContent>
-                    <div className="dash-form-group" style={{ margin: 0 }}>
-                      <Label>Judul Seksi Video</Label>
-                      <Input
-                        placeholder="Contoh: What to Watch atau Video Pilihan"
-                        value={settings.title_video_section || ''}
-                        onChange={(e) => setSettings({ ...settings, title_video_section: e.target.value })}
-                      />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label>Judul Seksi Video</Label>
+                        <Input
+                          placeholder="Contoh: What to Watch atau Video Pilihan"
+                          value={settings.title_video_section || ''}
+                          onChange={(e) => setSettings({ ...settings, title_video_section: e.target.value })}
+                        />
+                      </div>
+
+                      {/* Mode Pemilihan Artikel Video */}
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label style={{ display: 'block', marginBottom: '8px' }}>Metode Pemilihan Artikel Video</Label>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                          <Button
+                            type="button"
+                            variant={settings.video_posts_mode === 'manual' || !settings.video_posts_mode ? 'primary' : 'outline'}
+                            onClick={() => setSettings({ ...settings, video_posts_mode: 'manual' })}
+                            icon="fa-hand-pointer-o"
+                            style={{ flex: 1, minWidth: '180px' }}
+                          >
+                            Pilih Artikel Manual (Dinamis)
+                          </Button>
+                          <Button
+                            type="button"
+                            variant={settings.video_posts_mode === 'auto' ? 'primary' : 'outline'}
+                            onClick={() => setSettings({ ...settings, video_posts_mode: 'auto' })}
+                            icon="fa-magic"
+                            style={{ flex: 1, minWidth: '180px' }}
+                          >
+                            Otomatis (Video Terbaru)
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Manual Slots Configuration */}
+                      {settings.video_posts_mode !== 'auto' ? (
+                        <div
+                          style={{
+                            background: 'var(--dash-muted-bg)',
+                            padding: '16px',
+                            borderRadius: '12px',
+                            border: '1px solid var(--dash-border)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '14px'
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '6px' }}>
+                            <div style={{ fontSize: '11px', fontWeight: 800, color: 'var(--dash-text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                              Pilih 4 Artikel Video yang Ditampilkan:
+                            </div>
+                            <span style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)' }}>
+                              Pilih artikel dari daftar berita Anda
+                            </span>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#da0105', fontWeight: 700 }}>
+                                <i className="fa fa-play-circle"></i> Video 1 (Utama):
+                              </Label>
+                              <Select
+                                value={settings.video_post_slot_1 || ''}
+                                onChange={(e) => setSettings({ ...settings, video_post_slot_1: e.target.value })}
+                              >
+                                <option value="">-- Pilih Artikel Video 1 --</option>
+                                {allPosts.map(p => (
+                                  <option key={p.id} value={p.id}>
+                                    #{p.id} - {p.title} {p.videoUrl ? '🎬' : ''} ({typeof p.category === 'object' ? p.category?.name : (p.category || 'General')})
+                                  </option>
+                                ))}
+                              </Select>
+                            </div>
+
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#da0105', fontWeight: 700 }}>
+                                <i className="fa fa-play-circle"></i> Video 2:
+                              </Label>
+                              <Select
+                                value={settings.video_post_slot_2 || ''}
+                                onChange={(e) => setSettings({ ...settings, video_post_slot_2: e.target.value })}
+                              >
+                                <option value="">-- Pilih Artikel Video 2 --</option>
+                                {allPosts.map(p => (
+                                  <option key={p.id} value={p.id}>
+                                    #{p.id} - {p.title} {p.videoUrl ? '🎬' : ''} ({typeof p.category === 'object' ? p.category?.name : (p.category || 'General')})
+                                  </option>
+                                ))}
+                              </Select>
+                            </div>
+
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#da0105', fontWeight: 700 }}>
+                                <i className="fa fa-play-circle"></i> Video 3:
+                              </Label>
+                              <Select
+                                value={settings.video_post_slot_3 || ''}
+                                onChange={(e) => setSettings({ ...settings, video_post_slot_3: e.target.value })}
+                              >
+                                <option value="">-- Pilih Artikel Video 3 --</option>
+                                {allPosts.map(p => (
+                                  <option key={p.id} value={p.id}>
+                                    #{p.id} - {p.title} {p.videoUrl ? '🎬' : ''} ({typeof p.category === 'object' ? p.category?.name : (p.category || 'General')})
+                                  </option>
+                                ))}
+                              </Select>
+                            </div>
+
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#da0105', fontWeight: 700 }}>
+                                <i className="fa fa-play-circle"></i> Video 4:
+                              </Label>
+                              <Select
+                                value={settings.video_post_slot_4 || ''}
+                                onChange={(e) => setSettings({ ...settings, video_post_slot_4: e.target.value })}
+                              >
+                                <option value="">-- Pilih Artikel Video 4 --</option>
+                                {allPosts.map(p => (
+                                  <option key={p.id} value={p.id}>
+                                    #{p.id} - {p.title} {p.videoUrl ? '🎬' : ''} ({typeof p.category === 'object' ? p.category?.name : (p.category || 'General')})
+                                  </option>
+                                ))}
+                              </Select>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ background: 'var(--dash-muted-bg)', padding: '14px 18px', borderRadius: '10px', fontSize: '13px', color: 'var(--dash-text-muted)' }}>
+                          <i className="fa fa-info-circle" style={{ marginRight: '6px', color: '#3b82f6' }}></i>
+                          Sistem akan otomatis memilih artikel-artikel terbaru yang memiliki tautan video (YouTube dll) atau bertipe video dari database.
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 )}
@@ -1753,30 +1890,169 @@ export default function DashboardSettings() {
                 </CardHeader>
                 {settings.show_cta_banner_2 !== 'false' && (
                   <CardContent>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      {/* Mode Banner 2 */}
                       <div className="dash-form-group" style={{ margin: 0 }}>
-                        <Label>Judul Banner</Label>
-                        <Input
-                          placeholder="Dua Narasi - Portal Berita & Opini Terpercaya"
-                          value={settings.cta_2_title || ''}
-                          onChange={(e) => setSettings({ ...settings, cta_2_title: e.target.value })}
+                        <Label>Tipe / Format Tampilan Banner</Label>
+                        <Select
+                          value={settings.cta_2_mode || 'custom_text'}
+                          onChange={(e) => setSettings({ ...settings, cta_2_mode: e.target.value })}
+                        >
+                          <option value="custom_text">Format Standar (Gambar Latar + Logo Brand + Judul + Tombol CTA)</option>
+                          <option value="image_only">Banner Gambar Penuh (Gambar Iklan/Sponsor Langsung dengan Tautan)</option>
+                        </Select>
+                      </div>
+
+                      {/* 1. Background Image Uploader */}
+                      <div>
+                        <Label style={{ marginBottom: '8px', display: 'block' }}>
+                          {settings.cta_2_mode === 'image_only' ? 'Gambar Banner Sponsor Penuh' : 'Gambar Latar Belakang Banner (Background)'}
+                        </Label>
+                        <ImageUploader
+                          value={settings.cta_2_bg || ''}
+                          onChange={(url) => setSettings({ ...settings, cta_2_bg: url })}
+                          label="Upload Background Banner (Rekomendasi 1170x180 atau 1200x200)"
+                          presetFolder="bg-img"
+                          presetImages={['cta-bg-2.jpg', 'cta-bg.jpg', 'cta-bg-3.jpg']}
                         />
                       </div>
-                      <div className="dash-form-group" style={{ margin: 0 }}>
-                        <Label>Teks Tombol</Label>
-                        <Input
-                          placeholder="Hubungi Kami"
-                          value={settings.cta_2_btn_text || ''}
-                          onChange={(e) => setSettings({ ...settings, cta_2_btn_text: e.target.value })}
-                        />
-                      </div>
-                      <div className="dash-form-group" style={{ margin: 0 }}>
-                        <Label>Tautan Tombol</Label>
-                        <Input
-                          placeholder="/contact"
-                          value={settings.cta_2_btn_url || ''}
-                          onChange={(e) => setSettings({ ...settings, cta_2_btn_url: e.target.value })}
-                        />
+
+                      {/* 2. Logo / Icon Image Uploader (for custom_text mode) */}
+                      {settings.cta_2_mode !== 'image_only' && (
+                        <div>
+                          <Label style={{ marginBottom: '8px', display: 'block' }}>
+                            Logo / Gambar Ikon di Sisi Kiri Banner
+                          </Label>
+                          <ImageUploader
+                            value={settings.cta_2_logo || ''}
+                            onChange={(url) => setSettings({ ...settings, cta_2_logo: url })}
+                            label="Upload Logo / Ikon Brand (PNG transparan disarankan)"
+                            presetFolder="logo"
+                            presetImages={['logo-light-2.png', 'logo-light.png', 'logo-dark.png', 'favicon.png']}
+                          />
+                        </div>
+                      )}
+
+                      {/* Fields for custom_text mode */}
+                      {settings.cta_2_mode !== 'image_only' && (
+                        <>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label>Judul / Teks Utama Banner</Label>
+                              <Input
+                                placeholder="Dua Narasi - Portal Berita & Opini Terpercaya"
+                                value={settings.cta_2_title || ''}
+                                onChange={(e) => setSettings({ ...settings, cta_2_title: e.target.value })}
+                              />
+                            </div>
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label>Teks Tombol CTA</Label>
+                              <Input
+                                placeholder="Hubungi Kami"
+                                value={settings.cta_2_btn_text || ''}
+                                onChange={(e) => setSettings({ ...settings, cta_2_btn_text: e.target.value })}
+                              />
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label>Tautan / Target URL Tombol</Label>
+                              <Input
+                                placeholder="/contact atau https://..."
+                                value={settings.cta_2_btn_url || ''}
+                                onChange={(e) => setSettings({ ...settings, cta_2_btn_url: e.target.value })}
+                              />
+                            </div>
+                            <div className="dash-form-group" style={{ margin: 0 }}>
+                              <Label>Target Pembukaan Tautan</Label>
+                              <Select
+                                value={settings.cta_2_open_new_tab || 'false'}
+                                onChange={(e) => setSettings({ ...settings, cta_2_open_new_tab: e.target.value })}
+                              >
+                                <option value="false">Buka di Tab yang Sama (_self)</option>
+                                <option value="true">Buka di Tab Baru (_blank)</option>
+                              </Select>
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {/* Fields for image_only mode */}
+                      {settings.cta_2_mode === 'image_only' && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                          <div className="dash-form-group" style={{ margin: 0 }}>
+                            <Label>Tautan / Target URL Saat Banner Diklik</Label>
+                            <Input
+                              placeholder="Contoh: https://sponsor.com atau /contact"
+                              value={settings.cta_2_btn_url || ''}
+                              onChange={(e) => setSettings({ ...settings, cta_2_btn_url: e.target.value })}
+                            />
+                          </div>
+                          <div className="dash-form-group" style={{ margin: 0 }}>
+                            <Label>Target Pembukaan Tautan</Label>
+                            <Select
+                              value={settings.cta_2_open_new_tab || 'false'}
+                              onChange={(e) => setSettings({ ...settings, cta_2_open_new_tab: e.target.value })}
+                            >
+                              <option value="false">Buka di Tab yang Sama (_self)</option>
+                              <option value="true">Buka di Tab Baru (_blank)</option>
+                            </Select>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Live Interactive Preview Box */}
+                      <div style={{ marginTop: '8px', padding: '16px', background: 'var(--dash-muted-bg)', borderRadius: '10px', border: '1px solid var(--dash-border)' }}>
+                        <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--dash-text-muted)', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          <i className="fa fa-eye"></i> Pratinjau Tampilan Banner 2 (Live Preview):
+                        </div>
+                        <div style={{
+                          position: 'relative',
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                          minHeight: '100px',
+                          backgroundImage: `url(${getImageUrl(settings.cta_2_bg, '/assets/img/bg-img/cta-bg-2.jpg')})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '24px 36px',
+                          flexWrap: 'wrap',
+                          gap: '16px'
+                        }}>
+                          {settings.cta_2_mode === 'image_only' ? (
+                            <div style={{ color: '#fff', textShadow: '0 1px 3px rgba(0,0,0,0.8)', fontSize: '13px', fontWeight: 600 }}>
+                              Mode Banner Gambar Penuh Aktif
+                            </div>
+                          ) : (
+                            <>
+                              <img
+                                src={getImageUrl(settings.cta_2_logo || settings.logo_light, '/assets/img/logo/logo-light-2.png')}
+                                alt="Logo Banner"
+                                style={{ maxHeight: '38px', maxWidth: '140px', objectFit: 'contain' }}
+                                onError={(e) => { e.currentTarget.src = '/assets/img/logo/logo-light-2.png' }}
+                              />
+                              <div style={{ color: '#fff', fontSize: '16px', fontWeight: 600, flex: 1, minWidth: '200px', textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}>
+                                {settings.cta_2_title || 'Dua Narasi - Portal Berita & Opini Terpercaya'}
+                              </div>
+                              <span style={{
+                                background: 'var(--primary-color, #004CFF)',
+                                color: '#fff',
+                                padding: '10px 22px',
+                                borderRadius: '50px',
+                                fontSize: '12px',
+                                fontWeight: 700,
+                                textTransform: 'uppercase',
+                                display: 'inline-block',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                              }}>
+                                {settings.cta_2_btn_text || 'Hubungi Kami'}
+                              </span>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -1870,13 +2146,49 @@ export default function DashboardSettings() {
                 </CardHeader>
                 {settings.show_recent_posts !== 'false' && (
                   <CardContent>
-                    <div className="dash-form-group" style={{ margin: 0 }}>
-                      <Label>Judul Seksi Berita Terbaru</Label>
-                      <Input
-                        placeholder="Contoh: Recent Posts atau Berita Terbaru"
-                        value={settings.title_recent_posts || ''}
-                        onChange={(e) => setSettings({ ...settings, title_recent_posts: e.target.value })}
-                      />
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label>Judul Seksi Berita Terbaru</Label>
+                        <Input
+                          placeholder="Contoh: Recent Posts atau Berita Terbaru"
+                          value={settings.title_recent_posts || ''}
+                          onChange={(e) => setSettings({ ...settings, title_recent_posts: e.target.value })}
+                        />
+                      </div>
+
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label>Jumlah Artikel yang Ditampilkan</Label>
+                        <Select
+                          value={settings.recent_posts_limit || '12'}
+                          onChange={(e) => setSettings({ ...settings, recent_posts_limit: e.target.value })}
+                        >
+                          <option value="6">6 Artikel (3 Kiri + 3 Kanan - Versi Lama)</option>
+                          <option value="8">8 Artikel (4 Kiri + 4 Kanan)</option>
+                          <option value="10">10 Artikel (5 Kiri + 5 Kanan)</option>
+                          <option value="12">12 Artikel (6 Kiri + 6 Kanan - Rekomendasi)</option>
+                          <option value="16">16 Artikel (8 Kiri + 8 Kanan)</option>
+                          <option value="20">20 Artikel (10 Kiri + 10 Kanan)</option>
+                          <option value="24">24 Artikel (12 Kiri + 12 Kanan)</option>
+                          <option value="30">30 Artikel (15 Kiri + 15 Kanan)</option>
+                        </Select>
+                      </div>
+
+                      <div className="dash-form-group" style={{ margin: 0 }}>
+                        <Label>Mulai dari Urutan Artikel (Offset)</Label>
+                        <Select
+                          value={settings.recent_posts_offset || '0'}
+                          onChange={(e) => setSettings({ ...settings, recent_posts_offset: e.target.value })}
+                        >
+                          <option value="0">Mulai dari Berita Paling Pertama (Artikel #1)</option>
+                          <option value="4">Lewati 4 Berita Teratas (Mulai Artikel #5)</option>
+                          <option value="6">Lewati 6 Berita Teratas (Mulai Artikel #7)</option>
+                          <option value="8">Lewati 8 Berita Teratas (Mulai Artikel #9)</option>
+                          <option value="10">Lewati 10 Berita Teratas (Mulai Artikel #11)</option>
+                        </Select>
+                      </div>
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: 'var(--dash-text-muted)', marginTop: '12px' }}>
+                      <i className="fa fa-info-circle"></i> Jika database memiliki artikel lebih banyak dari batas di atas, pengunjung juga dapat menekan tombol <strong>&ldquo;Tampilkan Lebih Banyak Berita&rdquo;</strong> secara interaktif di halaman depan.
                     </div>
                   </CardContent>
                 )}

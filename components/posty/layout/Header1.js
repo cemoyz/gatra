@@ -85,13 +85,23 @@ export default function Header1({ scroll, isMobileMenu, handleMobileMenu, isSide
 							<div className="navigation-wrapper">
 								<div className="navigation-inner">
 									<div className="sidebar-icon">
-										<button className="sidebar-trigger open" onClick={handleSidebar}>
+										<button
+											className="sidebar-trigger open"
+											onClick={(e) => {
+												if (typeof window !== 'undefined' && window.innerWidth <= 991) {
+													handleMobileMenu(e)
+												} else {
+													handleSidebar(e)
+												}
+											}}
+											aria-label="Menu"
+										>
 											<span />
 											<span />
 											<span />
 										</button>
 									</div>
-									<div className="site-logo">
+									<div className="site-logo header-sticky-logo">
 										<Link className="light" href="/"><img src={logoDark} alt={settings.site_title || "logo"} style={{ maxHeight: '36px', width: 'auto' }} /></Link>
 										<Link className="dark" href="/"><img src={logoLight} alt={settings.site_title || "logo"} style={{ maxHeight: '36px', width: 'auto' }} /></Link>
 									</div>
@@ -100,10 +110,10 @@ export default function Header1({ scroll, isMobileMenu, handleMobileMenu, isSide
 									</nav>
 									<div className="header-right">
 										<ThemeSwitch />
-										<div className="search-icon dl-search-icon" onClick={handleSearch}>
+										<div className="search-icon dl-search-icon" onClick={handleSearch} title="Cari Berita" aria-label="Cari Berita">
 											<i className="las la-search" />
 										</div>
-										<div className="mobile-menu-icon" onClick={handleMobileMenu}>
+										<div className="mobile-menu-icon" onClick={handleMobileMenu} aria-label="Menu Mobile">
 											<div className="burger-menu">
 												<div className="line-menu line-half first-line" />
 												<div className="line-menu" />

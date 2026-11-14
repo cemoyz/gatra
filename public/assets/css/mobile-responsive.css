@@ -244,16 +244,52 @@ html, body {
   }
 
   .bottom-header .navigation-inner {
-    height: 54px !important;
-    padding: 0 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 48px !important;
+    padding: 0 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    grid-template-columns: unset !important;
   }
 
+  .bottom-header:not(.sticky-fixed-top) .header-sticky-logo,
+  .bottom-header:not(.sticky-fixed-top) .site-logo {
+    display: none !important;
+  }
+
+  .sticky-fixed-top .bottom-header .header-sticky-logo,
+  .sticky-fixed-top .bottom-header .site-logo {
+    display: block !important;
+  }
+
+  .bottom-header .header-sticky-logo img,
   .bottom-header .site-logo img {
-    max-height: 30px !important;
+    max-height: 28px !important;
+    width: auto !important;
   }
 
-  .mobile-menu-icon {
-    margin-left: 10px !important;
+  .bottom-header .header-right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+  }
+
+  .bottom-header .header-right .search-icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 18px !important;
+    cursor: pointer !important;
+    color: var(--heading-color, #1e293b) !important;
+  }
+
+  .bottom-header .header-right .mobile-menu-icon {
+    display: none !important;
   }
 }
 
@@ -1105,117 +1141,245 @@ html, body {
 }
 
 /* ==========================================================================
-   12. VIDEO SECTION (WATCH) MOBILE POLISH
+   12. CINEMA VIDEO HUB (WHAT TO WATCH) MOBILE POLISH
    ========================================================================== */
+@media (max-width: 991px) {
+  .cinema-watch-section {
+    padding: 20px 0 36px 0 !important;
+  }
+
+  .cinema-watch-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .cinema-player-card {
+    aspect-ratio: 16 / 9 !important;
+    min-height: unset !important;
+    height: auto !important;
+  }
+}
+
 @media (max-width: 767px) {
-  .watch-section {
-    padding: 20px 0 !important;
+  .cinema-watch-card {
+    padding: 16px 12px !important;
+    border-radius: 14px !important;
   }
 
-  .carousel-post {
-    height: 290px !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    position: relative !important;
+  .cinema-watch-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    margin-bottom: 14px !important;
+    padding-bottom: 12px !important;
   }
 
-  .carousel-post .post-img {
-    height: 100% !important;
-  }
-
-  .carousel-post .post-img img {
-    height: 100% !important;
+  .cinema-watch-header .header-left {
     width: 100% !important;
-    object-fit: cover !important;
   }
 
-  .carousel-post .post-text {
-    top: 14px !important;
-    left: 14px !important;
-    z-index: 3 !important;
+  .cinema-watch-header .live-indicator {
+    font-size: 10px !important;
+    padding: 3px 10px !important;
+    margin-bottom: 6px !important;
   }
 
-  .carousel-post .post-text .header {
-    font-size: 14px !important;
-    padding: 4px 10px !important;
-    background: rgba(0, 0, 0, 0.5) !important;
-    backdrop-filter: blur(4px) !important;
-    border-radius: 4px !important;
-    color: #ffffff !important;
-  }
-
-  .carousel-post .video-btn {
-    top: 40% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    right: auto !important;
-    z-index: 3 !important;
-  }
-
-  .carousel-post .video-btn a {
-    width: 50px !important;
-    height: 50px !important;
-    line-height: 50px !important;
+  .cinema-watch-header .section-main-title {
     font-size: 20px !important;
+    margin-bottom: 4px !important;
   }
 
-  .carousel-post .post-content {
-    left: 14px !important;
-    right: 14px !important;
-    bottom: 14px !important;
-    top: auto !important;
-    width: auto !important;
-    z-index: 3 !important;
+  .cinema-watch-header .section-subtitle {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
   }
 
-  .carousel-post .post-content .title {
-    font-size: 16px !important;
-    line-height: 1.35 !important;
-    color: #ffffff !important;
-    margin: 6px 0 !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
+  .cinema-watch-header .header-right {
+    width: 100% !important;
   }
 
-  .carousel-post .post-content .post-list li,
-  .carousel-post .post-content .post-list li a,
-  .carousel-post .post-content .post-list li span {
-    color: #e2e8f0 !important;
-    font-size: 11.5px !important;
+  .cinema-watch-header .view-all-video-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    padding: 8px 14px !important;
+    font-size: 12px !important;
   }
 
-  .watch-section .swiper-arrow {
+  .cinema-player-card {
+    aspect-ratio: 16 / 9 !important;
+    min-height: unset !important;
+    height: auto !important;
+    border-radius: 10px !important;
+  }
+
+  .cinema-top-badges {
+    padding: 10px 12px !important;
+  }
+
+  .cat-badge {
+    font-size: 9.5px !important;
+    padding: 3px 8px !important;
+  }
+
+  .hd-badge {
     display: none !important;
   }
 
-  .thumb-carousel-wrap {
-    padding: 12px 0 0 !important;
+  .fs-quick-btn {
+    font-size: 10px !important;
+    padding: 3px 8px !important;
   }
 
-  .carousel-thumb-post {
-    border-radius: 8px !important;
-    overflow: hidden !important;
+  .cinema-play-btn-wrap {
+    top: 42% !important;
   }
 
-  .carousel-thumb-post .thumb-content {
-    padding: 6px !important;
+  .cinema-play-btn {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 22px !important;
+    box-shadow: 0 0 0 6px rgba(218, 1, 5, 0.3) !important;
   }
 
-  .carousel-thumb-post .thumb-title {
+  .cinema-player-details {
+    padding: 12px 14px !important;
+  }
+
+  .player-title {
+    font-size: 14.5px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 6px !important;
+  }
+
+  .player-meta {
+    font-size: 10.5px !important;
+    gap: 10px !important;
+  }
+
+  .inline-floating-controls {
+    top: 8px !important;
+    right: 8px !important;
+    padding: 4px 6px !important;
+    gap: 6px !important;
+  }
+
+  .ctrl-action-btn {
     font-size: 11px !important;
+    padding: 3px 8px !important;
+  }
+
+  .playing-info-bar {
+    margin-top: 10px !important;
+    padding: 10px 12px !important;
+    border-radius: 8px !important;
+  }
+
+  .playing-title {
+    font-size: 14.5px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 6px !important;
+  }
+
+  .cinema-playlist-col {
+    padding: 12px !important;
+    border-radius: 10px !important;
+    margin-top: 12px !important;
+  }
+
+  .playlist-header {
+    padding-bottom: 8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .playlist-item {
+    padding: 8px !important;
+    gap: 10px !important;
+    border-radius: 8px !important;
+  }
+
+  .playlist-thumb-wrap {
+    width: 80px !important;
+    height: 52px !important;
+    border-radius: 6px !important;
+  }
+
+  .playlist-item-title {
+    font-size: 12px !important;
     line-height: 1.3 !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
+    margin-bottom: 3px !important;
+  }
+
+  .playlist-date {
+    font-size: 10px !important;
   }
 }
 
 /* ==========================================================================
    13. EDITOR'S PICK & RECENT POSTS MOBILE POLISH
    ========================================================================== */
+@media (max-width: 991px) {
+  .editor-post-card {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  [data-theme="dark"] .editor-post-card {
+    background: #111827 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .editor-post-card .post-thumb {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 220px !important;
+    overflow: hidden !important;
+  }
+
+  .editor-post-card .post-thumb img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+  }
+
+  .editor-post-card .post-content {
+    position: static !important;
+    transform: none !important;
+    top: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px !important;
+    border: none !important;
+    background: transparent !important;
+    box-sizing: border-box !important;
+  }
+
+  .editor-post-card .post-content .title {
+    font-size: 17px !important;
+    max-width: 100% !important;
+    margin-bottom: 8px !important;
+    line-height: 1.35 !important;
+  }
+
+  .editor-post-card .post-content p {
+    font-size: 13.5px !important;
+    max-width: 100% !important;
+    line-height: 1.5 !important;
+    margin-bottom: 10px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+}
 @media (max-width: 767px) {
   .editor-blog-area {
     padding-bottom: 36px !important;

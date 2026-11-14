@@ -253,9 +253,26 @@ export default function PostyHome({
     })
     const newsTickerPosts = breakingNewsPosts.slice(0, 10)
     const latestNewsPosts = activePosts.length > 8 ? activePosts.slice(6) : activePosts
-    const videoPosts = activePosts.filter(p => p.postType === 'video' || p.videoUrl).length > 0 
-        ? activePosts.filter(p => p.postType === 'video' || p.videoUrl) 
-        : activePosts.slice(0, 4)
+
+    // 9. Video Posts Selection: Manual Slot dari Dashboard atau Otomatis
+    let videoPosts = []
+    if (settings.video_posts_mode !== 'auto' && (settings.video_post_slot_1 || settings.video_post_slot_2 || settings.video_post_slot_3 || settings.video_post_slot_4)) {
+        const slotIds = [
+            settings.video_post_slot_1,
+            settings.video_post_slot_2,
+            settings.video_post_slot_3,
+            settings.video_post_slot_4
+        ].filter(Boolean).map(String)
+
+        const manualPosts = slotIds.map(id => activePosts.find(p => String(p.id) === id)).filter(Boolean)
+        if (manualPosts.length > 0) {
+            videoPosts = manualPosts
+        }
+    }
+    if (videoPosts.length === 0) {
+        const autoVideoPosts = activePosts.filter(p => p.postType === 'video' || p.videoUrl)
+        videoPosts = autoVideoPosts.length > 0 ? autoVideoPosts.slice(0, 4) : activePosts.slice(0, 4)
+    }
     const lifestylePosts = activePosts.filter(p => {
         const s = (typeof p.category === 'string' ? p.category : (p.category?.slug || p.category?.name || '')).toLowerCase()
         return s.includes('life') || s.includes('style') || s.includes('tren') || s.includes('travel')
