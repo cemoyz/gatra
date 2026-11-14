@@ -387,7 +387,8 @@ export async function getServerSideProps() {
                 take: 50,
                 include: {
                     category: { select: { id: true, name: true, slug: true } },
-                    author: { select: { id: true, name: true, avatar: true } }
+                    author: { select: { id: true, name: true, avatar: true } },
+                    tags: { select: { id: true, name: true, slug: true } }
                 }
             }),
             prisma.post.findMany({

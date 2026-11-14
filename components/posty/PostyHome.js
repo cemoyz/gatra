@@ -240,7 +240,18 @@ export default function PostyHome({
     mostReadPosts = mostReadPosts.slice(0, 5)
 
     // 5. Section Slices
-    const newsTickerPosts = activePosts.slice(0, 5)
+    // Breaking News: HANYA artikel yang diceklis Breaking News di dashboard
+    const breakingNewsPosts = activePosts.filter(p => {
+        if (p.isBreaking === true || p.isBreaking === 'true') return true
+        if (Array.isArray(p.tags)) {
+            return p.tags.some(t => {
+                const s = (typeof t === 'string' ? t : (t.slug || t.name || '')).toLowerCase()
+                return s.includes('breaking') || s.includes('kilas-berita') || s.includes('urgent')
+            })
+        }
+        return false
+    })
+    const newsTickerPosts = breakingNewsPosts.slice(0, 10)
     const latestNewsPosts = activePosts.length > 8 ? activePosts.slice(6) : activePosts
     const videoPosts = activePosts.filter(p => p.postType === 'video' || p.videoUrl).length > 0 
         ? activePosts.filter(p => p.postType === 'video' || p.videoUrl) 

@@ -133,7 +133,11 @@ export default async function handler(req, res) {
         authorName: post.author?.name || 'Admin',
         authorRole: post.author?.designation || post.author?.role || 'Penulis',
         authorAvatar: post.author?.avatar || '/assets/img/author/author-1.webp',
-        commentsCount: post._count?.comments || 0
+        commentsCount: post._count?.comments || 0,
+        isBreaking: Array.isArray(post.tags) && post.tags.some(t => {
+          const s = (typeof t === 'string' ? t : (t.slug || t.name || '')).toLowerCase()
+          return s.includes('breaking') || s.includes('kilas-berita') || s.includes('urgent')
+        })
       }))
 
       if (idArray && idArray.length > 0) {
