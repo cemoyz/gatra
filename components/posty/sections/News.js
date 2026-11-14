@@ -1,4 +1,3 @@
-
 'use client'
 import Link from 'next/link'
 import { Autoplay, Navigation, Pagination } from "swiper/modules"
@@ -7,7 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react"
 const swiperOptions = {
     modules: [Autoplay, Pagination, Navigation],
     slidesPerView: 1,
-    spaceBetween: 20,
+    spaceBetween: 0,
     slidesPerGroup: 1,
     direction: 'vertical',
     loop: true,
@@ -20,9 +19,7 @@ const swiperOptions = {
         reverseDirection: true,
         disableOnInteraction: false,
     },
-    // grabcursor: true,
     speed: 400,
-    effect: 'slide',
 }
 
 export default function News({ posts = [], settings = {} }) {
@@ -39,10 +36,10 @@ export default function News({ posts = [], settings = {} }) {
         <>
             <section className="news-area">
                 <div className="container">
-                    <div className="news-carousel swiper">
-                        <Swiper {...swiperOptions} className="swiper-wrapper">
+                    <div className="news-carousel">
+                        <Swiper {...swiperOptions} className="news-swiper" style={{ height: '100%', width: '100%' }}>
                             {displayPosts.map((post) => (
-                                <SwiperSlide key={post.id}>
+                                <SwiperSlide key={post.id} style={{ height: '100%', display: 'flex', alignItems: 'center' }}>
                                     <div className="hero-text">
                                         <span className="news"><img src="/assets/img/images/news-icon.png" alt="icon" />{tickerTitle}</span>
                                         <span>

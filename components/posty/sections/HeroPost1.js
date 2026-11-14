@@ -147,8 +147,8 @@ export default function HeroPost1({ posts = [], popularPosts = [], settings = {}
 
 						{/* Center Swiper Slider */}
 						<div className="post-carousel-wrap">
-							<div className="post-carousel swiper">
-								<Swiper {...swiperOptions} className="swiper-wrapper swiper-container">
+							<div className="post-carousel">
+								<Swiper {...swiperOptions} className="hero-post-swiper">
 									{sliderPosts && sliderPosts.length > 0 ? (
 										sliderPosts.map((post) => {
 											const catName = post.category?.name || (typeof post.category === 'string' ? post.category : 'Highlights')

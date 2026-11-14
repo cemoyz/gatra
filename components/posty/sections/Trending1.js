@@ -46,8 +46,8 @@ export default function Trending1({ posts = [], settings = {} }) {
         <>
             <section className="trending-area">
                 <div className="container">
-                    <div className="trending-carousel swiper">
-                        <Swiper {...swiperOptions} className="swiper-wrapper swiper-container">
+                    <div className="trending-carousel">
+                        <Swiper {...swiperOptions} className="trending-swiper">
                             {displayPosts ? (
                                 displayPosts.map((post) => {
                                     const catName = post.category?.name || (typeof post.category === 'string' ? post.category : 'Trending')

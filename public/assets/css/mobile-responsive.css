@@ -165,47 +165,77 @@ html, body {
 
   /* Mid header mobile layout */
   .mid-header {
-    padding: 10px 0 !important;
+    padding: 0 !important;
+  }
+
+  .mid-header .container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    max-width: 100% !important;
   }
 
   .mid-header-wrap {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
+    width: 100% !important;
+    padding: 8px 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
   }
 
-  .mid-header-left {
+  .mid-header-wrap .mid-header-left {
     display: none !important; /* Move social icons to mobile drawer */
   }
 
-  .site-logo {
+  .mid-header-wrap .site-logo {
+    display: block !important;
     text-align: left !important;
     margin: 0 !important;
+    flex: 0 0 auto !important;
   }
 
-  .site-logo img {
-    max-height: 34px !important;
+  .mid-header-wrap .site-logo img {
+    max-height: 26px !important;
+    max-width: 110px !important;
+    width: auto !important;
+    object-fit: contain !important;
   }
 
-  .mid-header-right {
+  .mid-header-wrap .mid-header-right {
     display: flex !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 6px !important;
+    margin: 0 !important;
+    flex: 0 0 auto !important;
   }
 
-  .mid-header-right .header-btn {
-    padding: 6px 14px !important;
-    font-size: 12px !important;
-    height: 34px !important;
-    line-height: 22px !important;
+  .mid-header-wrap .mid-header-right .header-btn {
+    padding: 0 10px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.3px !important;
+    height: 30px !important;
+    line-height: 30px !important;
     border-radius: 6px !important;
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
-  .mid-header-right .user {
-    width: 34px !important;
-    height: 34px !important;
-    font-size: 16px !important;
+  .mid-header-wrap .mid-header-right .user {
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    font-size: 18px !important;
     border-radius: 6px !important;
+    background: transparent !important;
+    color: var(--primary-color, #2563eb) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
   }
 
   /* Sticky Bottom Header on mobile */
@@ -232,31 +262,61 @@ html, body {
    ========================================================================== */
 @media (max-width: 767px) {
   .news-area {
-    padding: 8px 0 !important;
+    padding: 0 !important;
     border-bottom: 1px solid #f1f5f9;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    overflow: hidden !important;
   }
 
   .news-carousel {
-    height: auto !important;
-    line-height: 1.4 !important;
-    padding: 4px 0 !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    line-height: 48px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+
+  .news-carousel .news-swiper,
+  .news-carousel .swiper,
+  .news-carousel .swiper-wrapper {
+    height: 48px !important;
+    max-height: 48px !important;
+  }
+
+  .news-carousel .swiper-slide {
+    height: 48px !important;
+    max-height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
   }
 
   .hero-text {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 10px !important;
-    padding-bottom: 0 !important;
+    gap: 8px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 48px !important;
+    line-height: 48px !important;
     text-align: left !important;
+    width: 100% !important;
   }
 
   .hero-text .news {
     flex-shrink: 0 !important;
     height: 28px !important;
+    line-height: 28px !important;
     padding: 0 8px !important;
     font-size: 10.5px !important;
     border-radius: 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
   }
 
   .hero-text .news img {
@@ -266,13 +326,14 @@ html, body {
 
   .hero-text span:not(.news) {
     font-size: 13.5px !important;
-    line-height: 1.35 !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 1 !important;
-    -webkit-box-orient: vertical !important;
+    line-height: 48px !important;
+    display: block !important;
+    white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     color: var(--heading-color, #0f172a) !important;
+    flex: 1 !important;
+    min-width: 0 !important;
   }
 
   .news-carousel .swiper-arrow {
